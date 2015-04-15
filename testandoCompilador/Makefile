@@ -5,5 +5,6 @@ calc: teste.l teste.y
 	flex teste.l
 	mv lex.yy.c lexico.c
 	gcc -o readVariable sintatico.c lexico.c
+	./readVariable
 clean:
 	rm lexico.* sintatico.* calc.exe
