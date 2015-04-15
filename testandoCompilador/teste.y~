@@ -1,0 +1,15 @@
+%{
+#include "global"
+#include <stdio.h>
+#include <stdlib.h>
+%}
+
+%token SPACE
+%token TAB
+%token MESSAGE
+
+%start Input
+
+%%
+Input:
+	
