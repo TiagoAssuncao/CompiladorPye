@@ -1,20 +1,28 @@
 %{
-#include "global"
+#include "global.h"
 #include <stdio.h>
 #include <stdlib.h>
 %}
 
 %token SPACE
 %token TAB
-%token MESSAGE
+%token MESSAGE WARNING NOT
+%token END
 
 %start Input
 
 %%
 Input:
-	/*Empty*/
-	| {printf("Resultado %s\n", $$);}
+	//Empty
+	| Input Line
 	;
+Line:
+	END
+	| MESSAGE { printf("Variável Encontrada: %s\n\n", $1); }
+	| WARNING { printf("A Variável deve ter mais de três caracteres\n\n"); }
+	| NOT { printf("A entrada digitada não é uma variável\n\n"); }
+	;
+	
 
 %%
 int yyerror(char *s) {
