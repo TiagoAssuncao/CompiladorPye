@@ -7,15 +7,33 @@ Compiler utilized: gcc -g -o nameOfTheExecutable -W -Wall -pedantic -ansi -I. na
 */
 #include <stdlib.h>
 #include <stdio.h>
+#define NUMBER_TEST 10
 
-//Data struct declaretion
+/*Data struct declaretion*/
 typedef struct nodeList
 {
 	unsigned int idSymbol;
-	unsigned char nameSymbol[30];
 	struct nodeList *nextNode;
 
 }nodeList;
+
+nodeList *includeNodeList(nodeList *header){
+
+	nodeList *newNode = NULL;
+
+	if (header != NULL)
+	{
+		/*To include others nodes*/
+	}
+	else{
+		newNode->idSymbol = NUMBER_TEST;
+		newNode->nextNode = NULL;
+
+		header = newNode;
+	}
+
+	return header;
+}
 
 int main(void)
 {
