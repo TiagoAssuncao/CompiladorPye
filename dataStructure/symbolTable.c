@@ -7,7 +7,6 @@ Compiler utilized: gcc -g -o nameOfTheExecutable -W -Wall -pedantic -ansi -I. na
 */
 #include <stdlib.h>
 #include <stdio.h>
-#define NUMBER_TEST 10
 
 /*Data struct declaretion*/
 typedef struct nodeList
@@ -17,21 +16,20 @@ typedef struct nodeList
 
 }nodeList;
 
-nodeList *includeNodeList(nodeList *header){
+nodeList *includeNodeList(nodeList *header, int idValueSimble){
 
 	nodeList *newNode = NULL;
+	newNode->idSymbol = idValueSimble;
 
 	if (header != NULL)
 	{
-		/*To include others nodes*/
+		newNode->nextNode = header;
 	}
 	else{
-		newNode->idSymbol = NUMBER_TEST;
 		newNode->nextNode = NULL;
-
-		header = newNode;
 	}
 
+	header = newNode;
 	return header;
 }
 
