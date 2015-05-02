@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
 }
 
 node *build_node(char _value_type, char *_identifier, char *_scope, char *_value) {
-	debug("Starting build_node function...");
+	debug("FUNCTION build_node: Starting...");
 
 	node *new_node = (node *) malloc(sizeof(node));
 
@@ -30,14 +30,14 @@ node *build_node(char _value_type, char *_identifier, char *_scope, char *_value
 		new_node->value = _value;
 		new_node->next = new_node->previous = NULL;
 
-		debug("Node built...");
+		debug("FUNCTION build_node: Node built...");
 	}
 	else {
 		puts("An error occurred while building a node!");
 		exit(0);
 	}
 
-	debug("Leaving build_node function...");
+	debug("FUNCTION build_node: Leaving...");
 
 	return new_node;
 }
@@ -46,14 +46,14 @@ node *insert_node(char _value_type, char *_identifier, char *_scope, char *_valu
 
 }
 
-node *search_identifier(char *_identifier); {
+node *search_identifier(char *_identifier) {
 
 }
 
 void free_symbol_table(node *_root_node) {
-	debug("Starting free_symbol_table function...");
+	debug("FUNCTION free_symbol_table: Starting...");
 
-	node *helper_node;
+	node *helper_node = NULL;
 	
 	while(_root_node != NULL) {
 		helper_node = _root_node;
@@ -62,7 +62,7 @@ void free_symbol_table(node *_root_node) {
 		free(helper_node);
 	}
 
-	debug("Leaving free_symbol_table function...");
+	debug("FUNCTION free_symbol_table: Leaving...");
 
 	return;
 }
