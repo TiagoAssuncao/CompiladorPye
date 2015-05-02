@@ -37,7 +37,7 @@ void free_symbol_table(linked_list *symbol_table);
 // Inserts a element in the last position of the symbol table.
 void insert_element(linked_list *symbol_table, void *element);
 
-// Returns the symbol table size.
-unsigned int symbol_table_size(linked_list *symbol_table);
+// Displays a message of a memory allocation error.
+void malloc_error_msg();
 
 #endif

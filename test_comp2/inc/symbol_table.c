@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 #include "symbol_table.h"
@@ -13,7 +14,7 @@ int main(int argc, char **argv) {
 }
 
 linked_list *new_symbol_table(unsigned int element_size) {
-	assert(element_size == 0);
+	assert(element_size != 0);
 
 	debug("FUNCTION new_symbol_table: Starting...");
 
@@ -26,7 +27,7 @@ linked_list *new_symbol_table(unsigned int element_size) {
 		symbol_table->head = symbol_table->tail = NULL;
 	}
 	else {
-		puts("There was an error while allocating memory with malloc. Do something. Now.\n");
+		malloc_error_msg();
 		exit(0);
 	}
 
@@ -36,6 +37,8 @@ linked_list *new_symbol_table(unsigned int element_size) {
 }
 
 void free_symbol_table(linked_list *symbol_table) {
+	assert(symbol_table != NULL);
+
 	debug("FUNCTION free_symbol_table: Starting...");
 
 	node *current_node = NULL;
@@ -48,28 +51,40 @@ void free_symbol_table(linked_list *symbol_table) {
 	}
 
 	debug("FUNCTION free_symbol_table: Leaving...");
-
-	return;
 }
 
 void insert_element(linked_list *symbol_table, void *element) {
+	assert(symbol_table != NULL);
 
-}
+	debug("FUNCTION insert_element: Starting...");
 
-unsigned int symbol_table_size(linked_list *symbol_table) {
-	debug("FUNCTION symbol_table_size: Starting...");
+	node *new_node = NULL;
+	new_node = (node *) malloc(sizeof(node));
 	
-	int table_size = 0;
-	if(symbol_table != NULL) {
-		table_size = symbol_table->length;
+	new_node->data = NULL;
+	new_node->data = malloc(symbol_table->element_size);
+	
+	if(new_node != NULL && new_node->data != NULL) {
+		new_node->next = NULL;
+
+		memcpy(new_node->data, element, symbol_table->element_size);
+
+		if(symbol_table->length == 0) {
+			symbol_table->head = symbol_table->tail = new_node;
+		} 
+		else {
+			symbol_table->tail->next = new_node;
+			symbol_table->tail = new_node;
+		}
 	}
 	else {
-		puts("A empty symbol table has been passed as argument. There is no size.\n");
+		malloc_error_msg();
 		exit(0);
-	}
+	}	
 
-	debug("FUNCTION symbol_table_size: Leaving...");
-
-	return table_size;
+	debug("FUNCTION insert_element: Leaving...");
 }
 
+void malloc_error_msg() {
+	puts("There was an error while allocating memory with malloc. Do something. Now.\n");
+}
