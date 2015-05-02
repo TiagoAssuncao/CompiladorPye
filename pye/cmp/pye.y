@@ -16,7 +16,8 @@
 %union {int num; char id;}
 %start input
 %token print
-%token exit_command
+%token new_line
+%token white_characters
 %token <num> number
 %token <id> identifier
 %type <num> input expression term
@@ -29,8 +30,12 @@ input: 			assignment ';' {;}
 				| input assignment ';' {;}
 				| expression ';' {printf("Printing... %d\n", $1);}
 				| input expression ';' {printf("Printing... %d\n", $2);}
-				| exit_command ';' {exit(EXIT_SUCCESS);}
-				| input exit_command ';' {exit(EXIT_SUCCESS);}
+				| assignment new_line {;}
+				| input assignment new_line {;}
+				| expression new_line {printf("Printing... %d\n", $1);}
+				| input expression new_line {printf("Printing... %d\n", $2);}
+				| new_line {;}
+				| input new_line {;}
 				;
 
 
@@ -80,7 +85,7 @@ void update_symbol_value(char symbol, int value) {
 int main (int argc, char **argv) {
 	yyin = fopen(argv[1], "r");
 
-	if(yyin == NULL) {
+	if (yyin == NULL) {
 		printf("An error occurred while reading the file!\n");
 		exit(1);
 	}
