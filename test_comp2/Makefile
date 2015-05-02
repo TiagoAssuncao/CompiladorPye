@@ -2,23 +2,26 @@ INCFOLDER := inc/
 SRCFOLDER := src/
 BINFOLDER := bin/
 OBJFOLDER := obj/
+CMPFOLDER := cmp/
 
 CC := gcc
 
-C_SOURCES := $(wildcard src/*.c)
+CSOURCES := $(wildcard $(SRCFOLDER)*.c)
 
 
-all: flex_scanner calculator_interpreter.tab.c
-	 	gcc -g lex.yy.c calculator_interpreter.tab.c -o calculator_interpreter
+all: flex_scanner pye.tab.c
+	 $(CSOURCES:src/%.c=obj/%.o)
+	 $(CC) obj/*.o -o $(BINFOLDER)$@ -I./inc
 
-flex_scanner: bison_parser calculator_interpreter.l
-			  	flex calculator_interpreter.l
+flex_scanner: bison_parser $(CMPFOLDER)pye.l
+			  flex $(CMPFOLDER)pye.l
 
-bison_parser: calculator_interpreter.y
-				bison -d calculator_interpreter.y
+bison_parser: $(CMPFOLDER)pye.y
+			  bison -d $(CMPFOLDER)pye.y
 
-do_the_magic: $(C_SOURCES:src/%.c=obj/%.o)
-	#to be continued...
+obj/%.o: src/%.c
+		 $(CC) -c $< -o $@ -I./inc
 
-clean:
-		rm -f lex.yy.c calculator_interpreter.tab.c calculator_interpreter.tab.h calculator_interpreter calculator_interpreter.y~ calculator_interpreter.l~ Makefile~
+clean: 
+	   rm -rf $(OBJFOLDER)*
+	   rm -rf $(BINFOLDER)*
