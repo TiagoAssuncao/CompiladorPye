@@ -7,12 +7,6 @@
 #include "debugger.h"
 
 
-int main(int argc, char **argv) {
-	puts("Hello, world!");
-
-	return 0;
-}
-
 linked_list *new_symbol_table(unsigned int element_size) {
 	assert(element_size != 0);
 
@@ -62,12 +56,16 @@ linked_list *insert_element(linked_list *symbol_table, void *element) {
 	new_node = (node *) malloc(sizeof(node));
 	
 	new_node->element = NULL;
-	new_node->element = malloc(symbol_table->element_size);
+	new_node->element = (void *) malloc(symbol_table->element_size);
+
+	debug("FUNCTION insert_element: new node and its element malloc'd");
 	
 	if(new_node != NULL && new_node->element != NULL) {
 		new_node->next = NULL;
 
+		debug("FUNCTION insert_element: before memcpy");
 		memcpy(new_node->element, element, symbol_table->element_size);
+		debug("FUNCTION insert_element: aftermemcpy");
 
 		if(symbol_table->length == 0) {
 			new_node->previous = NULL;
@@ -78,6 +76,8 @@ linked_list *insert_element(linked_list *symbol_table, void *element) {
 			symbol_table->tail->next = new_node;
 			symbol_table->tail = new_node;
 		}
+
+		symbol_table->length++;
 	}
 	else {
 		malloc_error_msg();
