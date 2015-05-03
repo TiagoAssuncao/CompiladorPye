@@ -33,56 +33,62 @@
 
 %%
 
-input:						command {;}
-							| input command {;}
-							| function_declaration {;}
-							| input function_declaration {;}
-							| '\n' {;}
-							| input '\n' {;}
-							;
+input:						
+	command {;}
+	| input command {;}
+	| function_declaration {;}
+	| input function_declaration {;}
+	| '\n' {;}
+	| input '\n' {;}
+	;
 
 
 
-command:					assignment command_finisher {;}
-							| expression command_finisher {printf("Printing... %d\n", $1);}
-							;
+command:
+	assignment command_finisher {;}
+	| expression command_finisher {printf("Printing... %d\n", $1);}
+	;
 
 
 
-command_finisher:			'\n' {;}
-							| ';' {;}
-							;
+command_finisher:
+	'\n' {;}
+	| ';' {;}
+	;
 
 
 
-assignment: 				IDENTIFIER '=' expression {$$ = $3; update_symbol_value($1, $3);}
-							| IDENTIFIER '=' assignment {$$ = $3; update_symbol_value($1, $3);}
+assignment: 
+	IDENTIFIER '=' expression {$$ = $3; update_symbol_value($1, $3);}
+	| IDENTIFIER '=' assignment {$$ = $3; update_symbol_value($1, $3);}
 
 
 
-expression:					term {$$ = $1;}
-							| expression '+' term {$$ = $1 + $3;}
-							| expression '-' term {$$ = $1 - $3;}
-							;
+expression:
+	term {$$ = $1;}
+	| expression '+' term {$$ = $1 + $3;}
+	| expression '-' term {$$ = $1 - $3;}
+	;
 
 
 
-term:	 					NUMBER {$$ = $1;}
-							| IDENTIFIER {$$ = get_symbol_value($1);}
-							;
+term:
+	NUMBER {$$ = $1;}
+	| IDENTIFIER {$$ = get_symbol_value($1);}
+	;
 							
 
 
 /* INCOMPLETE !!! */
-function_declaration:		DEF IDENTIFIER LEFT_PARENTHESIS function_declaration_args RIGHT_PARENTHESIS COLON
-								{printf("asssooo!!! sou eu a funsao!!!\n");}
-							;
+function_declaration:
+	DEF IDENTIFIER LEFT_PARENTHESIS function_declaration_args RIGHT_PARENTHESIS COLON {printf("asssooo!!! sou eu a funsao!!!\n");}
+	;
 /* INCOMPLETE !!! */
 
 /* INCOMPLETE !!! */
-function_declaration_args:	;
+function_declaration_args:
+	;
 /* INCOMPLETE !!! */
-
 
 %% 
 
