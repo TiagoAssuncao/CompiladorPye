@@ -7,6 +7,8 @@
 	void yyerror (char *s);
 	extern FILE *yyin;
 
+	extern unsigned int current_line;
+
 	int symbol_table[52];
 	int get_symbol_value(char symbol);
 	void update_symbol_value(char symbol, int value);
@@ -14,44 +16,73 @@
 
 
 %union {int num; char id;}
+
 %start input
-%token print
-%token new_line
-%token white_characters
-%token <num> number
-%token <id> identifier
+
+%token DEF
+%token LEFT_PARENTHESIS
+%token RIGHT_PARENTHESIS
+%token COLON
+
+%token <num> NUMBER
+%token <id> IDENTIFIER
+
 %type <num> input expression term
 %type <id> assignment
 
 
 %%
 
-input: 			assignment ';' {;}
-				| input assignment ';' {;}
-				| expression ';' {printf("Printing... %d\n", $1);}
-				| input expression ';' {printf("Printing... %d\n", $2);}
-				| assignment new_line {;}
-				| input assignment new_line {;}
-				| expression new_line {printf("Printing... %d\n", $1);}
-				| input expression new_line {printf("Printing... %d\n", $2);}
-				| new_line {;}
-				| input new_line {;}
-				;
+input:						command {;}
+							| input command {;}
+							| function_declaration {;}
+							| input function_declaration {;}
+							| '\n' {;}
+							| input '\n' {;}
+							;
 
 
-assignment: 	identifier '=' expression {$$ = $3; update_symbol_value($1, $3);}
-				| identifier '=' assignment {$$ = $3; update_symbol_value($1, $3);}
+
+command:					assignment command_finisher {;}
+							| expression command_finisher {printf("Printing... %d\n", $1);}
+							;
 
 
-expression:		term {$$ = $1;}
-				| expression '+' term {$$ = $1 + $3;}
-				| expression '-' term {$$ = $1 - $3;}
-				;
+
+command_finisher:			'\n' {;}
+							| ';' {;}
+							;
 
 
-term:	 		number {$$ = $1;}
-				| identifier {$$ = get_symbol_value($1);}
-				;
+
+assignment: 				IDENTIFIER '=' expression {$$ = $3; update_symbol_value($1, $3);}
+							| IDENTIFIER '=' assignment {$$ = $3; update_symbol_value($1, $3);}
+
+
+
+expression:					term {$$ = $1;}
+							| expression '+' term {$$ = $1 + $3;}
+							| expression '-' term {$$ = $1 - $3;}
+							;
+
+
+
+term:	 					NUMBER {$$ = $1;}
+							| IDENTIFIER {$$ = get_symbol_value($1);}
+							;
+							
+
+
+/* INCOMPLETE !!! */
+function_declaration:		DEF IDENTIFIER LEFT_PARENTHESIS function_declaration_args RIGHT_PARENTHESIS COLON
+								{printf("asssooo!!! sou eu a funsao!!!\n");}
+							;
+/* INCOMPLETE !!! */
+
+/* INCOMPLETE !!! */
+function_declaration_args:	;
+/* INCOMPLETE !!! */
+
 
 %% 
 

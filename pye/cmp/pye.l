@@ -1,30 +1,34 @@
 %{
 	#include "pye.tab.h"
+	unsigned int current_line = 1;
 %}
 
+%option yylineno
 
 letter [a-zA-z]
 word {letter}+
 
 digit [0-9]
-number [1-9]{digit}*
+integer [1-9]{digit}*
 
-variable ({letter} | _) ({word} | {number} | _)*
+variable ({letter} | _) ({word} | {integer} | _)*
 
 function .
 
 block . 
-white [ \t\n]*
+white [ \t]
 
 %%
 
-"print" 		{return print;}
-[a-zA-Z]		{yylval.id = yytext[0]; return identifier;}
-[0-9]+ 			{yylval.num = atoi(yytext); return number;}
-[ \t] 			;
-"\n"			{return new_line;}
+"def"			{return DEF;}
+"("				{return LEFT_PARENTHESIS;}
+")"				{return RIGHT_PARENTHESIS;}
+":"				{return COLON;}
+[a-zA-Z]		{yylval.id = yytext[0]; return IDENTIFIER;}
+{integer} 		{yylval.num = atoi(yytext); return NUMBER;}
+{white}			{;}
+"\n"			{current_line++; return yytext[0];}
 [-+=;] 			{return yytext[0];}
-white			{return white_characters;}
 . 				{ECHO; yyerror ("unexpected character");}
 
 %%
