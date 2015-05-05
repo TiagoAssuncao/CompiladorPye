@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "debugger.h"
 
 #define DEBUG_ON

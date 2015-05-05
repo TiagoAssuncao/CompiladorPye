@@ -1,27 +1,36 @@
-INCFOLDER := inc/
-SRCFOLDER := src/
-BINFOLDER := bin/
-OBJFOLDER := obj/
-CMPFOLDER := cmp/
+#.RECIPEPREFIX = A   <--- This is a comment used to remember... Ignore it...
 
-CC := gcc
+CC = gcc
+FLAGS = 
 
-CSOURCES := $(wildcard $(SRCFOLDER)*.c)
+C_FILES = $(wildcard src/*.c)
+O_FILES = $(patsubst src/%.c, obj/%.o, $(C_FILES))
 
 
-all: flex_scanner pye.tab.c
-	 $(CSOURCES:src/%.c=obj/%.o)
-	 $(CC) obj/*.o -o $(BINFOLDER)$@ -I./inc
+all: bin/pye
 
-flex_scanner: bison_parser $(CMPFOLDER)pye.l
-			  flex $(CMPFOLDER)pye.l
+bin/pye: cmp/pye.l cmp/pye.y $(O_FILES)
+	$(CC) $(FLAGS) $(O_FILES) -o bin/pye -I./inc
 
-bison_parser: $(CMPFOLDER)pye.y
-			  bison -d $(CMPFOLDER)pye.y
+cmp/pye.l: src/lex.yy.c
+	flex cmp/pye.l
+	@mv lex.yy.c src/
+
+cmp/pye.y: src/pye.tab.c inc/pye.tab.h
+	bison -d cmp/pye.y
+	@mv pye.tab.c src/
+	@mv pye.tab.h inc/
+
+src/lex.yy.c:
+
+src/pye.tab.c:
+
+inc/pye.tab.h:
 
 obj/%.o: src/%.c
-		 $(CC) -c $< -o $@ -I./inc
+	$(CC) $(FLAGS) -c $< -o $@ -I./inc	 
 
+.PHONY: clean
 clean: 
-	   rm -rf $(OBJFOLDER)*
-	   rm -rf $(BINFOLDER)*
+	rm -rf obj/*
+	rm -rf bin/*

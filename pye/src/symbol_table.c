@@ -123,7 +123,9 @@ node *search_element(linked_list *symbol_table, void *element, generic_comparato
 }
 
 node *remove_element(linked_list *symbol_table, void *element, generic_comparator comparison_function) {
-	
+	// Not implemented yet (if only it has to be)...
+
+	return NULL;
 }
 
 void malloc_error_msg() {

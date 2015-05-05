@@ -33,7 +33,6 @@ white [ \t]
 
 %%
 
-
 int yywrap (void) {
 	return 1;
 }
