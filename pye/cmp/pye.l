@@ -3,7 +3,6 @@
 	unsigned int current_line = 1;
 %}
 
-%option yylineno
 
 letter [a-zA-z]
 word {letter}+
@@ -11,11 +10,8 @@ word {letter}+
 digit [0-9]
 integer [1-9]{digit}*
 
-variable ({letter} | _) ({word} | {integer} | _)*
+identifier ({letter}|_)({letter}|{digit}|_)*
 
-function .
-
-block . 
 white [ \t]
 
 %%
@@ -24,15 +20,21 @@ white [ \t]
 "("				{return LEFT_PARENTHESIS;}
 ")"				{return RIGHT_PARENTHESIS;}
 ":"				{return COLON;}
-[a-zA-Z]		{yylval.id = yytext[0]; return IDENTIFIER;}
-{integer} 		{yylval.num = atoi(yytext); return NUMBER;}
+";"				{return SEMICOLON;}
+"+"				{return PLUS;}
+"-"				{return MINUS;}
+"*"				{return MULTIPLY;}
+"/"				{return DIVIDE;}
+"="				{return EQUAL;}
+"\n"			{current_line++; return NEW_LINE;}
+
+{identifier}	{yylval.string = yytext; return IDENTIFIER;}
+{integer} 		{yylval.num = atoi(yytext); return INTEGER;}
 {white}			{;}
-"\n"			{current_line++; return yytext[0];}
-[-+=;] 			{return yytext[0];}
 . 				{ECHO; yyerror ("unexpected character");}
 
 %%
 
-int yywrap (void) {
+int yywrap(void) {
 	return 1;
 }

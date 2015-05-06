@@ -2,31 +2,26 @@
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <ctype.h>
-	
-	#define TABLE_SIZE 52	
 
 	void yyerror (char *s);
 	extern FILE *yyin;
 
 	extern unsigned int current_line;
-
-	int symbol_table[52];
-	int get_symbol_value(char symbol);
-	void update_symbol_value(char symbol, int value);
 %}
 
 
-%union {int num; char id;}
+%union {int num; char *identifier;}
 
 %start input
 
 %token DEF
-%token LEFT_PARENTHESIS
-%token RIGHT_PARENTHESIS
-%token COLON
+%token LEFT_PARENTHESIS RIGHT_PARENTHESIS
+%token COLON SEMI_COLON
+%token PLUS MINUS MULTIPLY DIVIDE EQUAL
+%token NEW_LINE
 
-%token <num> NUMBER
-%token <id> IDENTIFIER
+%token <num> INTEGER
+%token <identifier> IDENTIFIER
 
 %type <num> input expression term
 %type <id> assignment
@@ -39,8 +34,8 @@ input:
 	| input command {;}
 	| function_declaration {;}
 	| input function_declaration {;}
-	| '\n' {;}
-	| input '\n' {;}
+	| NEW_LINE {;}
+	| input NEW_LINE {;}
 	;
 
 
@@ -53,28 +48,28 @@ command:
 
 
 command_finisher:
-	'\n' {;}
-	| ';' {;}
+	NEW_LINE {;}
+	| SEMICOLON {;}
 	;
 
 
 
 assignment: 
-	IDENTIFIER '=' expression {$$ = $3; update_symbol_value($1, $3);}
-	| IDENTIFIER '=' assignment {$$ = $3; update_symbol_value($1, $3);}
+	IDENTIFIER EQUAL expression {$$ = $3; update_symbol_value($1, $3);}
+	| IDENTIFIER EQUAL assignment {$$ = $3; update_symbol_value($1, $3);}
 
 
 
 expression:
 	term {$$ = $1;}
-	| expression '+' term {$$ = $1 + $3;}
-	| expression '-' term {$$ = $1 - $3;}
+	| expression PLUS term {$$ = $1 + $3;}
+	| expression MINUS term {$$ = $1 - $3;}
 	;
 
 
 
 term:
-	NUMBER {$$ = $1;}
+	INTEGER {$$ = $1;}
 	| IDENTIFIER {$$ = get_symbol_value($1);}
 	;
 							
@@ -93,45 +88,13 @@ function_declaration_args:
 
 %% 
 
-
-int find_symbol_index(char symbol) {
-	int index = -1;
-
-	if(islower(symbol)) {
-		index = symbol - 'a' + 26;
-	} 
-	else if(isupper(symbol)) {
-		index = symbol - 'A';
-	}
-
-	return index;
-}
-
-int get_symbol_value(char symbol) {
-	int index = find_symbol_index(symbol);
-
-	return symbol_table[index];
-}
-
-void update_symbol_value(char symbol, int value) {
-	int index = find_symbol_index(symbol);
-
-	symbol_table[index] = value;
-}
-
-
 int main (int argc, char **argv) {
-	yyin = fopen(argv[1], "r");
+	/*yyin = fopen(argv[1], "r");
 
 	if (yyin == NULL) {
 		printf("An error occurred while reading the file!\n");
 		exit(1);
-	}
-	
-	int i;
-	for(i = 0; i < TABLE_SIZE; i++) {
-		symbol_table[i] = 0;
-	}
+	}*/
 
 	yyparse();	
 

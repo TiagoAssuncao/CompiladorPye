@@ -7,25 +7,22 @@ C_FILES = $(wildcard src/*.c)
 O_FILES = $(patsubst src/%.c, obj/%.o, $(C_FILES))
 
 
+.PHONY: all
 all: bin/pye
 
-bin/pye: cmp/pye.l cmp/pye.y $(O_FILES)
+bin/pye: lexical parser $(O_FILES)
 	$(CC) $(FLAGS) $(O_FILES) -o bin/pye -I./inc
 
-cmp/pye.l: src/lex.yy.c
+.PHONY: lexical
+lexical:
 	flex cmp/pye.l
 	@mv lex.yy.c src/
 
-cmp/pye.y: src/pye.tab.c inc/pye.tab.h
+.PHONY: parser
+parser:
 	bison -d cmp/pye.y
 	@mv pye.tab.c src/
 	@mv pye.tab.h inc/
-
-src/lex.yy.c:
-
-src/pye.tab.c:
-
-inc/pye.tab.h:
 
 obj/%.o: src/%.c
 	$(CC) $(FLAGS) -c $< -o $@ -I./inc	 
