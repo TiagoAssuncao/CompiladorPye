@@ -62,4 +62,10 @@ node *remove_element(linked_list *symbol_table, void *element, generic_comparato
 // Displays a message of a memory allocation error.
 void malloc_error_msg();
 
+// Comparison functions. Each one of them define a specific way of comparing two variables of man types.
+bool uint_comparator(void *first_unsigned, void *second_unsigned);
+bool char_comparator(void *first_char, void *second_char);
+bool string_comparator(void *first_string, void *second_string);
+bool double_comparator(void *first_double, void *second_double);
+
 #endif

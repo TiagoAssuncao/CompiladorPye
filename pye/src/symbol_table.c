@@ -131,3 +131,33 @@ node *remove_element(linked_list *symbol_table, void *element, generic_comparato
 void malloc_error_msg() {
 	puts("There was an error while allocating memory with malloc. Do something. Now.\n");
 }
+
+// Compararison functions down here.
+
+bool uint_comparator(void *first_unsigned, void *second_unsigned) {
+	bool equal = FALSE;
+	equal = *((unsigned int *) first_unsigned) == *((unsigned int *) second_unsigned);
+
+	return equal;
+}
+
+bool char_comparator(void *first_char, void *second_char) {
+	bool equal = FALSE;
+	equal = *((char *) first_char) == *((char *) second_char);
+
+	return equal;
+}
+
+bool string_comparator(void *first_string, void *second_string) {
+	bool equal = FALSE;
+	equal = !(strcmp(first_string, second_string));
+
+	return equal;
+}
+
+bool double_comparator(void *first_double, void *second_double) {
+	bool equal = FALSE;
+	equal = *((double *) first_double) == *((double *) second_double);
+
+	return equal;
+}
