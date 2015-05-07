@@ -13,7 +13,7 @@ linked_list *new_linked_list(unsigned int element_size) {
 	debug("FUNCTION new_linked_list: Starting...");
 
 	linked_list *l_list = NULL;
-	l_list = (linked_list *) malloc(sizeof(l_list));
+	l_list = (linked_list *) malloc(sizeof(linked_list));
 
 	if(l_list != NULL) {
 		l_list->element_size = element_size;
@@ -54,18 +54,20 @@ linked_list *insert_element(linked_list *l_list, void *element) {
 
 	node *new_node = NULL;
 	new_node = (node *) malloc(sizeof(node));
+
+	debug("FUNCTION insert_element: New_node malloc'd. Going for its element now.");
 	
 	new_node->element = NULL;
 	new_node->element = (void *) malloc(l_list->element_size);
 
-	debug("FUNCTION insert_element: new node and its element malloc'd");
+	debug("FUNCTION insert_element: New node and its element malloc'd");
 	
 	if(new_node != NULL && new_node->element != NULL) {
 		new_node->next = NULL;
 
-		debug("FUNCTION insert_element: before memcpy");
+		debug("FUNCTION insert_element: Before memcpy");
 		memcpy(new_node->element, element, l_list->element_size);
-		debug("FUNCTION insert_element: aftermemcpy");
+		debug("FUNCTION insert_element: After memcpy");
 
 		if(l_list->length == 0) {
 			new_node->previous = NULL;
