@@ -66,7 +66,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 13 "cmp/pye.y" /* yacc.c:1909  */
+#line 18 "cmp/pye.y" /* yacc.c:1909  */
 int num; char *identifier;
 
 #line 73 "pye.tab.h" /* yacc.c:1909  */

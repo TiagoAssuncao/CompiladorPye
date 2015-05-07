@@ -3,60 +3,60 @@
 #include <string.h>
 #include <assert.h>
 
-#include "symbol_table.h"
+#include "linked_list.h"
 #include "debugger.h"
 
 
-linked_list *new_symbol_table(unsigned int element_size) {
+linked_list *new_linked_list(unsigned int element_size) {
 	assert(element_size != 0);
 
-	debug("FUNCTION new_symbol_table: Starting...");
+	debug("FUNCTION new_linked_list: Starting...");
 
-	linked_list *symbol_table = NULL;
-	symbol_table = (linked_list *) malloc(sizeof(linked_list));
+	linked_list *l_list = NULL;
+	l_list = (linked_list *) malloc(sizeof(l_list));
 
-	if(symbol_table != NULL) {
-		symbol_table->element_size = element_size;
-		symbol_table->length = 0;
-		symbol_table->head = symbol_table->tail = NULL;
+	if(l_list != NULL) {
+		l_list->element_size = element_size;
+		l_list->length = 0;
+		l_list->head = l_list->tail = NULL;
 	}
 	else {
 		malloc_error_msg();
 		exit(0);
 	}
 
-	debug("FUNCTION new_symbol_table: Leaving...");
+	debug("FUNCTION new_linked_list: Leaving...");
 	
-	return symbol_table;
+	return l_list;
 }
 
-void free_symbol_table(linked_list *symbol_table) {
-	assert(symbol_table != NULL);
+void free_linked_list(linked_list *l_list) {
+	debug("FUNCTION free_linked_list: Starting...");
 
-	debug("FUNCTION free_symbol_table: Starting...");
+	assert(l_list != NULL);
 
 	node *current_node = NULL;
-	while(symbol_table->head != NULL) {
-		current_node = symbol_table->head;
-		symbol_table->head = current_node->next;
+	while(l_list->head != NULL) {
+		current_node = l_list->head;
+		l_list->head = current_node->next;
 		
 		free(current_node->element);
 		free(current_node);
 	}
 
-	debug("FUNCTION free_symbol_table: Leaving...");
+	debug("FUNCTION free_linked_list: Leaving...");
 }
 
-linked_list *insert_element(linked_list *symbol_table, void *element) {
-	assert(symbol_table != NULL);
-
+linked_list *insert_element(linked_list *l_list, void *element) {
 	debug("FUNCTION insert_element: Starting...");
+
+	assert(l_list != NULL);
 
 	node *new_node = NULL;
 	new_node = (node *) malloc(sizeof(node));
 	
 	new_node->element = NULL;
-	new_node->element = (void *) malloc(symbol_table->element_size);
+	new_node->element = (void *) malloc(l_list->element_size);
 
 	debug("FUNCTION insert_element: new node and its element malloc'd");
 	
@@ -64,20 +64,20 @@ linked_list *insert_element(linked_list *symbol_table, void *element) {
 		new_node->next = NULL;
 
 		debug("FUNCTION insert_element: before memcpy");
-		memcpy(new_node->element, element, symbol_table->element_size);
+		memcpy(new_node->element, element, l_list->element_size);
 		debug("FUNCTION insert_element: aftermemcpy");
 
-		if(symbol_table->length == 0) {
+		if(l_list->length == 0) {
 			new_node->previous = NULL;
-			symbol_table->head = symbol_table->tail = new_node;
+			l_list->head = l_list->tail = new_node;
 		} 
 		else {
-			new_node->previous = symbol_table->tail;
-			symbol_table->tail->next = new_node;
-			symbol_table->tail = new_node;
+			new_node->previous = l_list->tail;
+			l_list->tail->next = new_node;
+			l_list->tail = new_node;
 		}
 
-		symbol_table->length++;
+		l_list->length++;
 	}
 	else {
 		malloc_error_msg();
@@ -86,19 +86,19 @@ linked_list *insert_element(linked_list *symbol_table, void *element) {
 
 	debug("FUNCTION insert_element: Leaving...");
 
-	return symbol_table;
+	return l_list;
 }
 
-node *search_element(linked_list *symbol_table, void *element, generic_comparator comparison_function) {
-	assert(symbol_table != NULL);
-
+node *search_element(linked_list *l_list, void *element, generic_comparator comparison_function) {
 	debug("FUNCTION search_element: Starting...");
+
+	assert(l_list != NULL);
 
 	node *return_node = NULL;
 
-	if(symbol_table->length != 0) {
+	if(l_list->length != 0) {
 		node *current_node = NULL;
-		current_node = symbol_table->head;
+		current_node = l_list->head;
 
 		bool element_found = FALSE;
 
@@ -114,7 +114,7 @@ node *search_element(linked_list *symbol_table, void *element, generic_comparato
 		}
 	}
 	else {
-		puts("The symbol table is empty.\n");
+		puts("The linked list is empty.\n");
 	}
 
 	debug("FUNCTION search_element: Leaving...");
@@ -122,7 +122,7 @@ node *search_element(linked_list *symbol_table, void *element, generic_comparato
 	return return_node;
 }
 
-node *remove_element(linked_list *symbol_table, void *element, generic_comparator comparison_function) {
+node *remove_element(linked_list *l_list, void *element, generic_comparator comparison_function) {
 	// Not implemented yet (if only it has to be)...
 
 	return NULL;
