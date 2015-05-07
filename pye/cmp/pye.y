@@ -16,15 +16,14 @@
 
 %token DEF
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
-%token COLON SEMI_COLON
+%token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
 %token NEW_LINE
 
 %token <num> INTEGER
 %token <identifier> IDENTIFIER
 
-%type <num> input expression term
-%type <id> assignment
+%type <num> input expression term assignment
 
 
 %%
@@ -55,8 +54,8 @@ command_finisher:
 
 
 assignment: 
-	IDENTIFIER EQUAL expression {$$ = $3; update_symbol_value($1, $3);}
-	| IDENTIFIER EQUAL assignment {$$ = $3; update_symbol_value($1, $3);}
+	IDENTIFIER EQUAL expression {$$ = $3;}
+	| IDENTIFIER EQUAL assignment {$$ = $3;}
 
 
 
@@ -70,7 +69,7 @@ expression:
 
 term:
 	INTEGER {$$ = $1;}
-	| IDENTIFIER {$$ = get_symbol_value($1);}
+	| IDENTIFIER {;}
 	;
 							
 
@@ -89,12 +88,7 @@ function_declaration_args:
 %% 
 
 int main (int argc, char **argv) {
-	/*yyin = fopen(argv[1], "r");
-
-	if (yyin == NULL) {
-		printf("An error occurred while reading the file!\n");
-		exit(1);
-	}*/
+	yyin = fopen(argv[1], "r");
 
 	yyparse();	
 

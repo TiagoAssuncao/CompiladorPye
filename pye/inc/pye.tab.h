@@ -49,9 +49,15 @@ extern int yydebug;
     LEFT_PARENTHESIS = 259,
     RIGHT_PARENTHESIS = 260,
     COLON = 261,
-    NUMBER = 262,
-    IDENTIFIER = 263,
-    STRING = 264
+    SEMICOLON = 262,
+    PLUS = 263,
+    MINUS = 264,
+    MULTIPLY = 265,
+    DIVIDE = 266,
+    EQUAL = 267,
+    NEW_LINE = 268,
+    INTEGER = 269,
+    IDENTIFIER = 270
   };
 #endif
 
@@ -60,10 +66,10 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 19 "cmp/pye.y" /* yacc.c:1909  */
-int num; char id; char *string;
+#line 13 "cmp/pye.y" /* yacc.c:1909  */
+int num; char *identifier;
 
-#line 67 "pye.tab.h" /* yacc.c:1909  */
+#line 73 "pye.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

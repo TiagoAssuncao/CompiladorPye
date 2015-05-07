@@ -28,7 +28,7 @@ white [ \t]
 "="				{return EQUAL;}
 "\n"			{current_line++; return NEW_LINE;}
 
-{identifier}	{yylval.string = yytext; return IDENTIFIER;}
+{identifier}	{yylval.identifier = yytext; return IDENTIFIER;}
 {integer} 		{yylval.num = atoi(yytext); return INTEGER;}
 {white}			{;}
 . 				{ECHO; yyerror ("unexpected character");}
