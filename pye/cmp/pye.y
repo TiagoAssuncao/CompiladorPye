@@ -33,7 +33,7 @@
 
 %%
 
-input:						
+input:
 	command {;}
 	| input command {;}
 	| function_declaration {;}
@@ -58,7 +58,7 @@ command_finisher:
 
 
 
-assignment: 
+assignment:
 	IDENTIFIER EQUAL expression {$$ = $3;}
 	| IDENTIFIER EQUAL assignment {$$ = $3;}
 
@@ -76,7 +76,7 @@ term:
 	INTEGER {$$ = $1;}
 	| IDENTIFIER {;}
 	;
-							
+
 
 
 /* INCOMPLETE !!! */
@@ -90,14 +90,17 @@ function_declaration_args:
 	;
 /* INCOMPLETE !!! */
 
-%% 
+%%
 
 int main (int argc, char **argv) {
 	/* Testing */
-	linked_list *variable_table = NULL; 
-	variable_table = (linked_list *) new_linked_list(sizeof(variable_data));
+	header_list *variable_table = NULL;
 
-	variable_data variable = build_variable_data("foo", "main", TRUE, 12);
+	unsigned int size_of_element = sizeof(variable_data);
+	variable_table = (header_list *) new_linked_list(size_of_element);
+
+	char scope_the_function[] = "main";
+	variable_data variable = build_variable_data("foo", scope_the_function, TRUE, 12);
 	variable_table = insert_element(variable_table, (void *) &variable);
 
 	variable_data *list_head = ((variable_data *) variable_table->head->element);
@@ -109,14 +112,14 @@ int main (int argc, char **argv) {
 
 	//linked_list error_table = new_symbol_table(sizeof(error_data)); <--- Only ideas...
 	//linked_list scope_table = new_symbol_table(sizeof(scope_data)); <--- Only ideas...
-	/* Testing */ 
+	/* Testing */
 
 	yyin = fopen(argv[1], "r");
-	yyparse();	
+	yyparse();
 
 	return 0;
 }
 
 void yyerror (char *s) {
 	fprintf (stderr, "%s\n", s);
-} 
+}

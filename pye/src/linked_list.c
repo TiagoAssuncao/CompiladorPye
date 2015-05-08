@@ -7,13 +7,13 @@
 #include "debugger.h"
 
 
-linked_list *new_linked_list(unsigned int element_size) {
+header_list *new_linked_list(const unsigned int element_size) {
 	assert(element_size != 0);
 
 	debug("FUNCTION new_linked_list: Starting...");
 
-	linked_list *l_list = NULL;
-	l_list = (linked_list *) malloc(sizeof(linked_list));
+	header_list *l_list = NULL;
+	l_list = (header_list *) malloc(sizeof(header_list));
 
 	if(l_list != NULL) {
 		l_list->element_size = element_size;
@@ -26,11 +26,11 @@ linked_list *new_linked_list(unsigned int element_size) {
 	}
 
 	debug("FUNCTION new_linked_list: Leaving...");
-	
+
 	return l_list;
 }
 
-void free_linked_list(linked_list *l_list) {
+void free_linked_list(header_list *l_list) {
 	debug("FUNCTION free_linked_list: Starting...");
 
 	assert(l_list != NULL);
@@ -39,7 +39,7 @@ void free_linked_list(linked_list *l_list) {
 	while(l_list->head != NULL) {
 		current_node = l_list->head;
 		l_list->head = current_node->next;
-		
+
 		free(current_node->element);
 		free(current_node);
 	}
@@ -47,7 +47,7 @@ void free_linked_list(linked_list *l_list) {
 	debug("FUNCTION free_linked_list: Leaving...");
 }
 
-linked_list *insert_element(linked_list *l_list, void *element) {
+header_list *insert_element(header_list *l_list, void *element) {
 	debug("FUNCTION insert_element: Starting...");
 
 	assert(l_list != NULL);
@@ -56,12 +56,12 @@ linked_list *insert_element(linked_list *l_list, void *element) {
 	new_node = (node *) malloc(sizeof(node));
 
 	debug("FUNCTION insert_element: New_node malloc'd. Going for its element now.");
-	
+
 	new_node->element = NULL;
 	new_node->element = (void *) malloc(l_list->element_size);
 
 	debug("FUNCTION insert_element: New node and its element malloc'd");
-	
+
 	if(new_node != NULL && new_node->element != NULL) {
 		new_node->next = NULL;
 
@@ -72,7 +72,7 @@ linked_list *insert_element(linked_list *l_list, void *element) {
 		if(l_list->length == 0) {
 			new_node->previous = NULL;
 			l_list->head = l_list->tail = new_node;
-		} 
+		}
 		else {
 			new_node->previous = l_list->tail;
 			l_list->tail->next = new_node;
@@ -84,14 +84,14 @@ linked_list *insert_element(linked_list *l_list, void *element) {
 	else {
 		malloc_error_msg();
 		exit(0);
-	}	
+	}
 
 	debug("FUNCTION insert_element: Leaving...");
 
 	return l_list;
 }
 
-node *search_element(linked_list *l_list, void *element, generic_comparator comparison_function) {
+node *search_element(header_list *l_list, void *element, generic_comparator comparison_function) {
 	debug("FUNCTION search_element: Starting...");
 
 	assert(l_list != NULL);
@@ -124,7 +124,7 @@ node *search_element(linked_list *l_list, void *element, generic_comparator comp
 	return return_node;
 }
 
-node *remove_element(linked_list *l_list, void *element, generic_comparator comparison_function) {
+node *remove_element(header_list *l_list, void *element, generic_comparator comparison_function) {
 	// Not implemented yet (if only it has to be)...
 
 	return NULL;
