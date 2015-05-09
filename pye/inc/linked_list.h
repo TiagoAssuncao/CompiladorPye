@@ -37,26 +37,26 @@ typedef struct {
 	node *head;
 	node *tail;
 	// free_function free_f;
-} header_list;
+} list_header;
 
 
 // Allocates memory to a linked list and fill its element_size with the first parameter.
 // Returns a linked_list pointing to an allocated memory space.
-header_list *new_linked_list(unsigned int element_size);
+list_header *new_linked_list(unsigned int element_size);
 
 // Frees every node of a linked list. In other words, free the WHOLE linked list.
-void free_linked_list(header_list *l_list);
+void free_linked_list(list_header *header);
 
 // Inserts an element in the last position of the linked list.
 // Returns a linked_list pointer with its head/tail updated(s).
-header_list *insert_element(header_list *l_list, void *element);
+list_header *insert_element(list_header *header, void *element);
 
 // Search for a element in the linked list. The third is a pointer function that points to a comparison function.
 // If it is found, returns a pointer to the correlated node.
 // Otherwise, returns NULL.
-node *search_element(header_list *l_list, void *element, generic_comparator comparison_function);
+node *search_element(list_header *header, void *element, generic_comparator comparison_function);
 
-node *remove_element(header_list *l_list, void *element, generic_comparator comparison_function);
+node *remove_element(list_header *header, void *element, generic_comparator comparison_function);
 
 // Displays a message of a memory allocation error.
 void malloc_error_msg();

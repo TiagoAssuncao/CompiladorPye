@@ -76,9 +76,11 @@
 	void yyerror (char *s);
 	extern FILE *yyin;
 
+	char current_scope[35];
+
 	extern unsigned int current_line;
 
-#line 82 "pye.tab.c" /* yacc.c:339  */
+#line 84 "pye.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -134,10 +136,10 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 18 "cmp/pye.y" /* yacc.c:355  */
+#line 20 "cmp/pye.y" /* yacc.c:355  */
 int num; char *identifier;
 
-#line 141 "pye.tab.c" /* yacc.c:355  */
+#line 143 "pye.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -152,7 +154,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 156 "pye.tab.c" /* yacc.c:358  */
+#line 158 "pye.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -451,9 +453,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    37,    37,    38,    39,    40,    41,    42,    48,    49,
-      55,    56,    62,    63,    68,    69,    70,    76,    77,    84,
-      89
+       0,    39,    39,    40,    41,    42,    43,    44,    50,    51,
+      57,    58,    64,    65,    70,    71,    72,    78,    79,    86,
+      91
 };
 #endif
 
@@ -1242,115 +1244,115 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 37 "cmp/pye.y" /* yacc.c:1646  */
+#line 39 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1248 "pye.tab.c" /* yacc.c:1646  */
+#line 1250 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 38 "cmp/pye.y" /* yacc.c:1646  */
+#line 40 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1254 "pye.tab.c" /* yacc.c:1646  */
+#line 1256 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 39 "cmp/pye.y" /* yacc.c:1646  */
+#line 41 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1260 "pye.tab.c" /* yacc.c:1646  */
+#line 1262 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 40 "cmp/pye.y" /* yacc.c:1646  */
+#line 42 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1266 "pye.tab.c" /* yacc.c:1646  */
+#line 1268 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 41 "cmp/pye.y" /* yacc.c:1646  */
+#line 43 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1272 "pye.tab.c" /* yacc.c:1646  */
+#line 1274 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 42 "cmp/pye.y" /* yacc.c:1646  */
+#line 44 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1278 "pye.tab.c" /* yacc.c:1646  */
+#line 1280 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 48 "cmp/pye.y" /* yacc.c:1646  */
+#line 50 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1284 "pye.tab.c" /* yacc.c:1646  */
+#line 1286 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 49 "cmp/pye.y" /* yacc.c:1646  */
+#line 51 "cmp/pye.y" /* yacc.c:1646  */
     {printf("Printing... %d\n", (yyvsp[-1].num));}
-#line 1290 "pye.tab.c" /* yacc.c:1646  */
+#line 1292 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 55 "cmp/pye.y" /* yacc.c:1646  */
+#line 57 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1296 "pye.tab.c" /* yacc.c:1646  */
+#line 1298 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 56 "cmp/pye.y" /* yacc.c:1646  */
+#line 58 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1302 "pye.tab.c" /* yacc.c:1646  */
+#line 1304 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 62 "cmp/pye.y" /* yacc.c:1646  */
+#line 64 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.num) = (yyvsp[0].num);}
-#line 1308 "pye.tab.c" /* yacc.c:1646  */
+#line 1310 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 63 "cmp/pye.y" /* yacc.c:1646  */
+#line 65 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.num) = (yyvsp[0].num);}
-#line 1314 "pye.tab.c" /* yacc.c:1646  */
+#line 1316 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 68 "cmp/pye.y" /* yacc.c:1646  */
+#line 70 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.num) = (yyvsp[0].num);}
-#line 1320 "pye.tab.c" /* yacc.c:1646  */
+#line 1322 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 69 "cmp/pye.y" /* yacc.c:1646  */
+#line 71 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num);}
-#line 1326 "pye.tab.c" /* yacc.c:1646  */
+#line 1328 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 70 "cmp/pye.y" /* yacc.c:1646  */
+#line 72 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num);}
-#line 1332 "pye.tab.c" /* yacc.c:1646  */
+#line 1334 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 76 "cmp/pye.y" /* yacc.c:1646  */
+#line 78 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.num) = (yyvsp[0].num);}
-#line 1338 "pye.tab.c" /* yacc.c:1646  */
+#line 1340 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 77 "cmp/pye.y" /* yacc.c:1646  */
+#line 79 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1344 "pye.tab.c" /* yacc.c:1646  */
+#line 1346 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 84 "cmp/pye.y" /* yacc.c:1646  */
+#line 86 "cmp/pye.y" /* yacc.c:1646  */
     {printf("asssooo!!! sou eu a funsao!!!\n");}
-#line 1350 "pye.tab.c" /* yacc.c:1646  */
+#line 1352 "pye.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1354 "pye.tab.c" /* yacc.c:1646  */
+#line 1356 "pye.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1578,26 +1580,32 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 93 "cmp/pye.y" /* yacc.c:1906  */
+#line 95 "cmp/pye.y" /* yacc.c:1906  */
 
 
 int main (int argc, char **argv) {
 	/* Testing */
-	header_list *variable_table = NULL;
+	list_header *variable_table = NULL;
 
 	unsigned int size_of_element = sizeof(variable_data);
-	variable_table = (header_list *) new_linked_list(size_of_element);
+	variable_table = (list_header *) new_linked_list(size_of_element);
 
-	char scope_the_function[] = "main";
-	variable_data variable = build_variable_data("foo", scope_the_function, TRUE, 12);
+	variable_data variable = build_variable_data("foo", "main", TRUE, 12);
 	variable_table = insert_element(variable_table, (void *) &variable);
 
-	variable_data *list_head = ((variable_data *) variable_table->head->element);
+	node *v_node = search_variable_by_identifier(variable_table, "foo");
 
-	printf("The variable identifier is %s.\n", list_head->identifier);
-	printf("In what function is it present? Well, it's on %s.\n", list_head->function_scope);
-	printf("Is it declared? %d.\n", list_head->is_declared);
-	printf("In what line was this variable declared? Right there: %u.\n", list_head->declaration_line);
+	if(v_node != NULL) {
+		variable_data *found_variable = ((variable_data *) v_node->element);
+
+		printf("Variable identifier: %s\n", found_variable->identifier);
+		printf("In what function is it present? Well, it's on %s.\n", found_variable->function_scope);
+		printf("Is it declared? %d.\n", found_variable->is_declared);
+		printf("In what line was this variable declared? Right there: %u.\n", found_variable->declaration_line);
+	}
+	else {
+		printf("Variable not found!\n");
+	}
 
 	//linked_list error_table = new_symbol_table(sizeof(error_data)); <--- Only ideas...
 	//linked_list scope_table = new_symbol_table(sizeof(scope_data)); <--- Only ideas...

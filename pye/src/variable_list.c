@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "linked_list.h"
 #include "variable_list.h"
@@ -19,5 +20,29 @@ variable_data build_variable_data(char identifier[], char function_scope[], bool
 	debug("FUNCTION build_variable_data: Leaving...");
 
 	return variable;
+}
+
+node *search_variable_by_identifier(list_header *header, char identifier[]) {
+	assert(header != NULL);
+	assert(identifier != NULL);
+
+	node *return_node = NULL;
+
+	return_node = search_element(header, identifier, variable_identifier_comparator);
+
+	return return_node;
+}
+
+bool variable_identifier_comparator(void *variable, void *identifier) {
+	assert(variable != NULL);
+	assert(identifier != NULL);
+
+	char *variable_identifier = NULL;
+	variable_identifier = ((variable_data *) variable)->identifier;
+
+	bool equal = FALSE;
+	equal = string_comparator(variable_identifier, identifier);
+
+	return equal;
 }
 

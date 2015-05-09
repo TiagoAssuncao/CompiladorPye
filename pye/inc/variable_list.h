@@ -10,5 +10,8 @@ typedef struct {
 
 variable_data build_variable_data(char identifier[], char function_scope[], bool is_declared, unsigned int declaration_line);
 
+node *search_variable_by_identifier(list_header *header, char identifier[]);
+
+bool variable_identifier_comparator(void *variable, void *identifier);
 
 #endif

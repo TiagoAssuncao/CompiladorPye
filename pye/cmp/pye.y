@@ -11,6 +11,8 @@
 	void yyerror (char *s);
 	extern FILE *yyin;
 
+	char current_scope[35];
+
 	extern unsigned int current_line;
 %}
 
@@ -93,26 +95,32 @@ function_declaration_args:
 %%
 
 int main (int argc, char **argv) {
-	/* Testing */
-	header_list *variable_table = NULL;
+	/* Testing 
+	list_header *variable_table = NULL;
 
 	unsigned int size_of_element = sizeof(variable_data);
-	variable_table = (header_list *) new_linked_list(size_of_element);
+	variable_table = (list_header *) new_linked_list(size_of_element);
 
-	char scope_the_function[] = "main";
-	variable_data variable = build_variable_data("foo", scope_the_function, TRUE, 12);
+	variable_data variable = build_variable_data("foo", "main", TRUE, 12);
 	variable_table = insert_element(variable_table, (void *) &variable);
 
-	variable_data *list_head = ((variable_data *) variable_table->head->element);
+	node *v_node = search_variable_by_identifier(variable_table, "foo");
 
-	printf("The variable identifier is %s.\n", list_head->identifier);
-	printf("In what function is it present? Well, it's on %s.\n", list_head->function_scope);
-	printf("Is it declared? %d.\n", list_head->is_declared);
-	printf("In what line was this variable declared? Right there: %u.\n", list_head->declaration_line);
+	if(v_node != NULL) {
+		variable_data *found_variable = ((variable_data *) v_node->element);
+
+		printf("Variable identifier: %s\n", found_variable->identifier);
+		printf("In what function is it present? Well, it's on %s.\n", found_variable->function_scope);
+		printf("Is it declared? %d.\n", found_variable->is_declared);
+		printf("In what line was this variable declared? Right there: %u.\n", found_variable->declaration_line);
+	}
+	else {
+		printf("Variable not found!\n");
+	}
 
 	//linked_list error_table = new_symbol_table(sizeof(error_data)); <--- Only ideas...
 	//linked_list scope_table = new_symbol_table(sizeof(scope_data)); <--- Only ideas...
-	/* Testing */
+	Testing */
 
 	yyin = fopen(argv[1], "r");
 	yyparse();

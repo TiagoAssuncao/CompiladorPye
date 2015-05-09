@@ -25,7 +25,11 @@ parser:
 	@mv pye.tab.h inc/
 
 obj/%.o: src/%.c
-	$(CC) $(FLAGS) -c $< -o $@ -I./inc	 
+	$(CC) $(FLAGS) -c $< -o $@ -I./inc
+
+.PHONY: run
+run:
+	bin/./pye	 
 
 .PHONY: clean
 clean: 

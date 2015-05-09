@@ -7,18 +7,18 @@
 #include "debugger.h"
 
 
-header_list *new_linked_list(const unsigned int element_size) {
+list_header *new_linked_list(const unsigned int element_size) {
 	assert(element_size != 0);
 
 	debug("FUNCTION new_linked_list: Starting...");
 
-	header_list *l_list = NULL;
-	l_list = (header_list *) malloc(sizeof(header_list));
+	list_header *header = NULL;
+	header = (list_header *) malloc(sizeof(list_header));
 
-	if(l_list != NULL) {
-		l_list->element_size = element_size;
-		l_list->length = 0;
-		l_list->head = l_list->tail = NULL;
+	if(header != NULL) {
+		header->element_size = element_size;
+		header->length = 0;
+		header->head = header->tail = NULL;
 	}
 	else {
 		malloc_error_msg();
@@ -27,18 +27,18 @@ header_list *new_linked_list(const unsigned int element_size) {
 
 	debug("FUNCTION new_linked_list: Leaving...");
 
-	return l_list;
+	return header;
 }
 
-void free_linked_list(header_list *l_list) {
+void free_linked_list(list_header *header) {
 	debug("FUNCTION free_linked_list: Starting...");
 
-	assert(l_list != NULL);
+	assert(header != NULL);
 
 	node *current_node = NULL;
-	while(l_list->head != NULL) {
-		current_node = l_list->head;
-		l_list->head = current_node->next;
+	while(header->head != NULL) {
+		current_node = header->head;
+		header->head = current_node->next;
 
 		free(current_node->element);
 		free(current_node);
@@ -47,10 +47,11 @@ void free_linked_list(header_list *l_list) {
 	debug("FUNCTION free_linked_list: Leaving...");
 }
 
-header_list *insert_element(header_list *l_list, void *element) {
+list_header *insert_element(list_header *header, void *element) {
 	debug("FUNCTION insert_element: Starting...");
 
-	assert(l_list != NULL);
+	assert(header != NULL);
+	assert(element != NULL);
 
 	node *new_node = NULL;
 	new_node = (node *) malloc(sizeof(node));
@@ -58,7 +59,7 @@ header_list *insert_element(header_list *l_list, void *element) {
 	debug("FUNCTION insert_element: New_node malloc'd. Going for its element now.");
 
 	new_node->element = NULL;
-	new_node->element = (void *) malloc(l_list->element_size);
+	new_node->element = (void *) malloc(header->element_size);
 
 	debug("FUNCTION insert_element: New node and its element malloc'd");
 
@@ -66,20 +67,20 @@ header_list *insert_element(header_list *l_list, void *element) {
 		new_node->next = NULL;
 
 		debug("FUNCTION insert_element: Before memcpy");
-		memcpy(new_node->element, element, l_list->element_size);
+		memcpy(new_node->element, element, header->element_size);
 		debug("FUNCTION insert_element: After memcpy");
 
-		if(l_list->length == 0) {
+		if(header->length == 0) {
 			new_node->previous = NULL;
-			l_list->head = l_list->tail = new_node;
+			header->head = header->tail = new_node;
 		}
 		else {
-			new_node->previous = l_list->tail;
-			l_list->tail->next = new_node;
-			l_list->tail = new_node;
+			new_node->previous = header->tail;
+			header->tail->next = new_node;
+			header->tail = new_node;
 		}
 
-		l_list->length++;
+		header->length++;
 	}
 	else {
 		malloc_error_msg();
@@ -88,19 +89,20 @@ header_list *insert_element(header_list *l_list, void *element) {
 
 	debug("FUNCTION insert_element: Leaving...");
 
-	return l_list;
+	return header;
 }
 
-node *search_element(header_list *l_list, void *element, generic_comparator comparison_function) {
+node *search_element(list_header *header, void *element, generic_comparator comparison_function) {
 	debug("FUNCTION search_element: Starting...");
 
-	assert(l_list != NULL);
+	assert(header != NULL);
+	assert(element != NULL);
 
 	node *return_node = NULL;
 
-	if(l_list->length != 0) {
+	if(header->length != 0) {
 		node *current_node = NULL;
-		current_node = l_list->head;
+		current_node = header->head;
 
 		bool element_found = FALSE;
 
@@ -124,7 +126,7 @@ node *search_element(header_list *l_list, void *element, generic_comparator comp
 	return return_node;
 }
 
-node *remove_element(header_list *l_list, void *element, generic_comparator comparison_function) {
+node *remove_element(list_header *header, void *element, generic_comparator comparison_function) {
 	// Not implemented yet (if only it has to be)...
 
 	return NULL;
