@@ -5,17 +5,12 @@ For now, things are little messy. Just be patient.
 If you want to check what pye can do for now, go to folder pye/ and do:
 
 ```
-make
+$ make clean
+$ make
+$ make run
 ```
 
-With that, the binary executable named pye will be available in the folder bin/.
-Entering the folder, you just need to pass a file containing some syntax (that will be described below) as parameter to ./pye, like this:
-
-```
-./pye input_file
-```
-
-You can input any file you want, as long as you follow the following syntax:
+You can input any file you want or just use as an interpreter, as long as you follow the following syntax:
 
 ```
 a = b = c = 10; <--- a, b and c are valuated with 10.
