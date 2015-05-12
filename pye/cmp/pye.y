@@ -10,6 +10,7 @@
 
 	void yyerror (char *s);
 	extern FILE *yyin;
+	extern FILE *yyout;
 
 	char current_scope[35];
 
@@ -48,7 +49,7 @@ input:
 
 command:
 	assignment command_finisher {;}
-	| expression command_finisher {printf("Printing... %d\n", $1);}
+	| expression command_finisher {;}
 	;
 
 
@@ -121,6 +122,8 @@ int main (int argc, char **argv) {
 	//linked_list error_table = new_symbol_table(sizeof(error_data)); <--- Only ideas...
 	//linked_list scope_table = new_symbol_table(sizeof(scope_data)); <--- Only ideas...
 	Testing */
+
+	yyout = fopen("out.py", "w");
 
 	yyin = fopen(argv[1], "r");
 	yyparse();

@@ -16,7 +16,7 @@ white [ \t]
 
 %%
 
-"def"			{return DEF;}
+"def "			{return DEF;}
 "("				{return LEFT_PARENTHESIS;}
 ")"				{return RIGHT_PARENTHESIS;}
 ":"				{return COLON;}
@@ -27,7 +27,6 @@ white [ \t]
 "/"				{return DIVIDE;}
 "="				{return EQUAL;}
 "\n"			{current_line++; return NEW_LINE;}
-
 {identifier}	{yylval.identifier = yytext; return IDENTIFIER;}
 {integer} 		{yylval.num = atoi(yytext); return INTEGER;}
 {white}			{;}
