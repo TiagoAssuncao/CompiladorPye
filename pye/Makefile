@@ -29,9 +29,21 @@ obj/%.o: src/%.c
 
 .PHONY: run
 run:
-	bin/./pye	 
+	@cat in.py | bin/./pye
+
+.PHONY: show
+show:
+	@cat out.py 
 
 .PHONY: clean
 clean: 
 	rm -rf obj/*
 	rm -rf bin/*
+
+.PHONY: everything
+everything:
+	make clean
+	make
+	make run
+	clear
+	@make show

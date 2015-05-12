@@ -62,7 +62,11 @@ command_finisher:
 
 
 assignment:
-	IDENTIFIER EQUAL expression {$$ = $3;}
+	IDENTIFIER EQUAL expression {
+		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
+		fprintf(yyout, "%s = %d\n", $1, $3);
+		$$ = $3;
+	}
 	| IDENTIFIER EQUAL assignment {$$ = $3;}
 
 
@@ -82,16 +86,17 @@ term:
 
 
 
-/* INCOMPLETE !!! */
 function_declaration:
-	DEF IDENTIFIER LEFT_PARENTHESIS function_declaration_args RIGHT_PARENTHESIS COLON {printf("asssooo!!! sou eu a funsao!!!\n");}
+	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+		fprintf(yyout, "# Function declaration: %s\n", $2);
+		fprintf(yyout, "def %s():\n", $2);
+	}
 	;
-/* INCOMPLETE !!! */
 
-/* INCOMPLETE !!! */
+/* INCOMPLETE !!! 
 function_declaration_args:
 	;
-/* INCOMPLETE !!! */
+   INCOMPLETE !!! */
 
 %%
 
@@ -124,6 +129,11 @@ int main (int argc, char **argv) {
 	Testing */
 
 	yyout = fopen("out.py", "w");
+
+	if(yyout == NULL) {
+		printf("Error on yyout.\n");
+		exit(0);		
+	}
 
 	yyin = fopen(argv[1], "r");
 	yyparse();

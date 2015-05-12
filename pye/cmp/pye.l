@@ -1,5 +1,8 @@
 %{
+	#include <string.h>
+
 	#include "pye.tab.h"
+	
 	unsigned int current_line = 1;
 %}
 
@@ -10,7 +13,7 @@ word {letter}+
 digit [0-9]
 integer [1-9]{digit}*
 
-identifier ({letter}|_)({letter}|{digit}|_)*
+identifier [a-zA-Z_][a-zA-Z0-9_]*
 
 white [ \t]
 
@@ -27,9 +30,11 @@ white [ \t]
 "/"				{return DIVIDE;}
 "="				{return EQUAL;}
 "\n"			{current_line++; return NEW_LINE;}
-{identifier}	{yylval.identifier = yytext; return IDENTIFIER;}
+
+{identifier}	{yylval.identifier = strdup(yytext); return IDENTIFIER;}
 {integer} 		{yylval.num = atoi(yytext); return INTEGER;}
 {white}			{;}
+
 . 				{ECHO; yyerror ("unexpected character");}
 
 %%
