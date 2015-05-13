@@ -54,7 +54,12 @@ public:
         leftExpression(leftExpression), rightExpression(rightExpression), op(op) {}
 };
 
+class NBlock : public NExpression {
+public:
+	StatementList statement;
 
+	NBlock() {}
+};
 
 class NVariableDeclaration : public NStatement
 {
@@ -64,6 +69,16 @@ public:
 	NExpression *value;
 
 	NVariableDeclaration (NIdentifier *type, const NIdentifier *id, NExpression *value) : type(type), id(id), value(value) {}
+};
+
+class NFunctionDeclaration
+{
+public:
+	const NIdentifier *id;
+	VariableList arguments;
+	NBlock *block;
+
+	NFunctionDeclaration (NIdentifier *id, VariableList arguments, NBlock *block) : id(id), arguments(arguments), block(block) {}
 };
 
 
