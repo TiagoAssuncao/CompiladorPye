@@ -20,7 +20,7 @@ white [ ]
 
 %%
 
-"def "		{return DEF;}
+"def "			{return DEF;}
 "("				{return LEFT_PARENTHESIS;}
 ")"				{return RIGHT_PARENTHESIS;}
 ":"				{return COLON;}

@@ -43,8 +43,9 @@ input:
 	| function_declaration {;}
 	| input function_declaration {;}
 	| NEW_LINE {fprintf(yyout, "\n");}
-	| TABULATION {fprintf(yyout, "Achou TABULATION\t");}
-	| input NEW_LINE {;}
+	| input NEW_LINE {fprintf(yyout, "\n");}
+	| TABULATION {fprintf(yyout, "\t");}
+	| input TABULATION {fprintf(yyout, "\t");}
 	;
 
 
@@ -58,7 +59,7 @@ command:
 
 command_finisher:
 	NEW_LINE {fprintf(yyout, "\n");}
-	| SEMICOLON {;}
+	| SEMICOLON {fprintf(yyout, ";");}
 	;
 
 
@@ -66,7 +67,7 @@ command_finisher:
 assignment:
 	IDENTIFIER EQUAL expression {
 		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
-		fprintf(yyout, "%s = %d\n", $1, $3);
+		fprintf(yyout, "%s = %d", $1, $3);
 		$$ = $3;
 	}
 	| IDENTIFIER EQUAL assignment {$$ = $3;}
@@ -91,7 +92,7 @@ term:
 function_declaration:
 	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
 		fprintf(yyout, "# Function declaration: %s\n", $2);
-		fprintf(yyout, "def %s():\n", $2);
+		fprintf(yyout, "def %s():", $2);
 	}
 	;
 

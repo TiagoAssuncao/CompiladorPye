@@ -1,4 +1,4 @@
-brasil = 4
+    brasil = 5
 
 juca_bala = 4124;
 casa = 7
@@ -7,4 +7,4 @@ casa = 7
 
 
 def funcao():
-    numero = 1
+	numero = 1
