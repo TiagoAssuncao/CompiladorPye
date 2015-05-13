@@ -7,6 +7,7 @@
 	#include "linked_list.h"
 	#include "variable_list.h"
 	#include "debugger.h"
+	#include "node.h"
 
 	void yyerror (char *s);
 	extern FILE *yyin;
@@ -62,12 +63,12 @@ command_finisher:
 
 
 assignment:
-	IDENTIFIER EQUAL expression {
+	ident EQUAL expression {
 		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
 		fprintf(yyout, "%s = %d\n", $1, $3);
 		$$ = $3;
 	}
-	| IDENTIFIER EQUAL assignment {$$ = $3;}
+	| ident EQUAL assignment {$$ = new NVariableDeclaration(NULL, &$1, &$3);}
 
 
 
@@ -80,16 +81,22 @@ expression:
 
 
 term:
-	INTEGER {$$ = $1;}
-	| IDENTIFIER {;}
+	INTEGER {$$ = new NInterger (atol($1 -> c_str()));}
+	| ident {;}
 	;
 
 
 
 function_declaration:
-	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+	DEF ident LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
 		fprintf(yyout, "# Function declaration: %s\n", $2);
 		fprintf(yyout, "def %s():\n", $2);
+		$$ = new NFunctionDeclaration (&$2, NULL, NULL)
+	}
+	;
+
+ident: IDENTIFIER {
+		$$ = new NIdentifier ($1);
 	}
 	;
 
