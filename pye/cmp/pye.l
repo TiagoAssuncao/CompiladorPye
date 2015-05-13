@@ -2,6 +2,8 @@
 	#include <string.h>
 
 	#include "pye.tab.h"
+
+	#include "node.h"
 	
 	unsigned int current_line = 1;
 %}
