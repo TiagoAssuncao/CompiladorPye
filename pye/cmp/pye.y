@@ -19,7 +19,13 @@
 %}
 
 
-%union {int num; char *identifier;}
+%union {
+	int num; 
+	char *identifier;
+	NIdentifier *ident;
+	NStatement *stmt;
+	NExpression *expr;
+}
 
 %start input
 
@@ -30,9 +36,12 @@
 %token NEW_LINE
 
 %token <num> INTEGER
-%token <identifier> IDENTIFIER
+%token <ident> IDENTIFIER
 
-%type <num> input expression term assignment
+%type <ident> ident
+
+%type <stmt> assignment function_declaration
+%type <expr> input expression term
 
 
 %%
@@ -64,11 +73,11 @@ command_finisher:
 
 assignment:
 	ident EQUAL expression {
-		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
-		fprintf(yyout, "%s = %d\n", $1, $3);
+		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $<ident>1.name, $3);
+		fprintf(yyout, "%s = %d\n", $<ident>1, $3);
 		$$ = $3;
 	}
-	| ident EQUAL assignment {$$ = new NVariableDeclaration(NULL, &$1, &$3);}
+	| ident EQUAL assignment {$$ = new NVariableDeclaration(NULL, &$<ident>1, &$3);}
 
 
 
@@ -89,9 +98,9 @@ term:
 
 function_declaration:
 	DEF ident LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
-		fprintf(yyout, "# Function declaration: %s\n", $2);
-		fprintf(yyout, "def %s():\n", $2);
-		$$ = new NFunctionDeclaration (&$2, NULL, NULL)
+		fprintf(yyout, "# Function declaration: %s\n", $<ident>2.name);
+		fprintf(yyout, "def %s():\n", $<ident>2.name);
+		$$ = new NFunctionDeclaration (&$<ident>2, NULL, NULL)
 	}
 	;
 

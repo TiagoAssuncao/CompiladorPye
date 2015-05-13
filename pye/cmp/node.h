@@ -15,20 +15,20 @@ typedef vector<NExpression*> ExpressionList;
 typedef vector<NVariableDeclaration*> VariableList;
 
 
-//Primeiro nivel
+//First Level
 class Node {
 public:
 	virtual ~Node(){}
 };
 
-//Segundo nivel
+//Second level
 class NExpression : public Node {
 };
 
 class NStatement : public Node {
 };
 
-//Terceiro nivel
+//Third level
 class NInterger : public NExpression{
 public:
 	long int value;

@@ -1,6 +1,6 @@
 #.RECIPEPREFIX = A   <--- This is a comment used to remember... Ignore it...
 
-CC = gcc
+CC = g++
 FLAGS = 
 
 C_FILES = $(wildcard src/*.c)
@@ -21,8 +21,8 @@ lexical:
 .PHONY: parser
 parser:
 	bison -d cmp/pye.y
-	@mv pye.tab.c src/
-	@mv pye.tab.h inc/
+	@mv cmp/pye.tab.c src/
+	@mv cmp/pye.tab.h inc/
 
 obj/%.o: src/%.c
 	$(CC) $(FLAGS) -c $< -o $@ -I./inc
