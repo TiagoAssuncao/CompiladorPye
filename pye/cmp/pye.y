@@ -26,6 +26,7 @@
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
+%token TABULATION
 %token NEW_LINE
 
 %token <num> INTEGER
@@ -41,7 +42,8 @@ input:
 	| input command {;}
 	| function_declaration {;}
 	| input function_declaration {;}
-	| NEW_LINE {;}
+	| NEW_LINE {fprintf(yyout, "\n");}
+	| TABULATION {fprintf(yyout, "Achou TABULATION\t");}
 	| input NEW_LINE {;}
 	;
 
@@ -55,7 +57,7 @@ command:
 
 
 command_finisher:
-	NEW_LINE {;}
+	NEW_LINE {fprintf(yyout, "\n");}
 	| SEMICOLON {;}
 	;
 
@@ -93,7 +95,7 @@ function_declaration:
 	}
 	;
 
-/* INCOMPLETE !!! 
+/* INCOMPLETE !!!
 function_declaration_args:
 	;
    INCOMPLETE !!! */
@@ -101,7 +103,7 @@ function_declaration_args:
 %%
 
 int main (int argc, char **argv) {
-	/* Testing 
+	/* Testing
 	list_header *variable_table = NULL;
 
 	unsigned int size_of_element = sizeof(variable_data);
@@ -132,7 +134,7 @@ int main (int argc, char **argv) {
 
 	if(yyout == NULL) {
 		printf("Error on yyout.\n");
-		exit(0);		
+		exit(0);
 	}
 
 	yyin = fopen(argv[1], "r");

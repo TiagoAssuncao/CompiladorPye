@@ -55,9 +55,10 @@ extern int yydebug;
     MULTIPLY = 265,
     DIVIDE = 266,
     EQUAL = 267,
-    NEW_LINE = 268,
-    INTEGER = 269,
-    IDENTIFIER = 270
+    TABULATION = 268,
+    NEW_LINE = 269,
+    INTEGER = 270,
+    IDENTIFIER = 271
   };
 #endif
 
@@ -69,7 +70,7 @@ union YYSTYPE
 #line 21 "cmp/pye.y" /* yacc.c:1909  */
 int num; char *identifier;
 
-#line 73 "pye.tab.h" /* yacc.c:1909  */
+#line 74 "pye.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
