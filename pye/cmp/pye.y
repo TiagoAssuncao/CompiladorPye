@@ -1,4 +1,5 @@
 %{
+	//Lib Declaration
 	#include <stdio.h>
 	#include <stdlib.h>
 	#include <ctype.h>
@@ -7,6 +8,7 @@
 	#include "linked_list.h"
 	#include "variable_list.h"
 	#include "debugger.h"
+
 
 	void yyerror (char *s);
 	extern FILE *yyin;
