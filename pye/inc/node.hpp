@@ -29,22 +29,21 @@ class NStatement : public Node {
 };
 
 //Third level
-class NInterger : public NExpression{
+class NInteger : public NExpression {
 public:
 	long int value;
 
-	NInterger (long int value) : value(value)
+	NInteger (long int value) : value(value) {}
 };
 
-class NIdentifier : public NExpression{
+class NIdentifier : public NExpression {
 public:
 	string name;
 
 	NIdentifier (string name) : name(name) {}
 };
 
-class NOperator : public NExpression
-{
+class NOperator : public NExpression {
 public:
 	int op;
 	NExpression *leftExpression;
@@ -61,8 +60,7 @@ public:
 	NBlock() {}
 };
 
-class NVariableDeclaration : public NStatement
-{
+class NVariableDeclaration : public NStatement {
 public:
 	NIdentifier *type;
 	const NIdentifier *id;
@@ -71,8 +69,7 @@ public:
 	NVariableDeclaration (NIdentifier *type, const NIdentifier *id, NExpression *value) : type(type), id(id), value(value) {}
 };
 
-class NFunctionDeclaration
-{
+class NFunctionDeclaration {
 public:
 	const NIdentifier *id;
 	VariableList arguments;

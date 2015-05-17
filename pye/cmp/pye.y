@@ -4,10 +4,7 @@
 	#include <ctype.h>
 	#include <string.h>
 
-	#include "linked_list.h"
-	#include "variable_list.h"
-	#include "debugger.h"
-	#include "node.h"
+	#include "node.hpp"
 
 	void yyerror (char *s);
 	extern FILE *yyin;
@@ -90,7 +87,7 @@ expression:
 
 
 term:
-	INTEGER {$$ = new NInterger (atol($1 -> c_str()));}
+	INTEGER {$$ = new NInteger (atol($1 -> c_str()));}
 	| ident {;}
 	;
 

@@ -1,7 +1,7 @@
 #ifndef YY_parse_h_included
 #define YY_parse_h_included
-/*#define YY_USE_CLASS 
-*/
+#define YY_USE_CLASS
+
 #line 1 "/usr/share/bison++/bison.h"
 /* before anything */
 #ifdef c_plusplus
@@ -13,12 +13,15 @@
 
  #line 8 "/usr/share/bison++/bison.h"
 
-#line 21 "cmp/pye.y"
-typedef union {int num; char *identifier;} yy_parse_stype;
+#line 19 "cmp/pye.y"
+typedef union {
+	int num; 
+	char *identifier;
+	NIdentifier *ident;
+	NStatement *stmt;
+	NExpression *expr;
+} yy_parse_stype;
 #define YY_parse_STYPE yy_parse_stype
-#ifndef YY_USE_CLASS
-#define YYSTYPE yy_parse_stype
-#endif
 
 #line 21 "/usr/share/bison++/bison.h"
  /* %{ and %header{ and %union, during decl */

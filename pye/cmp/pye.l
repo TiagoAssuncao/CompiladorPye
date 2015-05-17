@@ -2,8 +2,7 @@
 	#include <string.h>
 
 	#include "pye.tab.h"
-
-	#include "node.h"
+	#include "node.hpp"
 	
 	unsigned int current_line = 1;
 %}
