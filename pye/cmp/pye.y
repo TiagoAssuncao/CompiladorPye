@@ -15,10 +15,11 @@
 	char current_scope[35];
 
 	extern unsigned int current_line;
+	unsigned char *indentation_level;
 %}
 
 
-%union {int num; char *identifier;}
+%union {int num; char *identifier; char *white;}
 
 %start input
 
@@ -26,11 +27,11 @@
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
-%token TABULATION
-%token NEW_LINE
+%token NEW_LINE 
 
 %token <num> INTEGER
 %token <identifier> IDENTIFIER
+%token <white> WHITE
 
 %type <num> input expression term assignment
 
@@ -40,12 +41,19 @@
 input:
 	command {;}
 	| input command {;}
+	| input WHITE command {fprintf(yyout, "Achoooooooooou");}
 	| function_declaration {;}
 	| input function_declaration {;}
-	| NEW_LINE {fprintf(yyout, "\n");}
-	| input NEW_LINE {fprintf(yyout, "\n");}
-	| TABULATION {fprintf(yyout, "\t");}
-	| input TABULATION {fprintf(yyout, "\t");}
+	| input WHITE function_declaration {;}
+	| NEW_LINE {
+		fprintf(yyout, "\n");
+	}
+	| input NEW_LINE {
+		fprintf(yyout, "\n");
+	}
+	| input WHITE NEW_LINE {
+		fprintf(yyout, "\n");
+	}
 	;
 
 
@@ -58,7 +66,9 @@ command:
 
 
 command_finisher:
-	NEW_LINE {fprintf(yyout, "\n");}
+	NEW_LINE {
+		fprintf(yyout, "\n");
+	}
 	| SEMICOLON {fprintf(yyout, ";");}
 	;
 
@@ -66,12 +76,13 @@ command_finisher:
 
 assignment:
 	IDENTIFIER EQUAL expression {
+		
 		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
 		fprintf(yyout, "%s = %d", $1, $3);
 		$$ = $3;
 	}
 	| IDENTIFIER EQUAL assignment {$$ = $3;}
-
+	;
 
 
 expression:
@@ -102,6 +113,9 @@ function_declaration_args:
    INCOMPLETE !!! */
 
 %%
+
+
+
 
 int main (int argc, char **argv) {
 	/* Testing
