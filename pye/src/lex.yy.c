@@ -369,8 +369,8 @@ static void yy_fatal_error (yyconst char msg[]  );
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
 
-#define YY_NUM_RULES 16
-#define YY_END_OF_BUFFER 17
+#define YY_NUM_RULES 17
+#define YY_END_OF_BUFFER 18
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -380,27 +380,27 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[26] =
     {   0,
-        0,    0,   17,   15,   11,   12,    2,    3,    8,    6,
-        7,    9,   14,    4,    5,   10,   13,   13,   12,   14,
-       13,   13,   13,    1,    0
+        0,    0,   18,   16,   13,   11,   12,    2,    3,    8,
+        6,    7,    9,   15,    4,    5,   10,   14,   14,   15,
+       14,   14,   14,    1,    0
     } ;
 
 static yyconst flex_int32_t yy_ec[256] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
+        1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    3,    1,    1,    1,    1,    1,    1,    1,    4,
-        5,    6,    7,    1,    8,    1,    9,   10,   11,   11,
-       11,   11,   11,   11,   11,   11,   11,   12,   13,    1,
-       14,    1,    1,    1,   15,   15,   15,   15,   15,   15,
-       15,   15,   15,   15,   15,   15,   15,   15,   15,   15,
-       15,   15,   15,   15,   15,   15,   15,   15,   15,   15,
-        1,    1,    1,    1,   15,    1,   15,   15,   15,   16,
+        1,    4,    1,    1,    1,    1,    1,    1,    1,    5,
+        6,    7,    8,    1,    9,    1,   10,   11,   12,   12,
+       12,   12,   12,   12,   12,   12,   12,   13,   14,    1,
+       15,    1,    1,    1,   16,   16,   16,   16,   16,   16,
+       16,   16,   16,   16,   16,   16,   16,   16,   16,   16,
+       16,   16,   16,   16,   16,   16,   16,   16,   16,   16,
+        1,    1,    1,    1,   16,    1,   16,   16,   16,   17,
 
-       17,   18,   15,   15,   15,   15,   15,   15,   15,   15,
-       15,   15,   15,   15,   15,   15,   15,   15,   15,   15,
-       15,   15,    1,    1,    1,    1,    1,    1,    1,    1,
+       18,   19,   16,   16,   16,   16,   16,   16,   16,   16,
+       16,   16,   16,   16,   16,   16,   16,   16,   16,   16,
+       16,   16,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -417,31 +417,31 @@ static yyconst flex_int32_t yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst flex_int32_t yy_meta[19] =
+static yyconst flex_int32_t yy_meta[20] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
-        2,    1,    1,    1,    2,    2,    2,    2
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        2,    2,    1,    1,    1,    2,    2,    2,    2
     } ;
 
 static yyconst flex_int16_t yy_base[27] =
     {   0,
-        0,    0,   29,   30,   30,   25,   30,   30,   30,   30,
-       30,   30,    9,   30,   30,   30,    0,   10,   23,   11,
-        0,    7,   21,   30,   30,   21
+        0,    0,   28,   29,   29,   29,   29,   29,   29,   29,
+       29,   29,   29,    9,   29,   29,   29,    0,    9,   11,
+        0,    7,   21,   29,   29,   22
     } ;
 
 static yyconst flex_int16_t yy_def[27] =
     {   0,
        25,    1,   25,   25,   25,   25,   25,   25,   25,   25,
-       25,   25,   25,   25,   25,   25,   26,   26,   25,   25,
+       25,   25,   25,   25,   25,   25,   25,   26,   26,   25,
        26,   26,   26,   25,    0,   25
     } ;
 
 static yyconst flex_int16_t yy_nxt[49] =
     {   0,
-        4,    5,    6,    7,    8,    9,   10,   11,   12,    4,
-       13,   14,   15,   16,   17,   18,   17,   17,   20,   20,
-       20,   20,   21,   24,   23,   19,   22,   19,   25,    3,
+        4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
+        4,   14,   15,   16,   17,   18,   19,   18,   18,   20,
+       20,   20,   20,   21,   24,   23,   22,   25,    3,   25,
        25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
        25,   25,   25,   25,   25,   25,   25,   25
     } ;
@@ -449,8 +449,8 @@ static yyconst flex_int16_t yy_nxt[49] =
 static yyconst flex_int16_t yy_chk[49] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,   13,   13,
-       20,   20,   26,   23,   22,   19,   18,    6,    3,   25,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,   14,
+       14,   20,   20,   26,   23,   22,   19,    3,   25,   25,
        25,   25,   25,   25,   25,   25,   25,   25,   25,   25,
        25,   25,   25,   25,   25,   25,   25,   25
     } ;
@@ -476,7 +476,10 @@ char *yytext;
 	#include "pye.tab.h"
 
 	unsigned int current_line = 1;
-#line 480 "lex.yy.c"
+	unsigned int space_level = 0;
+	unsigned int tabulation_level = 0;
+	unsigned int blocked_tabulation = 0;
+#line 483 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -690,10 +693,10 @@ YY_DECL
 		}
 
 	{
-#line 20 "cmp/pye.l"
+#line 23 "cmp/pye.l"
 
 
-#line 697 "lex.yy.c"
+#line 700 "lex.yy.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -726,7 +729,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 30 );
+		while ( yy_base[yy_current_state] != 29 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -752,86 +755,105 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 22 "cmp/pye.l"
+#line 25 "cmp/pye.l"
 {return DEF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 23 "cmp/pye.l"
+#line 26 "cmp/pye.l"
 {return LEFT_PARENTHESIS;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 24 "cmp/pye.l"
+#line 27 "cmp/pye.l"
 {return RIGHT_PARENTHESIS;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 25 "cmp/pye.l"
+#line 28 "cmp/pye.l"
 {return COLON;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 26 "cmp/pye.l"
+#line 29 "cmp/pye.l"
 {return SEMICOLON;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 27 "cmp/pye.l"
+#line 30 "cmp/pye.l"
 {return PLUS;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 28 "cmp/pye.l"
+#line 31 "cmp/pye.l"
 {return MINUS;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 29 "cmp/pye.l"
+#line 32 "cmp/pye.l"
 {return MULTIPLY;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 30 "cmp/pye.l"
+#line 33 "cmp/pye.l"
 {return DIVIDE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 31 "cmp/pye.l"
+#line 34 "cmp/pye.l"
 {return EQUAL;}
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 32 "cmp/pye.l"
-{current_line++; return NEW_LINE;}
+#line 35 "cmp/pye.l"
+{current_line++; blocked_tabulation = 0; return NEW_LINE;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 34 "cmp/pye.l"
-{yylval.white = strdup(yytext); return WHITE;}
+#line 37 "cmp/pye.l"
+{
+					if(!blocked_tabulation){
+						space_level++;
+					}
+					else{
+						//Nothing to do
+					}
+				}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 35 "cmp/pye.l"
-{yylval.identifier = strdup(yytext); return IDENTIFIER;}
+#line 46 "cmp/pye.l"
+{
+					if(!blocked_tabulation){
+						tabulation_level++;
+					}
+					else{
+						//Nothing to do
+					}
+				}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 36 "cmp/pye.l"
-{yylval.num = atoi(yytext); return INTEGER;}
+#line 55 "cmp/pye.l"
+{yylval.identifier = strdup(yytext); blocked_tabulation = 0; return IDENTIFIER;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 38 "cmp/pye.l"
-{ECHO; yyerror ("unexpected character");}
+#line 56 "cmp/pye.l"
+{yylval.num = atoi(yytext); return INTEGER;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 40 "cmp/pye.l"
+#line 58 "cmp/pye.l"
+{ECHO; yyerror ("unexpected character");}
+	YY_BREAK
+case 17:
+YY_RULE_SETUP
+#line 60 "cmp/pye.l"
 ECHO;
 	YY_BREAK
-#line 835 "lex.yy.c"
+#line 857 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1826,7 +1848,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 39 "cmp/pye.l"
+#line 59 "cmp/pye.l"
 
 
 

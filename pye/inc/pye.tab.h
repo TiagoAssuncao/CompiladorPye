@@ -57,8 +57,7 @@ extern int yydebug;
     EQUAL = 267,
     NEW_LINE = 268,
     INTEGER = 269,
-    IDENTIFIER = 270,
-    WHITE = 271
+    IDENTIFIER = 270
   };
 #endif
 
@@ -68,9 +67,9 @@ typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
 #line 22 "cmp/pye.y" /* yacc.c:1909  */
-int num; char *identifier; char *white;
+int num; char *identifier;
 
-#line 74 "pye.tab.h" /* yacc.c:1909  */
+#line 73 "pye.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

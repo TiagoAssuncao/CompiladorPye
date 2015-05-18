@@ -19,7 +19,7 @@
 %}
 
 
-%union {int num; char *identifier; char *white;}
+%union {int num; char *identifier;}
 
 %start input
 
@@ -31,7 +31,6 @@
 
 %token <num> INTEGER
 %token <identifier> IDENTIFIER
-%token <white> WHITE
 
 %type <num> input expression term assignment
 
@@ -41,17 +40,12 @@
 input:
 	command {;}
 	| input command {;}
-	| input WHITE command {fprintf(yyout, "Achoooooooooou");}
 	| function_declaration {;}
 	| input function_declaration {;}
-	| input WHITE function_declaration {;}
 	| NEW_LINE {
 		fprintf(yyout, "\n");
 	}
 	| input NEW_LINE {
-		fprintf(yyout, "\n");
-	}
-	| input WHITE NEW_LINE {
 		fprintf(yyout, "\n");
 	}
 	;
@@ -75,8 +69,7 @@ command_finisher:
 
 
 assignment:
-	IDENTIFIER EQUAL expression {
-		
+	| IDENTIFIER EQUAL expression {
 		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
 		fprintf(yyout, "%s = %d", $1, $3);
 		$$ = $3;
