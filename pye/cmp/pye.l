@@ -20,49 +20,52 @@ word {letter}+
 
 digit [0-9]
 integer [1-9]{digit}*
+comment_line [#]
 
 identifier [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
-"def "			{block_tabulation(TRUE); return DEF;}
-"("				{block_tabulation(TRUE); return LEFT_PARENTHESIS;}
-")"				{block_tabulation(TRUE); return RIGHT_PARENTHESIS;}
-":"				{block_tabulation(TRUE); return COLON;}
-";"				{block_tabulation(TRUE); return SEMICOLON;}
-"+"				{block_tabulation(TRUE); return PLUS;}
-"-"				{block_tabulation(TRUE); return MINUS;}
-"*"				{block_tabulation(TRUE); return MULTIPLY;}
-"/"				{block_tabulation(TRUE); return DIVIDE;}
-"="				{block_tabulation(TRUE);  return EQUAL;}
-"\n"			{printf("%d- Space: %d tabulation_level: %d\n", current_line, space_level, tabulation_level); 
-					current_line++; clean_tabulation(); 
-					block_tabulation(FALSE); 
-					return NEW_LINE;
-				}
-
-" "				{
-					if(!blocked_tabulation){
-						space_level++;
+"def "				{set_tabulation(TRUE); return DEF;}
+"("					{set_tabulation(TRUE); return LEFT_PARENTHESIS;}
+")"					{set_tabulation(TRUE); return RIGHT_PARENTHESIS;}
+":"					{set_tabulation(TRUE); return COLON;}
+";"					{set_tabulation(TRUE); return SEMICOLON;}
+"+"					{set_tabulation(TRUE); return PLUS;}
+"-"					{set_tabulation(TRUE); return MINUS;}
+"*"					{set_tabulation(TRUE); return MULTIPLY;}
+"/"					{set_tabulation(TRUE); return DIVIDE;}
+"="					{set_tabulation(TRUE);  return EQUAL;}
+{comment_line}.*	{set_tabulation(TRUE); yylval.comment_line = strdup(yytext); return COMMENT_LINE;}
+"\n"				{
+						current_line++; 
+						clean_tabulation(); 
+						set_tabulation(FALSE); 
+						return NEW_LINE;
 					}
-					else{
-						//Nothing to do
-					}
-				}
 
-"\t"			{
-					if(!blocked_tabulation){
-						tabulation_level++;
+" "					{
+						if(!blocked_tabulation){
+							space_level++;
+						}
+						else{
+							//Nothing to do
+						}
 					}
-					else{
-						//Nothing to do
+
+"\t"				{
+						if(!blocked_tabulation){
+							tabulation_level++;
+						}
+						else{
+							//Nothing to do
+						}
 					}
-				}
 
-{identifier}	{yylval.identifier = strdup(yytext); block_tabulation(TRUE); return IDENTIFIER;}
-{integer} 		{yylval.num = atoi(yytext); block_tabulation(TRUE);  return INTEGER;}
+{identifier}		{yylval.identifier = strdup(yytext); set_tabulation(TRUE); return IDENTIFIER;}
+{integer} 			{yylval.num = atoi(yytext); set_tabulation(TRUE);  return INTEGER;}
 
-. 				{ECHO; block_tabulation(TRUE); yyerror ("unexpected character");}
+. 					{ECHO; set_tabulation(TRUE); yyerror ("unexpected character");  return ANYTHING;}
 
 %%
 
@@ -71,7 +74,7 @@ void clean_tabulation(){
 	tabulation_level = 0;
 }
 
-void block_tabulation(bool isBlocked){
+void set_tabulation(bool isBlocked){
 	
 	if(isBlocked){
 		blocked_tabulation = 1;

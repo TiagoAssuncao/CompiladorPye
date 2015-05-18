@@ -20,7 +20,7 @@
 %}
 
 
-%union {int num; char *identifier;}
+%union {int num; char *identifier; char *comment_line;}
 
 %start input
 
@@ -29,9 +29,12 @@
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
 %token NEW_LINE 
+%token ANYTHING
+%token START_COMMENT FINISH_COMMENT
 
 %token <num> INTEGER
 %token <identifier> IDENTIFIER
+%token <comment_line> COMMENT_LINE
 
 %type <num> input expression term assignment
 
@@ -43,11 +46,21 @@ input:
 	| input command {;}
 	| function_declaration {;}
 	| input function_declaration {;}
-	| NEW_LINE {
+	| NEW_LINE 
+	{
 		fprintf(yyout, "\n");
 	}
-	| input NEW_LINE {
+	| input NEW_LINE 
+	{
 		fprintf(yyout, "\n");
+	}
+	| COMMENT_LINE {fprintf(yyout, "Comentatio em linha");}
+	| input COMMENT_LINE {
+		fprintf(yyout, "%s", $2);
+	}
+	| input START_COMMENT ANYTHING FINISH_COMMENT
+	{
+		fprintf(yyout, "ACHOOOOOOOOOOOOOO");
 	}
 	;
 
@@ -113,14 +126,15 @@ function_declaration_args:
 %%
 
 void apply_tabulation(){
-	int i=0;
+	
+	int i = 0;
 	while(space_level > i){
 
 		fprintf(yyout, " ");
 		i++;
 	}
 
-	i=0;
+	i = 0;
 	while(tabulation_level > i){
 
 		fprintf(yyout, "\t");
