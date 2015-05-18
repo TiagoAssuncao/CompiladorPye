@@ -479,7 +479,12 @@ char *yytext;
 	unsigned int space_level = 0;
 	unsigned int tabulation_level = 0;
 	unsigned int blocked_tabulation = 0;
-#line 483 "lex.yy.c"
+
+	typedef enum{
+		FALSE,
+		TRUE
+	}bool;
+#line 488 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -693,10 +698,10 @@ YY_DECL
 		}
 
 	{
-#line 23 "cmp/pye.l"
+#line 26 "cmp/pye.l"
 
 
-#line 700 "lex.yy.c"
+#line 705 "lex.yy.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -755,63 +760,67 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 25 "cmp/pye.l"
-{return DEF;}
+#line 28 "cmp/pye.l"
+{block_tabulation(TRUE); return DEF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 26 "cmp/pye.l"
-{return LEFT_PARENTHESIS;}
+#line 29 "cmp/pye.l"
+{block_tabulation(TRUE); return LEFT_PARENTHESIS;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 27 "cmp/pye.l"
-{return RIGHT_PARENTHESIS;}
+#line 30 "cmp/pye.l"
+{block_tabulation(TRUE); return RIGHT_PARENTHESIS;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 28 "cmp/pye.l"
-{return COLON;}
+#line 31 "cmp/pye.l"
+{block_tabulation(TRUE); return COLON;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 29 "cmp/pye.l"
-{return SEMICOLON;}
+#line 32 "cmp/pye.l"
+{block_tabulation(TRUE); return SEMICOLON;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 30 "cmp/pye.l"
-{return PLUS;}
+#line 33 "cmp/pye.l"
+{block_tabulation(TRUE); return PLUS;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 31 "cmp/pye.l"
-{return MINUS;}
+#line 34 "cmp/pye.l"
+{block_tabulation(TRUE); return MINUS;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 32 "cmp/pye.l"
-{return MULTIPLY;}
+#line 35 "cmp/pye.l"
+{block_tabulation(TRUE); return MULTIPLY;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 33 "cmp/pye.l"
-{return DIVIDE;}
+#line 36 "cmp/pye.l"
+{block_tabulation(TRUE); return DIVIDE;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 34 "cmp/pye.l"
-{return EQUAL;}
+#line 37 "cmp/pye.l"
+{block_tabulation(TRUE);  return EQUAL;}
 	YY_BREAK
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 35 "cmp/pye.l"
-{current_line++; blocked_tabulation = 0; return NEW_LINE;}
+#line 38 "cmp/pye.l"
+{printf("%d- Space: %d tabulation_level: %d\n", current_line, space_level, tabulation_level); 
+					current_line++; clean_tabulation(); 
+					block_tabulation(FALSE); 
+					return NEW_LINE;
+				}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 37 "cmp/pye.l"
+#line 44 "cmp/pye.l"
 {
 					if(!blocked_tabulation){
 						space_level++;
@@ -823,7 +832,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 46 "cmp/pye.l"
+#line 53 "cmp/pye.l"
 {
 					if(!blocked_tabulation){
 						tabulation_level++;
@@ -835,25 +844,25 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 55 "cmp/pye.l"
-{yylval.identifier = strdup(yytext); blocked_tabulation = 0; return IDENTIFIER;}
+#line 62 "cmp/pye.l"
+{yylval.identifier = strdup(yytext); block_tabulation(TRUE); return IDENTIFIER;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 56 "cmp/pye.l"
-{yylval.num = atoi(yytext); return INTEGER;}
+#line 63 "cmp/pye.l"
+{yylval.num = atoi(yytext); block_tabulation(TRUE);  return INTEGER;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 58 "cmp/pye.l"
-{ECHO; yyerror ("unexpected character");}
+#line 65 "cmp/pye.l"
+{ECHO; block_tabulation(TRUE); yyerror ("unexpected character");}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 60 "cmp/pye.l"
+#line 67 "cmp/pye.l"
 ECHO;
 	YY_BREAK
-#line 857 "lex.yy.c"
+#line 866 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1848,9 +1857,24 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 59 "cmp/pye.l"
+#line 66 "cmp/pye.l"
 
 
+
+void clean_tabulation(){
+	space_level = 0;
+	tabulation_level = 0;
+}
+
+void block_tabulation(bool isBlocked){
+	
+	if(isBlocked){
+		blocked_tabulation = 1;
+	}
+	else{
+		blocked_tabulation = 0;
+	}
+}
 
 int yywrap(void) {
 	return 1;

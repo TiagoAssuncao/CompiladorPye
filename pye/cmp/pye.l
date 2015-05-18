@@ -7,6 +7,11 @@
 	unsigned int space_level = 0;
 	unsigned int tabulation_level = 0;
 	unsigned int blocked_tabulation = 0;
+
+	typedef enum{
+		FALSE,
+		TRUE
+	}bool;
 %}
 
 
@@ -16,23 +21,25 @@ word {letter}+
 digit [0-9]
 integer [1-9]{digit}*
 
-white [ \t]+
-
 identifier [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
-"def "			{return DEF;}
-"("				{return LEFT_PARENTHESIS;}
-")"				{return RIGHT_PARENTHESIS;}
-":"				{return COLON;}
-";"				{return SEMICOLON;}
-"+"				{return PLUS;}
-"-"				{return MINUS;}
-"*"				{return MULTIPLY;}
-"/"				{return DIVIDE;}
-"="				{return EQUAL;}
-"\n"			{current_line++; blocked_tabulation = 0; return NEW_LINE;}
+"def "			{block_tabulation(TRUE); return DEF;}
+"("				{block_tabulation(TRUE); return LEFT_PARENTHESIS;}
+")"				{block_tabulation(TRUE); return RIGHT_PARENTHESIS;}
+":"				{block_tabulation(TRUE); return COLON;}
+";"				{block_tabulation(TRUE); return SEMICOLON;}
+"+"				{block_tabulation(TRUE); return PLUS;}
+"-"				{block_tabulation(TRUE); return MINUS;}
+"*"				{block_tabulation(TRUE); return MULTIPLY;}
+"/"				{block_tabulation(TRUE); return DIVIDE;}
+"="				{block_tabulation(TRUE);  return EQUAL;}
+"\n"			{printf("%d- Space: %d tabulation_level: %d\n", current_line, space_level, tabulation_level); 
+					current_line++; clean_tabulation(); 
+					block_tabulation(FALSE); 
+					return NEW_LINE;
+				}
 
 " "				{
 					if(!blocked_tabulation){
@@ -52,12 +59,27 @@ identifier [a-zA-Z_][a-zA-Z0-9_]*
 					}
 				}
 
-{identifier}	{yylval.identifier = strdup(yytext); blocked_tabulation = 0; return IDENTIFIER;}
-{integer} 		{yylval.num = atoi(yytext); return INTEGER;}
+{identifier}	{yylval.identifier = strdup(yytext); block_tabulation(TRUE); return IDENTIFIER;}
+{integer} 		{yylval.num = atoi(yytext); block_tabulation(TRUE);  return INTEGER;}
 
-. 				{ECHO; yyerror ("unexpected character");}
+. 				{ECHO; block_tabulation(TRUE); yyerror ("unexpected character");}
 
 %%
+
+void clean_tabulation(){
+	space_level = 0;
+	tabulation_level = 0;
+}
+
+void block_tabulation(bool isBlocked){
+	
+	if(isBlocked){
+		blocked_tabulation = 1;
+	}
+	else{
+		blocked_tabulation = 0;
+	}
+}
 
 int yywrap(void) {
 	return 1;

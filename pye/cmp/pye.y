@@ -15,7 +15,8 @@
 	char current_scope[35];
 
 	extern unsigned int current_line;
-	unsigned char *indentation_level;
+	extern unsigned int tabulation_level;
+	extern unsigned int space_level;
 %}
 
 
@@ -70,7 +71,9 @@ command_finisher:
 
 assignment:
 	| IDENTIFIER EQUAL expression {
+		apply_tabulation();
 		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
+		apply_tabulation();
 		fprintf(yyout, "%s = %d", $1, $3);
 		$$ = $3;
 	}
@@ -95,7 +98,9 @@ term:
 
 function_declaration:
 	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+		apply_tabulation();
 		fprintf(yyout, "# Function declaration: %s\n", $2);
+		apply_tabulation();
 		fprintf(yyout, "def %s():", $2);
 	}
 	;
@@ -107,36 +112,24 @@ function_declaration_args:
 
 %%
 
+void apply_tabulation(){
+	int i=0;
+	while(space_level > i){
 
+		fprintf(yyout, " ");
+		i++;
+	}
 
+	i=0;
+	while(tabulation_level > i){
+
+		fprintf(yyout, "\t");
+		i++;
+	}
+}
 
 int main (int argc, char **argv) {
-	/* Testing
-	list_header *variable_table = NULL;
 
-	unsigned int size_of_element = sizeof(variable_data);
-	variable_table = (list_header *) new_linked_list(size_of_element);
-
-	variable_data variable = build_variable_data("foo", "main", TRUE, 12);
-	variable_table = insert_element(variable_table, (void *) &variable);
-
-	node *v_node = search_variable_by_identifier(variable_table, "foo");
-
-	if(v_node != NULL) {
-		variable_data *found_variable = ((variable_data *) v_node->element);
-
-		printf("Variable identifier: %s\n", found_variable->identifier);
-		printf("In what function is it present? Well, it's on %s.\n", found_variable->function_scope);
-		printf("Is it declared? %d.\n", found_variable->is_declared);
-		printf("In what line was this variable declared? Right there: %u.\n", found_variable->declaration_line);
-	}
-	else {
-		printf("Variable not found!\n");
-	}
-
-	//linked_list error_table = new_symbol_table(sizeof(error_data)); <--- Only ideas...
-	//linked_list scope_table = new_symbol_table(sizeof(scope_data)); <--- Only ideas...
-	Testing */
 
 	yyout = fopen("out.py", "w");
 
@@ -154,3 +147,4 @@ int main (int argc, char **argv) {
 void yyerror (char *s) {
 	fprintf (stderr, "%s\n", s);
 }
+
