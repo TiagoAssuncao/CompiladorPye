@@ -17,6 +17,7 @@
 	extern unsigned int current_line;
 	extern unsigned int tabulation_level;
 	extern unsigned int space_level;
+	extern unsigned int amount_comment_blocks;
 %}
 
 
@@ -30,7 +31,7 @@
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
 %token NEW_LINE 
 %token ANYTHING
-%token START_COMMENT FINISH_COMMENT
+%token COMMENT_BLOCK
 
 %token <num> INTEGER
 %token <identifier> IDENTIFIER
@@ -58,9 +59,9 @@ input:
 	| input COMMENT_LINE {
 		fprintf(yyout, "%s", $2);
 	}
-	| input START_COMMENT ANYTHING FINISH_COMMENT
+	| input COMMENT_BLOCK     COMMENT_BLOCK
 	{
-		fprintf(yyout, "ACHOOOOOOOOOOOOOO");
+		fprintf(yyout, "Comentário em bloco encontrado");
 	}
 	;
 
@@ -154,6 +155,13 @@ int main (int argc, char **argv) {
 
 	yyin = fopen(argv[1], "r");
 	yyparse();
+
+	if((amount_comment_blocks%2) != 0){
+		printf("ERRO DE BLOCO DE COMENTARIO\n");
+	}
+	else{
+		//Nothing to do
+	}
 
 	return 0;
 }

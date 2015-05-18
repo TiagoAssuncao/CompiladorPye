@@ -6,8 +6,10 @@
    casa1=7
 		casa2=7
 
-#asgafsa
+#casa4 = 8;
 	casa3 = 5;
+
+""""""
 
 
 

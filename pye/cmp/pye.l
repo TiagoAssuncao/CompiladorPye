@@ -7,6 +7,7 @@
 	unsigned int space_level = 0;
 	unsigned int tabulation_level = 0;
 	unsigned int blocked_tabulation = 0;
+	unsigned int amount_comment_blocks = 0;
 
 	typedef enum{
 		FALSE,
@@ -17,12 +18,16 @@
 
 letter [a-zA-z]
 word {letter}+
+space [ ]
 
 digit [0-9]
 integer [1-9]{digit}*
-comment_line [#]
-
 identifier [a-zA-Z_][a-zA-Z0-9_]*
+
+comment_line [#]
+comment_block ["\""]{3}
+
+undefined [.]*
 
 %%
 
@@ -36,7 +41,18 @@ identifier [a-zA-Z_][a-zA-Z0-9_]*
 "*"					{set_tabulation(TRUE); return MULTIPLY;}
 "/"					{set_tabulation(TRUE); return DIVIDE;}
 "="					{set_tabulation(TRUE);  return EQUAL;}
-{comment_line}.*	{set_tabulation(TRUE); yylval.comment_line = strdup(yytext); return COMMENT_LINE;}
+
+{comment_line}.*	{
+						set_tabulation(TRUE); 
+						yylval.comment_line = strdup(yytext); 
+						return COMMENT_LINE;
+					}
+
+{comment_block}		{
+						set_tabulation(TRUE); 
+						amount_comment_blocks++;
+						return COMMENT_BLOCK;}
+
 "\n"				{
 						current_line++; 
 						clean_tabulation(); 
@@ -44,7 +60,7 @@ identifier [a-zA-Z_][a-zA-Z0-9_]*
 						return NEW_LINE;
 					}
 
-" "					{
+{space}				{
 						if(!blocked_tabulation){
 							space_level++;
 						}
@@ -62,10 +78,23 @@ identifier [a-zA-Z_][a-zA-Z0-9_]*
 						}
 					}
 
-{identifier}		{yylval.identifier = strdup(yytext); set_tabulation(TRUE); return IDENTIFIER;}
-{integer} 			{yylval.num = atoi(yytext); set_tabulation(TRUE);  return INTEGER;}
+{identifier}		{
+						yylval.identifier = strdup(yytext); 
+						set_tabulation(TRUE); 
+						return IDENTIFIER;
+					}
 
-. 					{ECHO; set_tabulation(TRUE); yyerror ("unexpected character");  return ANYTHING;}
+{integer} 			{	
+						yylval.num = atoi(yytext); 
+						set_tabulation(TRUE);  return INTEGER;
+					}
+
+{undefined}			{	
+						ECHO; 
+						set_tabulation(TRUE); 
+						yyerror ("unexpected character");  
+						return ANYTHING;
+					}
 
 %%
 
