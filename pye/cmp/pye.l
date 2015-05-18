@@ -21,6 +21,11 @@ white [ \t]
 %%
 
 "def "			{return DEF;}
+"if"			{return IF;}
+"else"			{return ELSE;}
+"for"			{return FOR;}
+"while"			{return WHILE;}
+"try"			{return TRY;}
 "("				{return LEFT_PARENTHESIS;}
 ")"				{return RIGHT_PARENTHESIS;}
 ":"				{return COLON;}

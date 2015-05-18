@@ -13,11 +13,10 @@
 
  #line 8 "/usr/share/bison++/bison.h"
 
-#line 19 "cmp/pye.y"
+#line 21 "cmp/pye.y"
 typedef union {
 	int num; 
-	char *identifier;
-	NIdentifier *ident;
+	NIdentifier *identifier;
 	NStatement *stmt;
 	NExpression *expr;
 } yy_parse_stype;
@@ -191,18 +190,23 @@ typedef
 
  #line 169 "/usr/share/bison++/bison.h"
 #define	DEF	258
-#define	LEFT_PARENTHESIS	259
-#define	RIGHT_PARENTHESIS	260
-#define	COLON	261
-#define	SEMICOLON	262
-#define	PLUS	263
-#define	MINUS	264
-#define	MULTIPLY	265
-#define	DIVIDE	266
-#define	EQUAL	267
-#define	NEW_LINE	268
-#define	INTEGER	269
-#define	IDENTIFIER	270
+#define	IF	259
+#define	ELSE	260
+#define	FOR	261
+#define	WHILE	262
+#define	TRY	263
+#define	LEFT_PARENTHESIS	264
+#define	RIGHT_PARENTHESIS	265
+#define	COLON	266
+#define	SEMICOLON	267
+#define	PLUS	268
+#define	MINUS	269
+#define	MULTIPLY	270
+#define	DIVIDE	271
+#define	EQUAL	272
+#define	NEW_LINE	273
+#define	INTEGER	274
+#define	IDENTIFIER	275
 
 
 #line 169 "/usr/share/bison++/bison.h"
@@ -252,6 +256,11 @@ public:
   
  #line 212 "/usr/share/bison++/bison.h"
 static const int DEF;
+static const int IF;
+static const int ELSE;
+static const int FOR;
+static const int WHILE;
+static const int TRY;
 static const int LEFT_PARENTHESIS;
 static const int RIGHT_PARENTHESIS;
 static const int COLON;
@@ -273,18 +282,23 @@ static const int IDENTIFIER;
   
  #line 215 "/usr/share/bison++/bison.h"
 	,DEF=258
-	,LEFT_PARENTHESIS=259
-	,RIGHT_PARENTHESIS=260
-	,COLON=261
-	,SEMICOLON=262
-	,PLUS=263
-	,MINUS=264
-	,MULTIPLY=265
-	,DIVIDE=266
-	,EQUAL=267
-	,NEW_LINE=268
-	,INTEGER=269
-	,IDENTIFIER=270
+	,IF=259
+	,ELSE=260
+	,FOR=261
+	,WHILE=262
+	,TRY=263
+	,LEFT_PARENTHESIS=264
+	,RIGHT_PARENTHESIS=265
+	,COLON=266
+	,SEMICOLON=267
+	,PLUS=268
+	,MINUS=269
+	,MULTIPLY=270
+	,DIVIDE=271
+	,EQUAL=272
+	,NEW_LINE=273
+	,INTEGER=274
+	,IDENTIFIER=275
 
 
 #line 215 "/usr/share/bison++/bison.h"

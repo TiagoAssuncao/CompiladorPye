@@ -6,6 +6,8 @@
 
 	#include "node.hpp"
 
+	using namespace std;
+
 	void yyerror (char *s);
 	extern FILE *yyin;
 	extern FILE *yyout;
@@ -18,24 +20,21 @@
 
 %union {
 	int num; 
-	char *identifier;
-	NIdentifier *ident;
+	NIdentifier *identifier;
 	NStatement *stmt;
 	NExpression *expr;
 }
 
 %start input
 
-%token DEF
+%token DEF IF ELSE FOR WHILE TRY
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
 %token NEW_LINE
 
 %token <num> INTEGER
-%token <ident> IDENTIFIER
-
-%type <ident> ident
+%token <identifier> IDENTIFIER
 
 %type <stmt> assignment function_declaration
 %type <expr> input expression term
@@ -69,12 +68,22 @@ command_finisher:
 
 
 assignment:
-	ident EQUAL expression {
-		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $<ident>1.name, $3);
+	IDENTIFIER EQUAL expression {
+		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1->name, $3);
 		fprintf(yyout, "%s = %d\n", $<ident>1, $3);
+
+		/* Here we need to create a function to check whether the identifier exists or not in the table
+		if(check_whether_identifier_exists($1) == TRUE) { // If it exists we just update the value in the table
+			
+		}
+		else {*/
+			//create a new identifier in the table
+			NIdentifier newIdentifier = new NIdentifier($1);
+		//}
+
 		$$ = $3;
 	}
-	| ident EQUAL assignment {$$ = new NVariableDeclaration(NULL, &$<ident>1, &$3);}
+	| IDENTIFIER EQUAL assignment {$$ = new NVariableDeclaration(NULL, &$<ident>1, &$3);}
 
 
 
@@ -88,21 +97,18 @@ expression:
 
 term:
 	INTEGER {$$ = new NInteger (atol($1 -> c_str()));}
-	| ident {;}
+	| IDENTIFIER {
+		;//Need to get the value of the identifier in the table here	
+	  }
 	;
 
 
 
 function_declaration:
-	DEF ident LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
-		fprintf(yyout, "# Function declaration: %s\n", $<ident>2.name);
-		fprintf(yyout, "def %s():\n", $<ident>2.name);
-		$$ = new NFunctionDeclaration (&$<ident>2, NULL, NULL)
-	}
-	;
-
-ident: IDENTIFIER {
-		$$ = new NIdentifier ($1);
+	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+		fprintf(yyout, "# Function declaration: %s\n", $2->name);
+		fprintf(yyout, "def %s():\n", $2->name);
+		$$ = new NFunctionDeclaration ($2, NULL, NULL)
 	}
 	;
 

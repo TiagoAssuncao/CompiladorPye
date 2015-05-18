@@ -108,6 +108,8 @@ Maintained by Magnus Ekdahl <magnus@debian.org>
 
 	#include "node.hpp"
 
+	using namespace std;
+
 	void yyerror (char *s);
 	extern FILE *yyin;
 	extern FILE *yyout;
@@ -116,11 +118,10 @@ Maintained by Magnus Ekdahl <magnus@debian.org>
 
 	extern unsigned int current_line;
 
-#line 19 "cmp/pye.y"
+#line 21 "cmp/pye.y"
 typedef union {
 	int num; 
-	char *identifier;
-	NIdentifier *ident;
+	NIdentifier *identifier;
 	NStatement *stmt;
 	NExpression *expr;
 } yy_parse_stype;
@@ -321,18 +322,23 @@ typedef
 
  #line 263 "/usr/share/bison++/bison.cc"
 #define	DEF	258
-#define	LEFT_PARENTHESIS	259
-#define	RIGHT_PARENTHESIS	260
-#define	COLON	261
-#define	SEMICOLON	262
-#define	PLUS	263
-#define	MINUS	264
-#define	MULTIPLY	265
-#define	DIVIDE	266
-#define	EQUAL	267
-#define	NEW_LINE	268
-#define	INTEGER	269
-#define	IDENTIFIER	270
+#define	IF	259
+#define	ELSE	260
+#define	FOR	261
+#define	WHILE	262
+#define	TRY	263
+#define	LEFT_PARENTHESIS	264
+#define	RIGHT_PARENTHESIS	265
+#define	COLON	266
+#define	SEMICOLON	267
+#define	PLUS	268
+#define	MINUS	269
+#define	MULTIPLY	270
+#define	DIVIDE	271
+#define	EQUAL	272
+#define	NEW_LINE	273
+#define	INTEGER	274
+#define	IDENTIFIER	275
 
 
 #line 263 "/usr/share/bison++/bison.cc"
@@ -383,6 +389,11 @@ public:
 
  #line 307 "/usr/share/bison++/bison.cc"
 static const int DEF;
+static const int IF;
+static const int ELSE;
+static const int FOR;
+static const int WHILE;
+static const int TRY;
 static const int LEFT_PARENTHESIS;
 static const int RIGHT_PARENTHESIS;
 static const int COLON;
@@ -404,18 +415,23 @@ enum YY_parse_ENUM_TOKEN { YY_parse_NULL_TOKEN=0
 
  #line 310 "/usr/share/bison++/bison.cc"
 	,DEF=258
-	,LEFT_PARENTHESIS=259
-	,RIGHT_PARENTHESIS=260
-	,COLON=261
-	,SEMICOLON=262
-	,PLUS=263
-	,MINUS=264
-	,MULTIPLY=265
-	,DIVIDE=266
-	,EQUAL=267
-	,NEW_LINE=268
-	,INTEGER=269
-	,IDENTIFIER=270
+	,IF=259
+	,ELSE=260
+	,FOR=261
+	,WHILE=262
+	,TRY=263
+	,LEFT_PARENTHESIS=264
+	,RIGHT_PARENTHESIS=265
+	,COLON=266
+	,SEMICOLON=267
+	,PLUS=268
+	,MINUS=269
+	,MULTIPLY=270
+	,DIVIDE=271
+	,EQUAL=272
+	,NEW_LINE=273
+	,INTEGER=274
+	,IDENTIFIER=275
 
 
 #line 310 "/usr/share/bison++/bison.cc"
@@ -453,18 +469,23 @@ public:
 
  #line 341 "/usr/share/bison++/bison.cc"
 const int YY_parse_CLASS::DEF=258;
-const int YY_parse_CLASS::LEFT_PARENTHESIS=259;
-const int YY_parse_CLASS::RIGHT_PARENTHESIS=260;
-const int YY_parse_CLASS::COLON=261;
-const int YY_parse_CLASS::SEMICOLON=262;
-const int YY_parse_CLASS::PLUS=263;
-const int YY_parse_CLASS::MINUS=264;
-const int YY_parse_CLASS::MULTIPLY=265;
-const int YY_parse_CLASS::DIVIDE=266;
-const int YY_parse_CLASS::EQUAL=267;
-const int YY_parse_CLASS::NEW_LINE=268;
-const int YY_parse_CLASS::INTEGER=269;
-const int YY_parse_CLASS::IDENTIFIER=270;
+const int YY_parse_CLASS::IF=259;
+const int YY_parse_CLASS::ELSE=260;
+const int YY_parse_CLASS::FOR=261;
+const int YY_parse_CLASS::WHILE=262;
+const int YY_parse_CLASS::TRY=263;
+const int YY_parse_CLASS::LEFT_PARENTHESIS=264;
+const int YY_parse_CLASS::RIGHT_PARENTHESIS=265;
+const int YY_parse_CLASS::COLON=266;
+const int YY_parse_CLASS::SEMICOLON=267;
+const int YY_parse_CLASS::PLUS=268;
+const int YY_parse_CLASS::MINUS=269;
+const int YY_parse_CLASS::MULTIPLY=270;
+const int YY_parse_CLASS::DIVIDE=271;
+const int YY_parse_CLASS::EQUAL=272;
+const int YY_parse_CLASS::NEW_LINE=273;
+const int YY_parse_CLASS::INTEGER=274;
+const int YY_parse_CLASS::IDENTIFIER=275;
 
 
 #line 341 "/usr/share/bison++/bison.cc"
@@ -483,11 +504,11 @@ YY_parse_CONSTRUCTOR_CODE;
  #line 352 "/usr/share/bison++/bison.cc"
 
 
-#define	YYFINAL		32
+#define	YYFINAL		31
 #define	YYFLAG		-32768
-#define	YYNTBASE	16
+#define	YYNTBASE	21
 
-#define YYTRANSLATE(x) ((unsigned)(x) <= 270 ? yytranslate[x] : 24)
+#define YYTRANSLATE(x) ((unsigned)(x) <= 275 ? yytranslate[x] : 28)
 
 static const char yytranslate[] = {     0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -516,87 +537,89 @@ static const char yytranslate[] = {     0,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
      2,     2,     2,     2,     2,     1,     2,     3,     4,     5,
-     6,     7,     8,     9,    10,    11,    12,    13,    14,    15
+     6,     7,     8,     9,    10,    11,    12,    13,    14,    15,
+    16,    17,    18,    19,    20
 };
 
 #if YY_parse_DEBUG != 0
 static const short yyprhs[] = {     0,
      0,     2,     5,     7,    10,    12,    15,    18,    21,    23,
-    25,    29,    33,    35,    39,    43,    45,    47,    53
+    25,    29,    33,    35,    39,    43,    45,    47
 };
 
-static const short yyrhs[] = {    17,
-     0,    16,    17,     0,    22,     0,    16,    22,     0,    13,
-     0,    16,    13,     0,    19,    18,     0,    20,    18,     0,
-    13,     0,     7,     0,    23,    12,    20,     0,    23,    12,
-    19,     0,    21,     0,    20,     8,    21,     0,    20,     9,
-    21,     0,    14,     0,    23,     0,     3,    23,     4,     5,
-     6,     0,    15,     0
+static const short yyrhs[] = {    22,
+     0,    21,    22,     0,    27,     0,    21,    27,     0,    18,
+     0,    21,    18,     0,    24,    23,     0,    25,    23,     0,
+    18,     0,    12,     0,    20,    17,    25,     0,    20,    17,
+    24,     0,    26,     0,    25,    13,    26,     0,    25,    14,
+    26,     0,    19,     0,    20,     0,     3,    20,     9,    10,
+    11,     0
 };
 
 #endif
 
 #if (YY_parse_DEBUG != 0) || defined(YY_parse_ERROR_VERBOSE) 
 static const short yyrline[] = { 0,
-    46,    48,    49,    50,    51,    52,    57,    59,    64,    66,
-    71,    77,    81,    83,    84,    89,    91,    96,   104
+    45,    47,    48,    49,    50,    51,    56,    58,    63,    65,
+    70,    86,    90,    92,    93,    98,   100,   107
 };
 
-static const char * const yytname[] = {   "$","error","$illegal.","DEF","LEFT_PARENTHESIS",
-"RIGHT_PARENTHESIS","COLON","SEMICOLON","PLUS","MINUS","MULTIPLY","DIVIDE","EQUAL",
-"NEW_LINE","INTEGER","IDENTIFIER","input","command","command_finisher","assignment",
-"expression","term","function_declaration","ident",""
+static const char * const yytname[] = {   "$","error","$illegal.","DEF","IF",
+"ELSE","FOR","WHILE","TRY","LEFT_PARENTHESIS","RIGHT_PARENTHESIS","COLON","SEMICOLON",
+"PLUS","MINUS","MULTIPLY","DIVIDE","EQUAL","NEW_LINE","INTEGER","IDENTIFIER",
+"input","command","command_finisher","assignment","expression","term","function_declaration",
+""
 };
 #endif
 
 static const short yyr1[] = {     0,
-    16,    16,    16,    16,    16,    16,    17,    17,    18,    18,
-    19,    19,    20,    20,    20,    21,    21,    22,    23
+    21,    21,    21,    21,    21,    21,    22,    22,    23,    23,
+    24,    24,    25,    25,    25,    26,    26,    27
 };
 
 static const short yyr2[] = {     0,
      1,     2,     1,     2,     1,     2,     2,     2,     1,     1,
-     3,     3,     1,     3,     3,     1,     1,     5,     1
+     3,     3,     1,     3,     3,     1,     1,     5
 };
 
 static const short yydefact[] = {     0,
-     0,     5,    16,    19,     0,     1,     0,     0,    13,     3,
-    17,     0,     6,     2,     4,    10,     9,     7,     0,     0,
-     8,     0,     0,    14,    17,    15,    12,    11,     0,    18,
-     0,     0
+     0,     5,    16,    17,     0,     1,     0,     0,    13,     3,
+     0,     0,     6,     2,     4,    10,     9,     7,     0,     0,
+     8,     0,    12,    11,    17,    14,    15,     0,    18,     0,
+     0
 };
 
 static const short yydefgoto[] = {     5,
-     6,    18,     7,     8,     9,    10,    11
+     6,    18,     7,     8,     9,    10
 };
 
-static const short yypact[] = {     7,
-   -12,-32768,-32768,-32768,     1,-32768,    -5,    -2,-32768,-32768,
-    -3,    13,-32768,-32768,-32768,-32768,-32768,-32768,     9,     9,
--32768,     9,    22,-32768,-32768,-32768,-32768,     4,    23,-32768,
-    28,-32768
+static const short yypact[] = {     3,
+   -15,-32768,-32768,    -3,     0,-32768,    -8,    -5,-32768,-32768,
+     8,   -18,-32768,-32768,-32768,-32768,-32768,-32768,    -4,    -4,
+-32768,    16,-32768,    -2,-32768,-32768,-32768,    17,-32768,    27,
+-32768
 };
 
 static const short yypgoto[] = {-32768,
-    25,    24,    11,    12,     6,    26,    -1
+    24,    22,    19,    20,     5,    28
 };
 
 
-#define	YYLAST		34
+#define	YYLAST		33
 
 
-static const short yytable[] = {    12,
-    31,    16,     4,     1,    16,    19,    20,    17,    22,     1,
-    17,    19,    20,    13,     3,     4,    23,    25,    25,     2,
-     3,     4,     3,     4,    24,    26,    29,    32,    30,    14,
-    15,    21,    27,    28
+static const short yytable[] = {    30,
+     3,     4,     1,    16,    11,     1,    16,    19,    20,    17,
+    19,    20,    17,    12,     3,    25,    22,    13,     3,     4,
+     2,     3,     4,    26,    27,    28,    31,    29,    14,    21,
+    23,    24,    15
 };
 
-static const short yycheck[] = {     1,
-     0,     7,    15,     3,     7,     8,     9,    13,    12,     3,
-    13,     8,     9,    13,    14,    15,     4,    19,    20,    13,
-    14,    15,    14,    15,    19,    20,     5,     0,     6,     5,
-     5,     8,    22,    22
+static const short yycheck[] = {     0,
+    19,    20,     3,    12,    20,     3,    12,    13,    14,    18,
+    13,    14,    18,    17,    19,    20,     9,    18,    19,    20,
+    18,    19,    20,    19,    20,    10,     0,    11,     5,     8,
+    12,    12,     5
 };
 
 #line 352 "/usr/share/bison++/bison.cc"
@@ -1093,89 +1116,95 @@ YYLABEL(yyreduce)
   switch (yyn) {
 
 case 1:
-#line 47 "cmp/pye.y"
+#line 46 "cmp/pye.y"
 {;;
     break;}
 case 2:
-#line 48 "cmp/pye.y"
+#line 47 "cmp/pye.y"
 {;;
     break;}
 case 3:
-#line 49 "cmp/pye.y"
+#line 48 "cmp/pye.y"
 {;;
     break;}
 case 4:
-#line 50 "cmp/pye.y"
+#line 49 "cmp/pye.y"
 {;;
     break;}
 case 5:
-#line 51 "cmp/pye.y"
+#line 50 "cmp/pye.y"
 {;;
     break;}
 case 6:
-#line 52 "cmp/pye.y"
+#line 51 "cmp/pye.y"
 {;;
     break;}
 case 7:
-#line 58 "cmp/pye.y"
+#line 57 "cmp/pye.y"
 {;;
     break;}
 case 8:
-#line 59 "cmp/pye.y"
+#line 58 "cmp/pye.y"
 {;;
     break;}
 case 9:
-#line 65 "cmp/pye.y"
+#line 64 "cmp/pye.y"
 {;;
     break;}
 case 10:
-#line 66 "cmp/pye.y"
+#line 65 "cmp/pye.y"
 {;;
     break;}
 case 11:
-#line 72 "cmp/pye.y"
+#line 71 "cmp/pye.y"
 {
-		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", yyvsp[-2].ident.name, yyvsp[0].expr);
+		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", yyvsp[-2].identifier->name, yyvsp[0].expr);
 		fprintf(yyout, "%s = %d\n", yyvsp[-2].ident, yyvsp[0].expr);
+
+		/* Here we need to create a function to check whether the identifier exists or not in the table
+		if(check_whether_identifier_exists($1) == TRUE) { // If it exists we just update the value in the table
+			
+		}
+		else {*/
+			//create a new identifier in the table
+			NIdentifier newIdentifier = new NIdentifier(yyvsp[-2].identifier);
+		//}
+
 		yyval.stmt = yyvsp[0].expr;
 	;
     break;}
 case 12:
-#line 77 "cmp/pye.y"
+#line 86 "cmp/pye.y"
 {yyval.stmt = new NVariableDeclaration(NULL, &yyvsp[-2].ident, &yyvsp[0].stmt);;
     break;}
 case 13:
-#line 82 "cmp/pye.y"
+#line 91 "cmp/pye.y"
 {yyval.expr = yyvsp[0].expr;;
     break;}
 case 14:
-#line 83 "cmp/pye.y"
+#line 92 "cmp/pye.y"
 {yyval.expr = yyvsp[-2].expr + yyvsp[0].expr;;
     break;}
 case 15:
-#line 84 "cmp/pye.y"
+#line 93 "cmp/pye.y"
 {yyval.expr = yyvsp[-2].expr - yyvsp[0].expr;;
     break;}
 case 16:
-#line 90 "cmp/pye.y"
+#line 99 "cmp/pye.y"
 {yyval.expr = new NInteger (atol(yyvsp[0].num -> c_str()));;
     break;}
 case 17:
-#line 91 "cmp/pye.y"
-{;;
+#line 100 "cmp/pye.y"
+{
+		;//Need to get the value of the identifier in the table here	
+	  ;
     break;}
 case 18:
-#line 97 "cmp/pye.y"
+#line 108 "cmp/pye.y"
 {
-		fprintf(yyout, "# Function declaration: %s\n", yyvsp[-3].ident.name);
-		fprintf(yyout, "def %s():\n", yyvsp[-3].ident.name);
-		yyval.stmt = new NFunctionDeclaration (&yyvsp[-3].ident, NULL, NULL)
-	;
-    break;}
-case 19:
-#line 104 "cmp/pye.y"
-{
-		yyval.ident = new NIdentifier (yyvsp[0].ident);
+		fprintf(yyout, "# Function declaration: %s\n", yyvsp[-3].identifier->name);
+		fprintf(yyout, "def %s():\n", yyvsp[-3].identifier->name);
+		yyval.stmt = new NFunctionDeclaration (yyvsp[-3].identifier, NULL, NULL)
 	;
     break;}
 }
@@ -1382,7 +1411,7 @@ YYLABEL(yyerrhandle)
 /* END */
 
  #line 1038 "/usr/share/bison++/bison.cc"
-#line 114 "cmp/pye.y"
+#line 120 "cmp/pye.y"
 
 
 int main (int argc, char **argv) {
