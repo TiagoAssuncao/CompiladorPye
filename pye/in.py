@@ -10,9 +10,9 @@
 	casa3 = 5;
 
 
-/* afsgafs
+""" afsgafs
 sdfshdghs
-casa5 = 6;*/
+casa5 = 6;"""
 
 
 def funcao():

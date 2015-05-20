@@ -55,7 +55,7 @@ input:
 	| input NEW_LINE {fprintf(yyout, "\n");}
 	| COMMENT_LINE {fprintf(yyout, "Comentatio em linha");}
 	| input COMMENT_LINE {fprintf(yyout, "%s", $2);}
-	| input COMMENT_BLOCK {fprintf(yyout, "%s", $2);}
+
 	;
 
 
@@ -75,7 +75,7 @@ command_finisher:
 
 
 assignment:
-	| IDENTIFIER EQUAL expression {
+	IDENTIFIER EQUAL expression {
 		apply_tabulation();
 		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
 		apply_tabulation();
@@ -117,17 +117,17 @@ function_declaration_args:
 
 %%
 
-void apply_tabulation(){
+void apply_tabulation() {
 	
 	int i = 0;
-	while(space_level > i){
+	while(space_level > i) {
 
 		fprintf(yyout, " ");
 		i++;
 	}
 
 	i = 0;
-	while(tabulation_level > i){
+	while(tabulation_level > i) {
 
 		fprintf(yyout, "\t");
 		i++;
@@ -147,7 +147,7 @@ int main (int argc, char **argv) {
 	yyin = fopen(argv[1], "r");
 	yyparse();
 
-	if((amount_comment_blocks%2) != 0){
+	if((amount_comment_blocks%2) != 0) {
 		printf("ERRO DE BLOCO DE COMENTARIO\n");
 	}
 	else{

@@ -26,8 +26,9 @@ integer [1-9]{digit}*
 identifier [a-zA-Z_][a-zA-Z0-9_]*
 
 comment_line [#]
+comment_many_lines "\"\"\""
 
-undefined [.]*
+undefined [.]+
 %x COMMENT
 
 %%
@@ -43,67 +44,78 @@ undefined [.]*
 "/"					{set_tabulation(TRUE); return DIVIDE;}
 "="					{set_tabulation(TRUE); return EQUAL;}
 
-{comment_line}.*	{
-						set_tabulation(TRUE); 
-						yylval.comment_line = strdup(yytext); 
-						return COMMENT_LINE;
-					}
+{comment_line}.* {
+	set_tabulation(TRUE); 
+	yylval.comment_line = strdup(yytext); 
+	return COMMENT_LINE;
+}
 
-"/*"            	{BEGIN(COMMENT);}
-<COMMENT>"*/" 		{set_tabulation(TRUE); BEGIN(INITIAL);}
-<COMMENT>{undefined} {yylval.comment_block = strdup(yytext); return COMMENT_BLOCK;}
+{comment_many_lines} {
+	BEGIN(COMMENT);
+}
 
-"\n"				{
-						current_line++; 
-						clean_tabulation(); 
-						set_tabulation(FALSE); 
-						return NEW_LINE;
-					}
+<COMMENT>{comment_many_lines} {
+	set_tabulation(TRUE); 
+	BEGIN(INITIAL);
+}
 
-{space}				{
-						if(!blocked_tabulation){
-							space_level++;
-						}
-						else{
-							//Nothing to do
-						}
-					}
+<COMMENT>{undefined} {
+	yylval.comment_block = strdup(yytext); 
+}
 
-{tabulation}		{
-						if(!blocked_tabulation){
-							tabulation_level++;
-						}
-						else{
-							//Nothing to do
-						}
-					}
+"\n" {
+	current_line++; 
+	clean_tabulation(); 
+	set_tabulation(FALSE); 
+	return NEW_LINE;
+}
 
-{identifier}		{
-						yylval.identifier = strdup(yytext); 
-						set_tabulation(TRUE); 
-						return IDENTIFIER;
-					}
+{space} {
+	if(!blocked_tabulation){
+		space_level++;
+	}
+	else{
+		//Nothing to do
+	}
+}
 
-{integer} 			{	
-						yylval.num = atoi(yytext); 
-						set_tabulation(TRUE); 
-						return INTEGER;
-					}
+{tabulation} {
+	if(!blocked_tabulation){
+		tabulation_level++;
+	}
+	else{
+		//Nothing to do
+	}
+}
 
-{undefined}			{	
-						ECHO; 
-						set_tabulation(TRUE); 
-						yyerror ("unexpected character");  
-					}
+{identifier} {
+	yylval.identifier = strdup(yytext); 
+	set_tabulation(TRUE); 
+	return IDENTIFIER;
+}
+
+{integer} {	
+	yylval.num = atoi(yytext); 
+	set_tabulation(TRUE); 
+	return INTEGER;
+}
+
+{undefined} {	
+	ECHO;
+	set_tabulation(TRUE); 
+	yyerror ("unexpected character");  
+}
 
 %%
 
-void clean_tabulation(){
+void clean_tabulation() {
 	space_level = 0;
 	tabulation_level = 0;
+
+	return 0;
 }
 
-void set_tabulation(bool isBlocked){
+void set_tabulation(bool isBlocked) {
 	
 	if(isBlocked){
 		blocked_tabulation = 1;
