@@ -25,9 +25,9 @@ integer [1-9]{digit}*
 identifier [a-zA-Z_][a-zA-Z0-9_]*
 
 comment_line [#]
-comment_block ["\""]{3}
 
 undefined [.]*
+%x COMMENT
 
 %%
 
@@ -48,10 +48,9 @@ undefined [.]*
 						return COMMENT_LINE;
 					}
 
-{comment_block}		{
-						set_tabulation(TRUE); 
-						amount_comment_blocks++;
-						return COMMENT_BLOCK;}
+"/*"            	{BEGIN(COMMENT);}
+<COMMENT>"*/" 		{set_tabulation(TRUE); BEGIN(INITIAL);}
+<COMMENT>{undefined} {yylval.comment_block = strdup(yytext); return COMMENT_BLOCK;}
 
 "\n"				{
 						current_line++; 

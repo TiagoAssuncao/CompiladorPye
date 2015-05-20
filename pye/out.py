@@ -12,12 +12,14 @@ casa1 = 7
 # Variable identifier: casa2. Value: 7
 casa2 = 7
 
-#casa4 = 8;
+POHAA#casa4 = 8;
 	# Variable identifier: casa3. Value: 5
 	casa3 = 5;
 
-Comentário em bloco encontrado
 
+ afsgafs
+sdfshdghs
+casa5 = 6;
 
 
 # Function declaration: funcao

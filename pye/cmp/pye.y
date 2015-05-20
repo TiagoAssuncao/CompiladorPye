@@ -21,7 +21,7 @@
 %}
 
 
-%union {int num; char *identifier; char *comment_line;}
+%union {int num; char *identifier; char *comment_line; char *comment_block;}
 
 %start input
 
@@ -31,11 +31,11 @@
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
 %token NEW_LINE 
 %token ANYTHING
-%token COMMENT_BLOCK
 
 %token <num> INTEGER
 %token <identifier> IDENTIFIER
 %token <comment_line> COMMENT_LINE
+%token <comment_block> COMMENT_BLOCK
 
 %type <num> input expression term assignment
 
@@ -47,22 +47,11 @@ input:
 	| input command {;}
 	| function_declaration {;}
 	| input function_declaration {;}
-	| NEW_LINE 
-	{
-		fprintf(yyout, "\n");
-	}
-	| input NEW_LINE 
-	{
-		fprintf(yyout, "\n");
-	}
+	| NEW_LINE { fprintf(yyout, "\n");}
+	| input NEW_LINE {fprintf(yyout, "\n");}
 	| COMMENT_LINE {fprintf(yyout, "Comentatio em linha");}
-	| input COMMENT_LINE {
-		fprintf(yyout, "%s", $2);
-	}
-	| input COMMENT_BLOCK     COMMENT_BLOCK
-	{
-		fprintf(yyout, "Comentário em bloco encontrado");
-	}
+	| input COMMENT_LINE {fprintf(yyout, "%s", $2);}
+	| input COMMENT_BLOCK {fprintf(yyout, "%s", $2);}
 	;
 
 
@@ -75,9 +64,7 @@ command:
 
 
 command_finisher:
-	NEW_LINE {
-		fprintf(yyout, "\n");
-	}
+	NEW_LINE {fprintf(yyout, "\n");}
 	| SEMICOLON {fprintf(yyout, ";");}
 	;
 
