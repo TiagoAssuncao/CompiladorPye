@@ -1,23 +1,17 @@
 #ifndef _LINKED_LIST_H_
 #define _LINKED_LIST_H_
 
+#include "bool.h"
+
 // A function pointer that will be used as a generic free function.
 // typedef void (*free_function)(void *);
-
-
-// C (< C99) has no bool type. This will simulate it.
-typedef enum {
-	FALSE,
-	TRUE
-} bool;
-
 
 // As the type on the linked list will be generic, we need a way to compare elements while iterating through the linked list.
 // Thus, this is defining a function (of comparison) pointer that can be passed as argument in many functions.
 typedef bool (*generic_comparator)(void *, void *);
 
 
-// A generic node that can handle any data type due to its void pointer (void *) element (data).
+// A generic node that can handle any data type due to its void pointer (void *) element.
 // By building this guy down here, only one implementation of a linked list will be necessary.
 typedef struct node {
 	void *element;
@@ -26,7 +20,7 @@ typedef struct node {
 } node;
 
 
-// A helper structure that will control a linked list (linked list) as a whole.
+// A helper structure that will control a linked list as a whole.
 // Its first element (length) represents how many nodes are present.
 // The second one (element_size) represents the size of the type to replace the generic type.
 // Third and fourth ones are, respectively, a pointer to the first node and a pointer to the last node of the list.

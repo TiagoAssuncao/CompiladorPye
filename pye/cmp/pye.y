@@ -17,15 +17,17 @@
 	extern unsigned int current_line;
 	extern unsigned int tabulation_level;
 	extern unsigned int space_level;
-	extern unsigned int amount_comment_blocks;
+	extern unsigned int amount_block_comments;
+
+	void apply_tabulation();
 %}
 
 
 %union {
 	int num; 
 	char *identifier; 
-	char *comment_line; 
-	char *comment_block;
+	char *line_comment; 
+	char *block_comment;
 }
 
 %start input
@@ -38,8 +40,8 @@
 
 %token <num> INTEGER
 %token <identifier> IDENTIFIER
-%token <comment_line> COMMENT_LINE
-%token <comment_block> COMMENT_BLOCK
+%token <line_comment> LINE_COMMENT
+%token <block_comment> BLOCK_COMMENT
 
 %type <num> input expression term assignment
 
@@ -53,8 +55,8 @@ input:
 	| input function_declaration {;}
 	| NEW_LINE { fprintf(yyout, "\n");}
 	| input NEW_LINE {fprintf(yyout, "\n");}
-	| COMMENT_LINE {fprintf(yyout, "Comentatio em linha");}
-	| input COMMENT_LINE {fprintf(yyout, "%s", $2);}
+	| LINE_COMMENT {fprintf(yyout, "Comentatio em linha");}
+	| input LINE_COMMENT {fprintf(yyout, "%s", $2);}
 
 	;
 
@@ -117,26 +119,7 @@ function_declaration_args:
 
 %%
 
-void apply_tabulation() {
-	
-	int i = 0;
-	while(space_level > i) {
-
-		fprintf(yyout, " ");
-		i++;
-	}
-
-	i = 0;
-	while(tabulation_level > i) {
-
-		fprintf(yyout, "\t");
-		i++;
-	}
-}
-
 int main (int argc, char **argv) {
-
-
 	yyout = fopen("out.py", "w");
 
 	if(yyout == NULL) {
@@ -147,14 +130,28 @@ int main (int argc, char **argv) {
 	yyin = fopen(argv[1], "r");
 	yyparse();
 
-	if((amount_comment_blocks%2) != 0) {
+	if((amount_block_comments % 2) != 0) {
 		printf("ERRO DE BLOCO DE COMENTARIO\n");
 	}
-	else{
+	else {
 		//Nothing to do
 	}
 
 	return 0;
+}
+
+void apply_tabulation() {
+	int i = 0;
+	while(space_level > i) {
+		fprintf(yyout, " ");
+		i++;
+	}
+
+	i = 0;
+	while(tabulation_level > i) {
+		fprintf(yyout, "\t");
+		i++;
+	}
 }
 
 void yyerror (char *s) {

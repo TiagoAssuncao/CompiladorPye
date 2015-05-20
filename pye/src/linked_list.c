@@ -4,13 +4,14 @@
 #include <assert.h>
 
 #include "linked_list.h"
+#include "bool.h"
 #include "debugger.h"
 
 
 list_header *new_linked_list(const unsigned int element_size) {
-	assert(element_size != 0);
-
 	debug("FUNCTION new_linked_list: Starting...");
+	
+	assert(element_size != 0);
 
 	list_header *header = NULL;
 	header = (list_header *) malloc(sizeof(list_header));

@@ -1,2 +1,9 @@
 #Object files
 *.o
+
+#Generated Flex/Bison files
+pye.tab.*
+lex.yy.c
+
+#Binary files
+pye/bin/pye

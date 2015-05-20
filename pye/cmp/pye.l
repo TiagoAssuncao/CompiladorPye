@@ -2,127 +2,137 @@
 	#include <string.h>
 
 	#include "pye.tab.h"
+	#include "bool.h"
+
+	enum {
+		NOT_BLOCKED,
+		BLOCKED
+	};
 
 	unsigned int current_line = 1;
 	unsigned int space_level = 0;
 	unsigned int tabulation_level = 0;
-	unsigned int blocked_tabulation = 0;
-	unsigned int amount_comment_blocks = 0;
+	unsigned int tabulation_enhancer_status = 0;
+	unsigned int amount_block_comments = 0;
 
-	typedef enum{
-		FALSE,
-		TRUE
-	}bool;
+	void clean_tabulation_level();
+	void set_tabulation_status(bool status);
 %}
 
 
 letter [a-zA-z]
 word {letter}+
-space [ ]
-tabulation \t
 
 digit [0-9]
 integer [1-9]{digit}*
 identifier [a-zA-Z_][a-zA-Z0-9_]*
 
-comment_line [#]
-comment_many_lines "\"\"\""
+space [ ]
+tabulation \t
+new_line \n
+
+line_comment [#]
+many_lines_comment "\"\"\""
 
 undefined [.]+
-%x COMMENT
+
+%x COMMENT_MODE
+
 
 %%
 
-"def "				{set_tabulation(TRUE); return DEF;}
-"("					{set_tabulation(TRUE); return LEFT_PARENTHESIS;}
-")"					{set_tabulation(TRUE); return RIGHT_PARENTHESIS;}
-":"					{set_tabulation(TRUE); return COLON;}
-";"					{set_tabulation(TRUE); return SEMICOLON;}
-"+"					{set_tabulation(TRUE); return PLUS;}
-"-"					{set_tabulation(TRUE); return MINUS;}
-"*"					{set_tabulation(TRUE); return MULTIPLY;}
-"/"					{set_tabulation(TRUE); return DIVIDE;}
-"="					{set_tabulation(TRUE); return EQUAL;}
+"def "				{set_tabulation_status(BLOCKED); return DEF;}
+"("					{set_tabulation_status(BLOCKED); return LEFT_PARENTHESIS;}
+")"					{set_tabulation_status(BLOCKED); return RIGHT_PARENTHESIS;}
+":"					{set_tabulation_status(BLOCKED); return COLON;}
+";"					{set_tabulation_status(BLOCKED); return SEMICOLON;}
+"+"					{set_tabulation_status(BLOCKED); return PLUS;}
+"-"					{set_tabulation_status(BLOCKED); return MINUS;}
+"*"					{set_tabulation_status(BLOCKED); return MULTIPLY;}
+"/"					{set_tabulation_status(BLOCKED); return DIVIDE;}
+"="					{set_tabulation_status(BLOCKED); return EQUAL;}
 
-{comment_line}.* {
-	set_tabulation(TRUE); 
-	yylval.comment_line = strdup(yytext); 
-	return COMMENT_LINE;
+
+{line_comment}.* {
+	set_tabulation_status(BLOCKED); 
+	yylval.line_comment = strdup(yytext); 
+	return LINE_COMMENT;
 }
 
-{comment_many_lines} {
-	BEGIN(COMMENT);
+
+{many_lines_comment} {
+	BEGIN(COMMENT_MODE);
 }
 
-<COMMENT>{comment_many_lines} {
-	set_tabulation(TRUE); 
+
+<COMMENT_MODE>{many_lines_comment} {
+	set_tabulation_status(BLOCKED); 
 	BEGIN(INITIAL);
 }
 
-<COMMENT>{undefined} {
-	yylval.comment_block = strdup(yytext); 
+
+<COMMENT_MODE>{undefined} {
+	yylval.block_comment = strdup(yytext); 
 }
 
-"\n" {
+
+{new_line} {
 	current_line++; 
-	clean_tabulation(); 
-	set_tabulation(FALSE); 
+	clean_tabulation_level(); 
+	set_tabulation_status(NOT_BLOCKED); 
 	return NEW_LINE;
 }
 
+
 {space} {
-	if(!blocked_tabulation){
+	if(tabulation_enhancer_status == NOT_BLOCKED){
 		space_level++;
 	}
-	else{
-		//Nothing to do
+	else {
+		// Nothing to do
 	}
 }
 
+
 {tabulation} {
-	if(!blocked_tabulation){
+	if(tabulation_enhancer_status == NOT_BLOCKED) {
 		tabulation_level++;
 	}
-	else{
-		//Nothing to do
+	else {
+		// Nothing to do
 	}
 }
+
 
 {identifier} {
 	yylval.identifier = strdup(yytext); 
-	set_tabulation(TRUE); 
+	set_tabulation_status(BLOCKED); 
 	return IDENTIFIER;
 }
 
+
 {integer} {	
 	yylval.num = atoi(yytext); 
-	set_tabulation(TRUE); 
+	set_tabulation_status(BLOCKED); 
 	return INTEGER;
 }
 
+
 {undefined} {	
 	ECHO;
-	set_tabulation(TRUE); 
+	set_tabulation_status(BLOCKED); 
 	yyerror ("unexpected character");  
 }
 
 %%
 
-void clean_tabulation() {
+void clean_tabulation_level() {
 	space_level = 0;
 	tabulation_level = 0;
-
-	return 0;
 }
 
-void set_tabulation(bool isBlocked) {
-	
-	if(isBlocked){
-		blocked_tabulation = 1;
-	}
-	else{
-		blocked_tabulation = 0;
-	}
+void set_tabulation_status(bool status) {
+	tabulation_enhancer_status = status;
 }
 
 int yywrap(void) {

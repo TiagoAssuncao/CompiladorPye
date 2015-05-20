@@ -58,8 +58,8 @@ extern int yydebug;
     NEW_LINE = 268,
     INTEGER = 269,
     IDENTIFIER = 270,
-    COMMENT_LINE = 271,
-    COMMENT_BLOCK = 272
+    LINE_COMMENT = 271,
+    BLOCK_COMMENT = 272
   };
 #endif
 
@@ -68,12 +68,12 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 24 "cmp/pye.y" /* yacc.c:1909  */
+#line 26 "cmp/pye.y" /* yacc.c:1909  */
 
 	int num; 
 	char *identifier; 
-	char *comment_line; 
-	char *comment_block;
+	char *line_comment; 
+	char *block_comment;
 
 #line 79 "pye.tab.h" /* yacc.c:1909  */
 };
