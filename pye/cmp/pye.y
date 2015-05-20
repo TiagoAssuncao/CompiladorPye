@@ -21,7 +21,12 @@
 %}
 
 
-%union {int num; char *identifier; char *comment_line; char *comment_block;}
+%union {
+	int num; 
+	char *identifier; 
+	char *comment_line; 
+	char *comment_block;
+}
 
 %start input
 
@@ -30,7 +35,6 @@
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
 %token NEW_LINE 
-%token ANYTHING
 
 %token <num> INTEGER
 %token <identifier> IDENTIFIER

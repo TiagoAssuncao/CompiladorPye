@@ -12,7 +12,7 @@ casa1 = 7
 # Variable identifier: casa2. Value: 7
 casa2 = 7
 
-POHAA#casa4 = 8;
+#casa4 = 8;
 	# Variable identifier: casa3. Value: 5
 	casa3 = 5;
 

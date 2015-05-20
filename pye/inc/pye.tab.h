@@ -56,11 +56,10 @@ extern int yydebug;
     DIVIDE = 266,
     EQUAL = 267,
     NEW_LINE = 268,
-    ANYTHING = 269,
-    INTEGER = 270,
-    IDENTIFIER = 271,
-    COMMENT_LINE = 272,
-    COMMENT_BLOCK = 273
+    INTEGER = 269,
+    IDENTIFIER = 270,
+    COMMENT_LINE = 271,
+    COMMENT_BLOCK = 272
   };
 #endif
 
@@ -70,9 +69,13 @@ typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
 #line 24 "cmp/pye.y" /* yacc.c:1909  */
-int num; char *identifier; char *comment_line; char *comment_block;
 
-#line 76 "pye.tab.h" /* yacc.c:1909  */
+	int num; 
+	char *identifier; 
+	char *comment_line; 
+	char *comment_block;
+
+#line 79 "pye.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

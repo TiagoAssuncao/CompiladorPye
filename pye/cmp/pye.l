@@ -19,6 +19,7 @@
 letter [a-zA-z]
 word {letter}+
 space [ ]
+tabulation \t
 
 digit [0-9]
 integer [1-9]{digit}*
@@ -40,7 +41,7 @@ undefined [.]*
 "-"					{set_tabulation(TRUE); return MINUS;}
 "*"					{set_tabulation(TRUE); return MULTIPLY;}
 "/"					{set_tabulation(TRUE); return DIVIDE;}
-"="					{set_tabulation(TRUE);  return EQUAL;}
+"="					{set_tabulation(TRUE); return EQUAL;}
 
 {comment_line}.*	{
 						set_tabulation(TRUE); 
@@ -68,7 +69,7 @@ undefined [.]*
 						}
 					}
 
-"\t"				{
+{tabulation}		{
 						if(!blocked_tabulation){
 							tabulation_level++;
 						}
@@ -85,14 +86,14 @@ undefined [.]*
 
 {integer} 			{	
 						yylval.num = atoi(yytext); 
-						set_tabulation(TRUE);  return INTEGER;
+						set_tabulation(TRUE); 
+						return INTEGER;
 					}
 
 {undefined}			{	
 						ECHO; 
 						set_tabulation(TRUE); 
 						yyerror ("unexpected character");  
-						return ANYTHING;
 					}
 
 %%
