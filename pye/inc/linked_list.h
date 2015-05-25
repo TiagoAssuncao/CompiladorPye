@@ -14,7 +14,17 @@ typedef bool (*generic_comparator)(void *, void *);
 // A generic node that can handle any data type due to its void pointer (void *) element.
 // By building this guy down here, only one implementation of a linked list will be necessary.
 typedef struct node {
-	void *element;
+	bool is_used;
+
+	unsigned int declaration_line;
+	unsigned int tabulation_level;
+	unsigned int space_level;
+	// The size of these 'strings' are not yet defined, i.e they can be changed from 35.
+	char type[35];
+	char identifier[35];
+	char scope[35];	
+	char structure_type[35];	
+
 	struct node *next;
 	struct node *previous;
 } node;
@@ -27,7 +37,6 @@ typedef struct node {
 // The last one is a pointer to a function that will implement a specific way of freeing the specific type of the list.
 typedef struct {
 	unsigned int length;
-	unsigned int element_size;
 	node *head;
 	node *tail;
 	// free_function free_f;
@@ -36,19 +45,19 @@ typedef struct {
 
 // Allocates memory to a linked list and fill its element_size with the first parameter.
 // Returns a linked_list pointing to an allocated memory space.
-list_header *new_linked_list(unsigned int element_size);
+list_header *new_linked_list(void);
 
 // Frees every node of a linked list. In other words, free the WHOLE linked list.
 void free_linked_list(list_header *header);
 
 // Inserts an element in the last position of the linked list.
 // Returns a linked_list pointer with its head/tail updated(s).
-list_header *insert_element(list_header *header, void *element);
+list_header *insert_element(list_header *header, node *element);
 
 // Search for a element in the linked list. The third is a pointer function that points to a comparison function.
 // If it is found, returns a pointer to the correlated node.
 // Otherwise, returns NULL.
-node *search_element(list_header *header, void *element, generic_comparator comparison_function);
+node *search_element(list_header *header, char node_identifier[]);
 
 node *remove_element(list_header *header, void *element, generic_comparator comparison_function);
 

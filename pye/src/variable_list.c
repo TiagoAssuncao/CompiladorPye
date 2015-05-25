@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -54,5 +54,5 @@ bool variable_identifier_comparator(void *variable, void *identifier) {
 
 
 	return equal;
-}
+}*/
 

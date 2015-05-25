@@ -8,16 +8,13 @@
 #include "debugger.h"
 
 
-list_header *new_linked_list(const unsigned int element_size) {
+list_header *new_linked_list(void) {
 	debug("FUNCTION new_linked_list: Starting...");
-	
-	assert(element_size != 0);
 
 	list_header *header = NULL;
 	header = (list_header *) malloc(sizeof(list_header));
 
 	if(header != NULL) {
-		header->element_size = element_size;
 		header->length = 0;
 		header->head = header->tail = NULL;
 	}
@@ -41,14 +38,13 @@ void free_linked_list(list_header *header) {
 		current_node = header->head;
 		header->head = current_node->next;
 
-		free(current_node->element);
 		free(current_node);
 	}
 
 	debug("FUNCTION free_linked_list: Leaving...");
 }
 
-list_header *insert_element(list_header *header, void *element) {
+list_header *insert_element(list_header *header, node *element) {
 	debug("FUNCTION insert_element: Starting...");
 
 	assert(header != NULL);
@@ -57,19 +53,10 @@ list_header *insert_element(list_header *header, void *element) {
 	node *new_node = NULL;
 	new_node = (node *) malloc(sizeof(node));
 
-	debug("FUNCTION insert_element: New_node malloc'd. Going for its element now.");
+	debug("FUNCTION insert_element: New_node malloc'd.");
 
-	new_node->element = NULL;
-	new_node->element = (void *) malloc(header->element_size);
-
-	debug("FUNCTION insert_element: New node and its element malloc'd");
-
-	if(new_node != NULL && new_node->element != NULL) {
+	if(new_node != NULL) {
 		new_node->next = NULL;
-
-		debug("FUNCTION insert_element: Before memcpy");
-		memcpy(new_node->element, element, header->element_size);
-		debug("FUNCTION insert_element: After memcpy");
 
 		if(header->length == 0) {
 			new_node->previous = NULL;
@@ -93,11 +80,11 @@ list_header *insert_element(list_header *header, void *element) {
 	return header;
 }
 
-node *search_element(list_header *header, void *element, generic_comparator comparison_function) {
+node *search_element(list_header *header, char node_identifier[]) {
 	debug("FUNCTION search_element: Starting...");
 
 	assert(header != NULL);
-	assert(element != NULL);
+	assert(node_identifier != NULL);
 
 	node *return_node = NULL;
 
@@ -105,12 +92,12 @@ node *search_element(list_header *header, void *element, generic_comparator comp
 		node *current_node = NULL;
 		current_node = header->head;
 
-		bool element_found = FALSE;
+		int element_found = 0;
 
 		while(current_node != NULL) {
-			element_found = comparison_function(current_node->element, element);
+			element_found = !strcmp(current_node->identifier, node_identifier);
 
-			if(element_found == TRUE) {
+			if(element_found) {
 				return_node = current_node;
 				break;
 			}
