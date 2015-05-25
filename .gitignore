@@ -2,8 +2,8 @@
 *.o
 
 #Generated Flex/Bison files
-pye.tab.*
-lex.yy.c
+*pye.tab.*
+*lex.yy.c
 
 #Binary files
 pye/bin/pye

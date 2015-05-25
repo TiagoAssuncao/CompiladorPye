@@ -29,7 +29,7 @@ obj/%.o: src/%.c
 
 .PHONY: run
 run:
-	@cat in.py | bin/./pye
+	bin/./pye in.py out.py
 
 .PHONY: show
 show:

@@ -73,20 +73,26 @@
 	#include "variable_list.h"
 	#include "debugger.h"
 
+	enum {
+		FIRST,
+		SECOND
+	};
+
+	unsigned int CURRENT_STEP;
+
+	char CURRENT_SCOPE[35];
+
 	void yyerror (char *s);
+	void apply_tabulation();
+
 	extern FILE *yyin;
 	extern FILE *yyout;
-
-	char current_scope[35];
-
 	extern unsigned int current_line;
 	extern unsigned int tabulation_level;
 	extern unsigned int space_level;
 	extern unsigned int amount_block_comments;
 
-	void apply_tabulation();
-
-#line 90 "pye.tab.c" /* yacc.c:339  */
+#line 96 "pye.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -144,14 +150,14 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 26 "cmp/pye.y" /* yacc.c:355  */
+#line 32 "cmp/pye.y" /* yacc.c:355  */
 
 	int num; 
 	char *identifier; 
 	char *line_comment; 
 	char *block_comment;
 
-#line 155 "pye.tab.c" /* yacc.c:355  */
+#line 161 "pye.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -166,7 +172,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 170 "pye.tab.c" /* yacc.c:358  */
+#line 176 "pye.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -465,9 +471,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    52,    52,    53,    54,    55,    56,    57,    58,    59,
-      66,    67,    73,    74,    80,    87,    92,    93,    94,   100,
-     101,   107
+       0,    58,    58,    59,    60,    61,    62,    63,    64,    65,
+      71,    72,    78,    79,    85,    92,    97,    98,    99,   105,
+     106,   112
 };
 #endif
 
@@ -1256,79 +1262,79 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 52 "cmp/pye.y" /* yacc.c:1646  */
-    {;}
-#line 1262 "pye.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 3:
-#line 53 "cmp/pye.y" /* yacc.c:1646  */
+#line 58 "cmp/pye.y" /* yacc.c:1646  */
     {;}
 #line 1268 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 4:
-#line 54 "cmp/pye.y" /* yacc.c:1646  */
+  case 3:
+#line 59 "cmp/pye.y" /* yacc.c:1646  */
     {;}
 #line 1274 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 5:
-#line 55 "cmp/pye.y" /* yacc.c:1646  */
+  case 4:
+#line 60 "cmp/pye.y" /* yacc.c:1646  */
     {;}
 #line 1280 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 6:
-#line 56 "cmp/pye.y" /* yacc.c:1646  */
-    { fprintf(yyout, "\n");}
+  case 5:
+#line 61 "cmp/pye.y" /* yacc.c:1646  */
+    {;}
 #line 1286 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 7:
-#line 57 "cmp/pye.y" /* yacc.c:1646  */
+  case 6:
+#line 62 "cmp/pye.y" /* yacc.c:1646  */
     {fprintf(yyout, "\n");}
 #line 1292 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 8:
-#line 58 "cmp/pye.y" /* yacc.c:1646  */
-    {fprintf(yyout, "Comentatio em linha");}
+  case 7:
+#line 63 "cmp/pye.y" /* yacc.c:1646  */
+    {fprintf(yyout, "\n");}
 #line 1298 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 9:
-#line 59 "cmp/pye.y" /* yacc.c:1646  */
-    {fprintf(yyout, "%s", (yyvsp[0].line_comment));}
+  case 8:
+#line 64 "cmp/pye.y" /* yacc.c:1646  */
+    {fprintf(yyout, "Comentatio em linha");}
 #line 1304 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 10:
-#line 66 "cmp/pye.y" /* yacc.c:1646  */
-    {;}
+  case 9:
+#line 65 "cmp/pye.y" /* yacc.c:1646  */
+    {fprintf(yyout, "%s", (yyvsp[0].line_comment));}
 #line 1310 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 11:
-#line 67 "cmp/pye.y" /* yacc.c:1646  */
+  case 10:
+#line 71 "cmp/pye.y" /* yacc.c:1646  */
     {;}
 #line 1316 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 12:
-#line 73 "cmp/pye.y" /* yacc.c:1646  */
-    {fprintf(yyout, "\n");}
+  case 11:
+#line 72 "cmp/pye.y" /* yacc.c:1646  */
+    {;}
 #line 1322 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 13:
-#line 74 "cmp/pye.y" /* yacc.c:1646  */
-    {fprintf(yyout, ";");}
+  case 12:
+#line 78 "cmp/pye.y" /* yacc.c:1646  */
+    {fprintf(yyout, "\n");}
 #line 1328 "pye.tab.c" /* yacc.c:1646  */
     break;
 
+  case 13:
+#line 79 "cmp/pye.y" /* yacc.c:1646  */
+    {fprintf(yyout, ";");}
+#line 1334 "pye.tab.c" /* yacc.c:1646  */
+    break;
+
   case 14:
-#line 80 "cmp/pye.y" /* yacc.c:1646  */
+#line 85 "cmp/pye.y" /* yacc.c:1646  */
     {
 		apply_tabulation();
 		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", (yyvsp[-2].identifier), (yyvsp[0].num));
@@ -1336,58 +1342,58 @@ yyreduce:
 		fprintf(yyout, "%s = %d", (yyvsp[-2].identifier), (yyvsp[0].num));
 		(yyval.num) = (yyvsp[0].num);
 	}
-#line 1340 "pye.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 15:
-#line 87 "cmp/pye.y" /* yacc.c:1646  */
-    {(yyval.num) = (yyvsp[0].num);}
 #line 1346 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 16:
+  case 15:
 #line 92 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.num) = (yyvsp[0].num);}
 #line 1352 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 17:
-#line 93 "cmp/pye.y" /* yacc.c:1646  */
-    {(yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num);}
+  case 16:
+#line 97 "cmp/pye.y" /* yacc.c:1646  */
+    {(yyval.num) = (yyvsp[0].num);}
 #line 1358 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 18:
-#line 94 "cmp/pye.y" /* yacc.c:1646  */
-    {(yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num);}
+  case 17:
+#line 98 "cmp/pye.y" /* yacc.c:1646  */
+    {(yyval.num) = (yyvsp[-2].num) + (yyvsp[0].num);}
 #line 1364 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 19:
-#line 100 "cmp/pye.y" /* yacc.c:1646  */
-    {(yyval.num) = (yyvsp[0].num);}
+  case 18:
+#line 99 "cmp/pye.y" /* yacc.c:1646  */
+    {(yyval.num) = (yyvsp[-2].num) - (yyvsp[0].num);}
 #line 1370 "pye.tab.c" /* yacc.c:1646  */
     break;
 
-  case 20:
-#line 101 "cmp/pye.y" /* yacc.c:1646  */
-    {;}
+  case 19:
+#line 105 "cmp/pye.y" /* yacc.c:1646  */
+    {(yyval.num) = (yyvsp[0].num);}
 #line 1376 "pye.tab.c" /* yacc.c:1646  */
     break;
 
+  case 20:
+#line 106 "cmp/pye.y" /* yacc.c:1646  */
+    {;}
+#line 1382 "pye.tab.c" /* yacc.c:1646  */
+    break;
+
   case 21:
-#line 107 "cmp/pye.y" /* yacc.c:1646  */
+#line 112 "cmp/pye.y" /* yacc.c:1646  */
     {
 		apply_tabulation();
 		fprintf(yyout, "# Function declaration: %s\n", (yyvsp[-3].identifier));
 		apply_tabulation();
 		fprintf(yyout, "def %s():", (yyvsp[-3].identifier));
 	}
-#line 1387 "pye.tab.c" /* yacc.c:1646  */
+#line 1393 "pye.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1391 "pye.tab.c" /* yacc.c:1646  */
+#line 1397 "pye.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1615,19 +1621,24 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 120 "cmp/pye.y" /* yacc.c:1906  */
+#line 125 "cmp/pye.y" /* yacc.c:1906  */
 
 
 int main (int argc, char **argv) {
-	yyout = fopen("out.py", "w");
+	yyin = fopen(argv[1], "r");
+	if(yyin == NULL) {
+		printf("Error on yyin.\n");
+		exit(0);
+	}
 
+	yyout = fopen(argv[2], "w");
 	if(yyout == NULL) {
 		printf("Error on yyout.\n");
 		exit(0);
 	}
 
-	yyin = fopen(argv[1], "r");
 	yyparse();
+
 
 	if((amount_block_comments % 2) != 0) {
 		printf("ERRO DE BLOCO DE COMENTARIO\n");

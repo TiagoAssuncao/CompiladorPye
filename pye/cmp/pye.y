@@ -8,18 +8,24 @@
 	#include "variable_list.h"
 	#include "debugger.h"
 
+	enum {
+		FIRST,
+		SECOND
+	};
+
+	unsigned int CURRENT_STEP;
+
+	char CURRENT_SCOPE[35];
+
 	void yyerror (char *s);
+	void apply_tabulation();
+
 	extern FILE *yyin;
 	extern FILE *yyout;
-
-	char current_scope[35];
-
 	extern unsigned int current_line;
 	extern unsigned int tabulation_level;
 	extern unsigned int space_level;
 	extern unsigned int amount_block_comments;
-
-	void apply_tabulation();
 %}
 
 
@@ -53,11 +59,10 @@ input:
 	| input command {;}
 	| function_declaration {;}
 	| input function_declaration {;}
-	| NEW_LINE { fprintf(yyout, "\n");}
+	| NEW_LINE {fprintf(yyout, "\n");}
 	| input NEW_LINE {fprintf(yyout, "\n");}
 	| LINE_COMMENT {fprintf(yyout, "Comentatio em linha");}
 	| input LINE_COMMENT {fprintf(yyout, "%s", $2);}
-
 	;
 
 
@@ -120,14 +125,22 @@ function_declaration_args:
 %%
 
 int main (int argc, char **argv) {
-	yyout = fopen("out.py", "w");
+	yyin = fopen(argv[1], "r");
+	if(yyin == NULL) {
+		printf("Error on yyin.\n");
+		exit(0);
+	}
 
+	yyout = fopen(argv[2], "w");
 	if(yyout == NULL) {
 		printf("Error on yyout.\n");
 		exit(0);
 	}
 
-	yyin = fopen(argv[1], "r");
+	CURRENT_STEP = FIRST;
+	yyparse();
+
+	CURRENT_STEP = SECOND;
 	yyparse();
 
 	if((amount_block_comments % 2) != 0) {
