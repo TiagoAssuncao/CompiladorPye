@@ -12,11 +12,11 @@
 	unsigned int current_line = 1;
 	unsigned int space_level = 0;
 	unsigned int tabulation_level = 0;
-	unsigned int tabulation_enhancer_status = 0;
+	unsigned int white_enhancer_status = 0;
 	unsigned int amount_block_comments = 0;
 
-	void clean_tabulation_level();
-	void set_tabulation_status(bool status);
+	void clean_white_level();
+	void set_white_status(bool status);
 %}
 
 
@@ -41,20 +41,26 @@ undefined [.]+
 
 %%
 
-"def "				{set_tabulation_status(BLOCKED); return DEF;}
-"("					{set_tabulation_status(BLOCKED); return LEFT_PARENTHESIS;}
-")"					{set_tabulation_status(BLOCKED); return RIGHT_PARENTHESIS;}
-":"					{set_tabulation_status(BLOCKED); return COLON;}
-";"					{set_tabulation_status(BLOCKED); return SEMICOLON;}
-"+"					{set_tabulation_status(BLOCKED); return PLUS;}
-"-"					{set_tabulation_status(BLOCKED); return MINUS;}
-"*"					{set_tabulation_status(BLOCKED); return MULTIPLY;}
-"/"					{set_tabulation_status(BLOCKED); return DIVIDE;}
-"="					{set_tabulation_status(BLOCKED); return EQUAL;}
+"def "				{set_white_status(BLOCKED); return DEF;}
+"if"				{set_white_status(BLOCKED); return IF;}
+"else"				{set_white_status(BLOCKED); return ELSE;}
+"for"				{set_white_status(BLOCKED); return FOR;}
+"while"				{set_white_status(BLOCKED); return WHILE;}
+"try"				{set_white_status(BLOCKED); return TRY;}
+"catch"				{set_white_status(BLOCKED); return CATCH;}
+"("					{set_white_status(BLOCKED); return LEFT_PARENTHESIS;}
+")"					{set_white_status(BLOCKED); return RIGHT_PARENTHESIS;}
+":"					{set_white_status(BLOCKED); return COLON;}
+";"					{set_white_status(BLOCKED); return SEMICOLON;}
+"+"					{set_white_status(BLOCKED); return PLUS;}
+"-"					{set_white_status(BLOCKED); return MINUS;}
+"*"					{set_white_status(BLOCKED); return MULTIPLY;}
+"/"					{set_white_status(BLOCKED); return DIVIDE;}
+"="					{set_white_status(BLOCKED); return EQUAL;}
 
 
 {line_comment}.* {
-	set_tabulation_status(BLOCKED); 
+	set_white_status(BLOCKED); 
 	yylval.line_comment = strdup(yytext); 
 	return LINE_COMMENT;
 }
@@ -66,7 +72,7 @@ undefined [.]+
 
 
 <COMMENT_MODE>{many_lines_comment} {
-	set_tabulation_status(BLOCKED); 
+	set_white_status(BLOCKED); 
 	BEGIN(INITIAL);
 }
 
@@ -78,14 +84,14 @@ undefined [.]+
 
 {new_line} {
 	current_line++; 
-	clean_tabulation_level(); 
-	set_tabulation_status(NOT_BLOCKED); 
+	clean_white_level(); 
+	set_white_status(NOT_BLOCKED); 
 	return NEW_LINE;
 }
 
 
 {space} {
-	if(tabulation_enhancer_status == NOT_BLOCKED){
+	if(white_enhancer_status == NOT_BLOCKED){
 		space_level++;
 	}
 	else {
@@ -95,7 +101,7 @@ undefined [.]+
 
 
 {tabulation} {
-	if(tabulation_enhancer_status == NOT_BLOCKED) {
+	if(white_enhancer_status == NOT_BLOCKED) {
 		tabulation_level++;
 	}
 	else {
@@ -106,33 +112,33 @@ undefined [.]+
 
 {identifier} {
 	yylval.identifier = strdup(yytext); 
-	set_tabulation_status(BLOCKED); 
+	set_white_status(BLOCKED); 
 	return IDENTIFIER;
 }
 
 
 {integer} {	
 	yylval.num = atoi(yytext); 
-	set_tabulation_status(BLOCKED); 
+	set_white_status(BLOCKED); 
 	return INTEGER;
 }
 
 
 {undefined} {	
 	ECHO;
-	set_tabulation_status(BLOCKED); 
+	set_white_status(BLOCKED); 
 	yyerror ("unexpected character");  
 }
 
 %%
 
-void clean_tabulation_level() {
+void clean_white_level() {
 	space_level = 0;
 	tabulation_level = 0;
 }
 
-void set_tabulation_status(bool status) {
-	tabulation_enhancer_status = status;
+void set_white_status(bool status) {
+	white_enhancer_status = status;
 }
 
 int yywrap(void) {
