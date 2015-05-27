@@ -16,10 +16,11 @@ typedef bool (*generic_comparator)(void *, void *);
 typedef struct node {
 	bool is_used;
 
+	unsigned int id;
 	unsigned int declaration_line;
 	unsigned int tabulation_level;
 	unsigned int space_level;
-	// The size of these 'strings' are not yet defined, i.e they can be changed from 35.
+
 	char type[35];
 	char identifier[35];
 	char scope[35];	

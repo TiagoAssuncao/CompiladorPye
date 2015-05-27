@@ -15,6 +15,7 @@
 
 	unsigned int CURRENT_STEP;
 
+	// Change to stack.. 
 	char CURRENT_SCOPE[35];
 
 	void yyerror (char *s);
@@ -30,7 +31,8 @@
 
 
 %union {
-	int num; 
+	double num; 
+	char *string;
 	char *identifier; 
 	char *line_comment; 
 	char *block_comment;
@@ -44,12 +46,14 @@
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL
 %token NEW_LINE 
 
-%token <num> INTEGER
+%token <num> NUMBER
+%token <string> STRING 
 %token <identifier> IDENTIFIER
 %token <line_comment> LINE_COMMENT
 %token <block_comment> BLOCK_COMMENT
 
-%type <num> input expression term assignment
+%type <num> input number_expression term assignment
+%type <string> string_expression
 
 
 %%
@@ -69,7 +73,8 @@ input:
 
 command:
 	assignment command_finisher {;}
-	| expression command_finisher {;}
+	| number_expression command_finisher {;}
+	| string_expression command_finisher {;}
 	;
 
 
@@ -82,30 +87,35 @@ command_finisher:
 
 
 assignment:
-	IDENTIFIER EQUAL expression {
+	IDENTIFIER EQUAL number_expression {
 		apply_tabulation();
-		fprintf(yyout, "# Variable identifier: %s. Value: %d\n", $1, $3);
+		fprintf(yyout, "# Variable identifier: %s. Value: %lf\n", $1, $3);
 		apply_tabulation();
-		fprintf(yyout, "%s = %d", $1, $3);
+		fprintf(yyout, "%s = %lf", $1, $3);
+		$$ = $3;
+	}
+	| IDENTIFIER EQUAL string_expression {
+		apply_tabulation();
+		fprintf(yyout, "# Variable identifier: %s. String value: %s\n", $1, $3);
+		apply_tabulation();
+		fprintf(yyout, "%s = %s\n", $1, $3);
 		$$ = $3;
 	}
 	| IDENTIFIER EQUAL assignment {$$ = $3;}
 	;
 
 
-expression:
+number_expression:
 	term {$$ = $1;}
-	| expression PLUS term {$$ = $1 + $3;}
-	| expression MINUS term {$$ = $1 - $3;}
+	| number_expression PLUS term {$$ = $1 + $3;}
+	| number_expression MINUS term {$$ = $1 - $3;}
 	;
-
 
 
 term:
-	INTEGER {$$ = $1;}
+	NUMBER {$$ = $1;}
 	| IDENTIFIER {;}
 	;
-
 
 
 function_declaration:
