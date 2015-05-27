@@ -24,8 +24,14 @@ letter [a-zA-z]
 word {letter}+
 
 digit [0-9]
-integer [1-9]{digit}*
+number {digit}+"."?{digit}*
+
 identifier [a-zA-Z_][a-zA-Z0-9_]*
+
+double_quotes \"
+simple_quotes \'
+
+string ({double_quotes}.*{double_quotes})|({simple_quotes}.*{simple_quotes})
 
 space [ ]
 tabulation \t
@@ -41,22 +47,23 @@ undefined [.]+
 
 %%
 
-"def "				{set_white_status(BLOCKED); return DEF;}
-"if"				{set_white_status(BLOCKED); return IF;}
-"else"				{set_white_status(BLOCKED); return ELSE;}
-"for"				{set_white_status(BLOCKED); return FOR;}
-"while"				{set_white_status(BLOCKED); return WHILE;}
-"try"				{set_white_status(BLOCKED); return TRY;}
-"catch"				{set_white_status(BLOCKED); return CATCH;}
-"("					{set_white_status(BLOCKED); return LEFT_PARENTHESIS;}
-")"					{set_white_status(BLOCKED); return RIGHT_PARENTHESIS;}
-":"					{set_white_status(BLOCKED); return COLON;}
-";"					{set_white_status(BLOCKED); return SEMICOLON;}
-"+"					{set_white_status(BLOCKED); return PLUS;}
-"-"					{set_white_status(BLOCKED); return MINUS;}
-"*"					{set_white_status(BLOCKED); return MULTIPLY;}
-"/"					{set_white_status(BLOCKED); return DIVIDE;}
-"="					{set_white_status(BLOCKED); return EQUAL;}
+"def "			{set_white_status(BLOCKED); return DEF;}
+"if"			{set_white_status(BLOCKED); return IF;}
+"else"			{set_white_status(BLOCKED); return ELSE;}
+"for"			{set_white_status(BLOCKED); return FOR;}
+"while"			{set_white_status(BLOCKED); return WHILE;}
+"try"			{set_white_status(BLOCKED); return TRY;}
+"catch"			{set_white_status(BLOCKED); return CATCH;}
+"("				{set_white_status(BLOCKED); return LEFT_PARENTHESIS;}
+")"				{set_white_status(BLOCKED); return RIGHT_PARENTHESIS;}
+":"				{set_white_status(BLOCKED); return COLON;}
+";"				{set_white_status(BLOCKED); return SEMICOLON;}
+"+"				{set_white_status(BLOCKED); return PLUS;}
+"-"				{set_white_status(BLOCKED); return MINUS;}
+"*"				{set_white_status(BLOCKED); return MULTIPLY;}
+"/"				{set_white_status(BLOCKED); return DIVIDE;}
+"="				{set_white_status(BLOCKED); return EQUAL;}
+
 
 
 {line_comment}.* {
@@ -117,10 +124,16 @@ undefined [.]+
 }
 
 
-{integer} {	
-	yylval.num = atoi(yytext); 
+{number} {	
+	yylval.num = atof(yytext);
 	set_white_status(BLOCKED); 
-	return INTEGER;
+	return NUMBER;
+}
+
+{string} {
+	yylval.string = yytext;
+	set_white_status(BLOCKED);
+	return STRING;
 }
 
 
