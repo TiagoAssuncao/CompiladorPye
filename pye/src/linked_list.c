@@ -109,15 +109,49 @@ node *search_element(list_header *header, char node_identifier[]) {
 		puts("The linked list is empty.\n");
 	}
 
-	debug("FUNCTION search_element: Leaving...");
 
+	debug("FUNCTION search_element: Leaving...");
 	return return_node;
 }
 
+// Delete remove_element
 node *remove_element(list_header *header, void *element, generic_comparator comparison_function) {
 	// Not implemented yet (if only it has to be)...
 
 	return NULL;
+}
+
+node *build_new_node(
+	unsigned int id,
+	unsigned int declaration_line,
+	unsigned int tabulation_level,
+	unsigned int space_level,
+	char type[35],
+	char identifier[35],
+	char scope[35],	
+	char structure_type[35])
+{
+	debug("FUNCTION build_new_node: Starting...");
+
+	node *new_node = ( node* ) malloc(sizeof(node));
+
+	new_node->is_used = FALSE;
+	new_node->id = id;
+	new_node->declaration_line = declaration_line;
+	new_node->tabulation_level = tabulation_level;
+	new_node->space_level = space_level;
+
+	strcpy(new_node->type, type);
+	strcpy(new_node->identifier, identifier);
+	strcpy(new_node->scope, scope);
+	strcpy(new_node->structure_type, structure_type);
+
+	new_node->next = NULL;
+	new_node->previous = NULL;
+
+	debug("FUNCTION build_new_node: Leaving...");
+
+	return new_node;
 }
 
 void malloc_error_msg() {
@@ -152,4 +186,52 @@ bool double_comparator(void *first_double, void *second_double) {
 	equal = *((double *) first_double) == *((double *) second_double);
 
 	return equal;
+}
+
+stack_scope *new_stack_of_scope(){
+
+	debug("FUNCTION new_stack_of_scope: Starting...");
+
+	stack_scope *header = NULL;
+	header = (stack_scope *) malloc(sizeof(stack_scope));
+
+	if(header != NULL) {
+		strcpy(header->name_scope, "");
+		header->next_element_of_stack = NULL;
+	}
+	else {
+		malloc_error_msg();
+		exit(0);
+	}
+
+	debug("FUNCTION new_stack_of_scope: Leaving...");
+
+	return header;
+}
+
+stack_scope *insert_scope_on_stack(stack_scope *header, char name_scope[35]){
+
+	debug("FUNCTION insert_scope_on_stack: Starting...");
+	
+	assert(header != NULL);
+	assert(name_scope != NULL);
+
+	stack_scope *new_element_of_stack = ( stack_scope* ) malloc(sizeof(stack_scope));
+	strcpy(new_element_of_stack->name_scope, name_scope);
+	new_element_of_stack->next_element_of_stack = header;
+
+	header = new_element_of_stack;
+
+	debug("FUNCTION insert_scope_on_stack: Leaving...");
+
+	return header;
+}
+
+stack_scope *delete_scope_on_stack(stack_scope *header){
+
+	/**********************
+	To implement
+	***********************/
+
+	return header;
 }

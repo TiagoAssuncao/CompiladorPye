@@ -14,6 +14,7 @@
 	};
 
 	unsigned int CURRENT_STEP;
+	unsigned int count_identifier = 0;
 
 	// Change to stack.. 
 	char CURRENT_SCOPE[35];
@@ -117,9 +118,35 @@ term:
 	| IDENTIFIER {;}
 	;
 
+string_expression:
+	{;}
+	| STRING {$$ = $1;}
+	;
 
 function_declaration:
 	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+
+		char name_identifier[35];
+		strcpy(name_identifier, $2);
+
+		char structure_type[35];
+		strcpy(structure_type, "function");
+
+		char scope[35];
+		strcpy(scope, "Testando Escopo");
+
+		build_new_node(
+			count_identifier,
+			current_line,
+			tabulation_level,
+			space_level,
+			NULL,
+			name_identifier,
+			scope,	
+			structure_type);
+
+		count_identifier++;
+
 		apply_tabulation();
 		fprintf(yyout, "# Function declaration: %s\n", $2);
 		apply_tabulation();
@@ -162,6 +189,7 @@ int main (int argc, char **argv) {
 
 	return 0;
 }
+
 
 void apply_tabulation() {
 	int i = 0;
