@@ -97,5 +97,7 @@ stack_scope *new_stack_of_scope();
 //Insert or delete a element of the stack
 stack_scope *insert_scope_on_stack(stack_scope *header, char name_scope[35]);
 stack_scope *delete_scope_on_stack(stack_scope *header);
+stack_scope *get_top_of_stack(stack_scope *header);
+void show_stack(stack_scope *header);
 
 #endif

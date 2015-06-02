@@ -188,7 +188,7 @@ bool double_comparator(void *first_double, void *second_double) {
 	return equal;
 }
 
-stack_scope *new_stack_of_scope(){
+stack_scope *new_stack_of_scope() {
 
 	debug("FUNCTION new_stack_of_scope: Starting...");
 
@@ -209,8 +209,7 @@ stack_scope *new_stack_of_scope(){
 	return header;
 }
 
-stack_scope *insert_scope_on_stack(stack_scope *header, char name_scope[35]){
-
+stack_scope *insert_scope_on_stack(stack_scope *header, char name_scope[35]) {
 	debug("FUNCTION insert_scope_on_stack: Starting...");
 	
 	assert(header != NULL);
@@ -228,19 +227,53 @@ stack_scope *insert_scope_on_stack(stack_scope *header, char name_scope[35]){
 }
 
 //Removes the last term which came in line
-stack_scope *delete_scope_on_stack(stack_scope *header){
+stack_scope *delete_scope_on_stack(stack_scope *header) {
+	debug("FUNCTION insert_scope_on_stack: Starting...");
+	
+	if (header != NULL) {
+		stack_scope *element_to_remove = ( stack_scope* ) malloc(sizeof(stack_scope));
+		element_to_remove = header;
 
+		header = element_to_remove->next_element_of_stack;
+		free(element_to_remove);
+	}
+	else {
+		debug("FUNCTION insert_scope_on_stack: Can't remove a element. The Stack is blank");
+	}
+
+	debug("FUNCTION insert_scope_on_stack: Leaving...");
+
+	return header;
+}
+
+stack_scope *get_top_of_stack(stack_scope *header) {
 	debug("FUNCTION insert_scope_on_stack: Starting...");
 	
 	assert(header != NULL);
 
-	stack_scope *element_to_remove = ( stack_scope* ) malloc(sizeof(stack_scope));
-	element_to_remove = header;
-
-	header = element_to_remove->next_element_of_stack;
-	free(element_to_remove);
+	stack_scope *element_on_top = NULL;
+	element_on_top = header;
 	
 	debug("FUNCTION insert_scope_on_stack: Leaving...");
 
-	return header;
+	return element_on_top;
+}
+
+void show_stack(stack_scope *header) {
+	debug("FUNCTION insert_scope_on_stack: Starting...");
+	
+	assert(header != NULL);
+
+	stack_scope *element_in_stack = header;
+	
+	while(element_in_stack != NULL){
+		int i=0;
+
+		printf("%d- Nome do elemento: %s\n", i, element_in_stack->name_scope);
+
+		i++;
+		element_in_stack = element_in_stack->next_element_of_stack;
+	}
+	
+	debug("FUNCTION insert_scope_on_stack: Leaving...");
 }
