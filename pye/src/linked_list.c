@@ -227,11 +227,20 @@ stack_scope *insert_scope_on_stack(stack_scope *header, char name_scope[35]){
 	return header;
 }
 
+//Removes the last term which came in line
 stack_scope *delete_scope_on_stack(stack_scope *header){
 
-	/**********************
-	To implement
-	***********************/
+	debug("FUNCTION insert_scope_on_stack: Starting...");
+	
+	assert(header != NULL);
+
+	stack_scope *element_to_remove = ( stack_scope* ) malloc(sizeof(stack_scope));
+	element_to_remove = header;
+
+	header = element_to_remove->next_element_of_stack;
+	free(element_to_remove);
+	
+	debug("FUNCTION insert_scope_on_stack: Leaving...");
 
 	return header;
 }
