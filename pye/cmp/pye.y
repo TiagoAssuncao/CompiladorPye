@@ -7,6 +7,7 @@
 	#include "linked_list.h"
 	#include "variable_list.h"
 	#include "debugger.h"
+	#include "mathematics.h"
 
 	enum {
 		FIRST,
@@ -44,7 +45,7 @@
 %token DEF IF ELSE FOR WHILE TRY CATCH
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
 %token COLON SEMICOLON
-%token PLUS MINUS MULTIPLY DIVIDE EQUAL
+%token PLUS MINUS MULTIPLY DIVIDE EQUAL POW
 %token NEW_LINE 
 
 %token <num> NUMBER
@@ -53,8 +54,8 @@
 %token <line_comment> LINE_COMMENT
 %token <block_comment> BLOCK_COMMENT
 
-%type <num> input number_expression term assignment
-%type <string> string_expression
+%type <num> input number_expression number_term number_assignment
+%type <string> string_expression string_term string_assignment
 
 
 %%
@@ -80,6 +81,13 @@ command:
 
 
 
+assignment:
+	number_assignment {;}
+	| string_assignment {;}
+	;
+
+
+
 command_finisher:
 	NEW_LINE {fprintf(yyout, "\n");}
 	| SEMICOLON {fprintf(yyout, ";");}
@@ -87,7 +95,7 @@ command_finisher:
 
 
 
-assignment:
+number_assignment:
 	IDENTIFIER EQUAL number_expression {
 		apply_tabulation();
 		fprintf(yyout, "# Variable identifier: %s. Value: %lf\n", $1, $3);
@@ -95,33 +103,55 @@ assignment:
 		fprintf(yyout, "%s = %lf", $1, $3);
 		$$ = $3;
 	}
-	| IDENTIFIER EQUAL string_expression {
+	| IDENTIFIER EQUAL number_assignment {$$ = $3;}
+	;
+
+
+
+string_assignment:
+	IDENTIFIER EQUAL string_expression {
 		apply_tabulation();
 		fprintf(yyout, "# Variable identifier: %s. String value: %s\n", $1, $3);
 		apply_tabulation();
 		fprintf(yyout, "%s = %s\n", $1, $3);
 		$$ = $3;
 	}
-	| IDENTIFIER EQUAL assignment {$$ = $3;}
+	| IDENTIFIER EQUAL string_assignment {$$ = $3;}
 	;
+
 
 
 number_expression:
-	term {$$ = $1;}
-	| number_expression PLUS term {$$ = $1 + $3;}
-	| number_expression MINUS term {$$ = $1 - $3;}
+	number_term {$$ = $1;}
+	| number_expression PLUS number_term {$$ = $1 + $3;}
+	| number_expression MINUS number_term {$$ = $1 - $3;}
+	| number_expression MULTIPLY number_term {$$ = $1 * $3;}
+	| number_expression DIVIDE number_term {$$ = $1 / $3;}
+	| number_expression POW number_term {$$ = fast_exponentiation($1, $3);}
 	;
 
 
-term:
-	NUMBER {$$ = $1;}
-	| IDENTIFIER {;}
-	;
 
 string_expression:
-	{;}
-	| STRING {$$ = $1;}
+	string_term {$$ = $1;}
+	| string_expression PLUS string_term {$$ = strcat($1, $3);}
 	;
+
+
+
+number_term:
+	NUMBER {$$ = $1;}
+	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
+	;
+
+
+
+string_term:
+	STRING {$$ = $1;}
+	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
+	;
+
+
 
 function_declaration:
 	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {

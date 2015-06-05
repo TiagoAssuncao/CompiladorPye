@@ -29,9 +29,9 @@ number {digit}+"."?{digit}*
 identifier [a-zA-Z_][a-zA-Z0-9_]*
 
 double_quotes \"
-simple_quotes \'
+single_quotes \'
 
-string ({double_quotes}.*{double_quotes})|({simple_quotes}.*{simple_quotes})
+string ({double_quotes}.*{double_quotes})|({single_quotes}.*{single_quotes})
 
 space [ ]
 tabulation \t
@@ -60,6 +60,7 @@ undefined [.]+
 ";"				{set_white_status(BLOCKED); return SEMICOLON;}
 "+"				{set_white_status(BLOCKED); return PLUS;}
 "-"				{set_white_status(BLOCKED); return MINUS;}
+"**"			{set_white_status(BLOCKED); return POW;}
 "*"				{set_white_status(BLOCKED); return MULTIPLY;}
 "/"				{set_white_status(BLOCKED); return DIVIDE;}
 "="				{set_white_status(BLOCKED); return EQUAL;}
