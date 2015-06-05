@@ -127,6 +127,19 @@ number_assignment:
 
 string_assignment:
 	IDENTIFIER EQUAL string_expression {
+
+		char name_identifier[35];
+		strcpy(name_identifier, $1);
+
+		char scope[35];
+		strcpy(scope, "Testando Escopo"); // Will come from the stack...
+
+		char type_of_element[35];
+		strcpy(type_of_element, "");
+
+		create_new_node(name_identifier, STRUCTURE_VARIABLE, scope, type_of_element);
+
+
 		apply_tabulation();
 		fprintf(yyout, "# Variable identifier: %s. String value: %s\n", $1, $3);
 		apply_tabulation();
