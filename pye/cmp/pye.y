@@ -14,7 +14,14 @@
 		SECOND
 	};
 
-	unsigned int CURRENT_STEP;
+	const char STRUCTURE_FUNCTION[] = "function";
+	const char STRUCTURE_VARIABLE[] = "variable";
+	const char STRUCTURE_CLASS[] = "class";
+	const char STRUCTURE_METHOD[] = "method";
+
+	list_header *symbol_table;
+
+	unsigned int current_step;
 	unsigned int count_identifier = 0;
 
 	// Change to stack.. 
@@ -75,15 +82,6 @@ input:
 
 command:
 	assignment command_finisher {;}
-	| number_expression command_finisher {;}
-	| string_expression command_finisher {;}
-	;
-
-
-
-assignment:
-	number_assignment {;}
-	| string_assignment {;}
 	;
 
 
@@ -95,13 +93,22 @@ command_finisher:
 
 
 
+assignment:
+	number_assignment {;}
+	| string_assignment {;}
+	;
+
+
+
 number_assignment:
 	IDENTIFIER EQUAL number_expression {
+		/*
 		apply_tabulation();
 		fprintf(yyout, "# Variable identifier: %s. Value: %lf\n", $1, $3);
 		apply_tabulation();
 		fprintf(yyout, "%s = %lf", $1, $3);
 		$$ = $3;
+		*/
 	}
 	| IDENTIFIER EQUAL number_assignment {$$ = $3;}
 	;
@@ -155,26 +162,27 @@ string_term:
 
 function_declaration:
 	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
-
 		char name_identifier[35];
 		strcpy(name_identifier, $2);
 
 		char structure_type[35];
-		strcpy(structure_type, "function");
+		strcpy(structure_type, STRUCTURE_FUNCTION);
 
 		char scope[35];
-		strcpy(scope, "Testando Escopo");
+		strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-		build_new_node(
-			count_identifier,
-			current_line,
-			tabulation_level,
-			space_level,
-			NULL,
-			name_identifier,
-			scope,	
-			structure_type);
+		node *new_node = NULL;
+		new_node = build_new_node(
+					count_identifier,
+					current_line,
+					tabulation_level,
+					space_level,
+					"",
+					name_identifier,
+					scope,	
+					structure_type);
 
+		symbol_table = insert_element(symbol_table, new_node);
 		count_identifier++;
 
 		apply_tabulation();
@@ -204,10 +212,12 @@ int main (int argc, char **argv) {
 		exit(0);
 	}
 
-	CURRENT_STEP = FIRST;
+	symbol_table = new_linked_list();
+
+	current_step = FIRST;
 	yyparse();
 
-	CURRENT_STEP = SECOND;
+	current_step = SECOND;
 	yyparse();
 
 	if((amount_block_comments % 2) != 0) {

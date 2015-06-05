@@ -44,14 +44,11 @@ void free_linked_list(list_header *header) {
 	debug("FUNCTION free_linked_list: Leaving...");
 }
 
-list_header *insert_element(list_header *header, node *element) {
+list_header *insert_element(list_header *header, node *new_node) {
 	debug("FUNCTION insert_element: Starting...");
 
 	assert(header != NULL);
-	assert(element != NULL);
-
-	node *new_node = NULL;
-	new_node = (node *) malloc(sizeof(node));
+	assert(new_node != NULL);
 
 	debug("FUNCTION insert_element: New_node malloc'd.");
 
@@ -126,13 +123,15 @@ node *build_new_node(unsigned int id, unsigned int declaration_line, unsigned in
 {
 	debug("FUNCTION build_new_node: Starting...");
 
-	node *new_node = ( node* ) malloc(sizeof(node));
+	node *new_node = (node *) malloc(sizeof(node));
 
 	new_node->is_used = FALSE;
 	new_node->id = id;
 	new_node->declaration_line = declaration_line;
 	new_node->tabulation_level = tabulation_level;
 	new_node->space_level = space_level;
+
+	debug("FUNCTION build_new_node: Starting strcpy's.");
 
 	strcpy(new_node->type, type);
 	strcpy(new_node->identifier, identifier);
@@ -145,6 +144,41 @@ node *build_new_node(unsigned int id, unsigned int declaration_line, unsigned in
 	debug("FUNCTION build_new_node: Leaving...");
 
 	return new_node;
+}
+
+void print_linked_list(list_header *header) {
+	debug("FUNCTION print_linked_list: Starting...");
+
+	assert(header != NULL);
+	assert(header->length != 0);
+
+	node *current_node = header->head;
+	while(current_node != NULL) {
+		print_node(current_node);
+
+		current_node = current_node->next;
+	}
+
+	debug("FUNCTION print_linked_list: Leaving...");
+
+	return;
+}
+
+void print_node(node *input_node) {
+	debug("FUNCTION print_node: Starting...");
+
+	assert(input_node != NULL);
+
+	printf("ID: %u\n", input_node->id);
+	printf("Identifier: %s\n", input_node->identifier);
+	printf("Type: %s\n", input_node->type);
+	printf("Scope: %s\n", input_node->scope);
+	printf("Structure Type: %s\n", input_node->structure_type);
+	printf("Declaration Line: %u\n", input_node->declaration_line);
+	printf("Tabulation Level: %u\n", input_node->tabulation_level);
+	printf("Space Level: %u\n", input_node->space_level);
+
+	debug("FUNCTION print_node: Leaving...");
 }
 
 void malloc_error_msg() {
