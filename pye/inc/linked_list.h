@@ -41,15 +41,7 @@ typedef struct {
 	node *head;
 	node *tail;
 	// free_function free_f;
-} 
-list_header;
-
-//It's a struct for store every names of the scope in a stack
-typedef struct stack_scope
-{
-	char name_scope[35];
-	struct stack_scope *next_element_of_stack;
-}stack_scope;
+} list_header;
 
 // Allocates memory to a linked list and fill its element_size with the first parameter.
 // Returns a linked_list pointing to an allocated memory space.
@@ -91,13 +83,5 @@ bool char_comparator(void *first_char, void *second_char);
 bool string_comparator(void *first_string, void *second_string);
 bool double_comparator(void *first_double, void *second_double);
 
-//Creating a new header for store a stack of scopes
-stack_scope *new_stack_of_scope();
-
-//Insert or delete a element of the stack
-stack_scope *insert_scope_on_stack(stack_scope *header, char name_scope[35]);
-stack_scope *delete_scope_on_stack(stack_scope *header);
-stack_scope *get_top_of_stack(stack_scope *header);
-void show_stack(stack_scope *header);
 
 #endif
