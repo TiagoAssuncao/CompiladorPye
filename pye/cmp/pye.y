@@ -102,13 +102,23 @@ assignment:
 
 number_assignment:
 	IDENTIFIER EQUAL number_expression {
-		/*
+
+		char name_identifier[35];
+		strcpy(name_identifier, $1);
+
+		char scope[35];
+		strcpy(scope, "Testando Escopo"); // Will come from the stack...
+
+		char type_of_element[35];
+		strcpy(type_of_element, "");
+
+		create_new_node(name_identifier, STRUCTURE_VARIABLE, scope, type_of_element);
+
 		apply_tabulation();
 		fprintf(yyout, "# Variable identifier: %s. Value: %lf\n", $1, $3);
 		apply_tabulation();
 		fprintf(yyout, "%s = %lf", $1, $3);
 		$$ = $3;
-		*/
 	}
 	| IDENTIFIER EQUAL number_assignment {$$ = $3;}
 	;
@@ -165,25 +175,13 @@ function_declaration:
 		char name_identifier[35];
 		strcpy(name_identifier, $2);
 
-		char structure_type[35];
-		strcpy(structure_type, STRUCTURE_FUNCTION);
+		char type_of_element[35];
+		strcpy(type_of_element, "");
 
 		char scope[35];
 		strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-		node *new_node = NULL;
-		new_node = build_new_node(
-					count_identifier,
-					current_line,
-					tabulation_level,
-					space_level,
-					"",
-					name_identifier,
-					scope,	
-					structure_type);
-
-		symbol_table = insert_element(symbol_table, new_node);
-		count_identifier++;
+		create_new_node(name_identifier, STRUCTURE_FUNCTION, scope, type_of_element);
 
 		apply_tabulation();
 		fprintf(yyout, "# Function declaration: %s\n", $2);
@@ -220,6 +218,8 @@ int main (int argc, char **argv) {
 	current_step = SECOND;
 	yyparse();
 
+	print_linked_list(symbol_table);
+
 	if((amount_block_comments % 2) != 0) {
 		printf("ERRO DE BLOCO DE COMENTARIO\n");
 	}
@@ -245,6 +245,21 @@ void apply_tabulation() {
 	}
 }
 
+void create_new_node(char name_identifier[35], char structure_type[35], char scope[35], char type_of_element[35]) {
+	node *new_node = NULL;
+	new_node = build_new_node(
+				count_identifier,
+				current_line,
+				tabulation_level,
+				space_level,
+				type_of_element,
+				name_identifier,
+				scope,	
+				structure_type);
+
+	symbol_table = insert_element(symbol_table, new_node);
+	count_identifier++;
+}
 void yyerror (char *s) {
 	fprintf (stderr, "%s\n", s);
 }
