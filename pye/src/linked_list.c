@@ -119,7 +119,7 @@ node *remove_element(list_header *header, void *element, generic_comparator comp
 }
 
 node *build_new_node(unsigned int id, unsigned int declaration_line, unsigned int tabulation_level, unsigned int space_level,
-					 char type[35], char identifier[35], char scope[35], char structure_type[35]) 
+					 const char type[35], const char identifier[35], const char scope[35], const char structure_type[35]) 
 {
 	debug("FUNCTION build_new_node: Starting...");
 

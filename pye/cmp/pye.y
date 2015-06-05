@@ -14,6 +14,14 @@
 		SECOND
 	};
 
+	enum {
+		NUMBER_EXPRESSION,
+		STRING_EXPRESSION
+	};
+
+	const char STRUCTURE_ARRAY [][35] = {"function", "variable", "class", "method"};
+	const char ELEMENT_TYPE [][35] = {"number", "string"};
+
 	const char STRUCTURE_FUNCTION[] = "function";
 	const char STRUCTURE_VARIABLE[] = "variable";
 	const char STRUCTURE_CLASS[] = "class";
@@ -29,6 +37,7 @@
 
 	void yyerror (char *s);
 	void apply_tabulation();
+	void create_new_node(const char name_identifier[35], const char structure_type[35], const char type_of_element[35]);
 
 	extern FILE *yyin;
 	extern FILE *yyout;
@@ -40,7 +49,8 @@
 
 
 %union {
-	double num; 
+	int expression_type;
+	double num;
 	char *string;
 	char *identifier; 
 	char *line_comment; 
@@ -61,9 +71,9 @@
 %token <line_comment> LINE_COMMENT
 %token <block_comment> BLOCK_COMMENT
 
-%type <num> input number_expression number_term number_assignment
-%type <string> string_expression string_term string_assignment
-
+%type <num> input number_term
+%type <string> string_term
+%type <expression_type> expression number_expression string_expression
 
 %%
 
@@ -94,77 +104,46 @@ command_finisher:
 
 
 assignment:
-	number_assignment {;}
-	| string_assignment {;}
+	IDENTIFIER EQUAL expression {
+		char name_identifier[35];
+		strcpy(name_identifier, $1);
+
+		int expression_type = $3;
+
+		char element_type[35];
+		strcpy(element_type, ELEMENT_TYPE[expression_type]);
+
+		create_new_node(name_identifier, STRUCTURE_VARIABLE, element_type);
+	}
 	;
 
 
 
-number_assignment:
-	IDENTIFIER EQUAL number_expression {
-
-		char name_identifier[35];
-		strcpy(name_identifier, $1);
-
-		char scope[35];
-		strcpy(scope, "Testando Escopo"); // Will come from the stack...
-
-		char type_of_element[35];
-		strcpy(type_of_element, "");
-
-		create_new_node(name_identifier, STRUCTURE_VARIABLE, scope, type_of_element);
-
-		apply_tabulation();
-		fprintf(yyout, "# Variable identifier: %s. Value: %lf\n", $1, $3);
-		apply_tabulation();
-		fprintf(yyout, "%s = %lf", $1, $3);
-		$$ = $3;
+expression:
+	number_expression {
+		$$ = NUMBER_EXPRESSION;
 	}
-	| IDENTIFIER EQUAL number_assignment {$$ = $3;}
-	;
-
-
-
-string_assignment:
-	IDENTIFIER EQUAL string_expression {
-
-		char name_identifier[35];
-		strcpy(name_identifier, $1);
-
-		char scope[35];
-		strcpy(scope, "Testando Escopo"); // Will come from the stack...
-
-		char type_of_element[35];
-		strcpy(type_of_element, "");
-
-		create_new_node(name_identifier, STRUCTURE_VARIABLE, scope, type_of_element);
-
-
-		apply_tabulation();
-		fprintf(yyout, "# Variable identifier: %s. String value: %s\n", $1, $3);
-		apply_tabulation();
-		fprintf(yyout, "%s = %s\n", $1, $3);
-		$$ = $3;
+	| string_expression {
+		$$ = STRING_EXPRESSION;
 	}
-	| IDENTIFIER EQUAL string_assignment {$$ = $3;}
 	;
 
 
 
 number_expression:
-	number_term {$$ = $1;}
-	| number_expression PLUS number_term {$$ = $1 + $3;}
-	| number_expression MINUS number_term {$$ = $1 - $3;}
-	| number_expression MULTIPLY number_term {$$ = $1 * $3;}
-	| number_expression DIVIDE number_term {$$ = $1 / $3;}
-	| number_expression POW number_term {$$ = fast_exponentiation($1, $3);}
+	number_term {$$ = NUMBER_EXPRESSION;}
+	| number_expression PLUS number_term {$$ = NUMBER_EXPRESSION;}
+	| number_expression MINUS number_term {$$ = NUMBER_EXPRESSION;}
+	| number_expression MULTIPLY number_term {$$ = NUMBER_EXPRESSION;}
+	| number_expression DIVIDE number_term {$$ = NUMBER_EXPRESSION;}
+	| number_expression POW number_term {$$ = NUMBER_EXPRESSION;}
 	;
 
 
 
 string_expression:
-	string_term {$$ = $1;}
-	| string_expression PLUS string_term {$$ = strcat($1, $3);}
+	string_term {$$ = STRING_EXPRESSION;}
+	| string_expression PLUS string_term {$$ = STRING_EXPRESSION;}
 	;
 
 
@@ -188,13 +167,13 @@ function_declaration:
 		char name_identifier[35];
 		strcpy(name_identifier, $2);
 
-		char type_of_element[35];
-		strcpy(type_of_element, "");
+		char element_type[35];
+		strcpy(element_type, "");
 
 		char scope[35];
 		strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-		create_new_node(name_identifier, STRUCTURE_FUNCTION, scope, type_of_element);
+		create_new_node(name_identifier, STRUCTURE_FUNCTION, element_type);
 
 		apply_tabulation();
 		fprintf(yyout, "# Function declaration: %s\n", $2);
@@ -258,21 +237,25 @@ void apply_tabulation() {
 	}
 }
 
-void create_new_node(char name_identifier[35], char structure_type[35], char scope[35], char type_of_element[35]) {
+void create_new_node(const char name_identifier[35], const char structure_type[35], const char element_type[35]) {
 	node *new_node = NULL;
+
+	char scope[35] = "scope"; // change to stack...
+
 	new_node = build_new_node(
 				count_identifier,
 				current_line,
 				tabulation_level,
 				space_level,
-				type_of_element,
+				element_type,
 				name_identifier,
-				scope,	
+				scope, // implement stack logic right here
 				structure_type);
 
 	symbol_table = insert_element(symbol_table, new_node);
 	count_identifier++;
 }
+
 void yyerror (char *s) {
 	fprintf (stderr, "%s\n", s);
 }

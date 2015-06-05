@@ -69,10 +69,10 @@ node *build_new_node(
 	unsigned int tabulation_level,
 	unsigned int space_level,
 
-	char type[35],
-	char identifier[35],
-	char scope[35],	
-	char structure_type[35]);
+	const char type[35],
+	const char identifier[35],
+	const char scope[35],	
+	const char structure_type[35]);
 
 void print_linked_list(list_header *header);
 void print_node(node *input_node);
