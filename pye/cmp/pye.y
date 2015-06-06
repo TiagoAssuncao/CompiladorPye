@@ -9,23 +9,25 @@
 	#include "debugger.h"
 	#include "mathematics.h"
 
-	enum {
+	enum steps {
 		FIRST,
 		SECOND
 	};
 
-	enum {
+	enum expression_types {
 		NUMBER_EXPRESSION,
 		STRING_EXPRESSION
 	};
 
-	const char STRUCTURE_ARRAY [][35] = {"function", "variable", "class", "method"};
-	const char ELEMENT_TYPE [][35] = {"number", "string"};
+	enum structure_types {
+		STRUCTURE_FUNCTION,
+		STRUCTURE_VARIABLE,
+		STRUCTURE_CLASS,
+		STRUCTURE_METHOD
+	};
 
-	const char STRUCTURE_FUNCTION[] = "function";
-	const char STRUCTURE_VARIABLE[] = "variable";
-	const char STRUCTURE_CLASS[] = "class";
-	const char STRUCTURE_METHOD[] = "method";
+	const char STRUCTURE_TYPES[][35] = {"function", "variable", "class", "method"};
+	const char EXPRESSION_TYPES[][35] = {"number", "string"};
 
 	list_header *symbol_table;
 
@@ -37,7 +39,7 @@
 
 	void yyerror (char *s);
 	void apply_tabulation();
-	void create_new_node(const char name_identifier[35], const char structure_type[35], const char type_of_element[35]);
+	void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char type_of_element[35]);
 
 	extern FILE *yyin;
 	extern FILE *yyout;
@@ -113,9 +115,9 @@ assignment:
 		int expression_type = $3;
 
 		char element_type[35];
-		strcpy(element_type, ELEMENT_TYPE[expression_type]);
+		strcpy(element_type, EXPRESSION_TYPES[expression_type]);
 
-		create_new_node(name_identifier, STRUCTURE_VARIABLE, element_type);
+		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_VARIABLE], element_type);
 	}
 	;
 
@@ -175,7 +177,7 @@ function_declaration:
 		char scope[35];
 		strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-		create_new_node(name_identifier, STRUCTURE_FUNCTION, element_type);
+		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_FUNCTION], element_type);
 
 		apply_tabulation();
 		fprintf(yyout, "# Function declaration: %s\n", $2);
@@ -183,6 +185,8 @@ function_declaration:
 		fprintf(yyout, "def %s():", $2);
 	}
 	;
+
+
 
 class_declaration:
 	CLASS IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
@@ -195,7 +199,7 @@ class_declaration:
 		char scope[35];
 		strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-		create_new_node(name_identifier, STRUCTURE_CLASS, element_type);
+		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_CLASS], element_type);
 
 		apply_tabulation();
 		fprintf(yyout, "# Class declaration: %s\n", $2);
@@ -259,7 +263,7 @@ void apply_tabulation() {
 	}
 }
 
-void create_new_node(const char name_identifier[35], const char structure_type[35], const char element_type[35]) {
+void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char element_type[35]) {
 	node *new_node = NULL;
 
 	char scope[35] = "scope"; // change to stack...
