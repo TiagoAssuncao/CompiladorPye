@@ -18,3 +18,7 @@ casa5 = 6;"""
 def funcao():
      numero = 1;
 estadosUnidos=4
+
+
+class nomedaclass():
+	

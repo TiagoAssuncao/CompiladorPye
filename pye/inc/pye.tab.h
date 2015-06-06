@@ -52,21 +52,23 @@ extern int yydebug;
     WHILE = 262,
     TRY = 263,
     CATCH = 264,
-    LEFT_PARENTHESIS = 265,
-    RIGHT_PARENTHESIS = 266,
-    COLON = 267,
-    SEMICOLON = 268,
-    PLUS = 269,
-    MINUS = 270,
-    MULTIPLY = 271,
-    DIVIDE = 272,
-    EQUAL = 273,
-    NEW_LINE = 274,
-    NUMBER = 275,
-    STRING = 276,
-    IDENTIFIER = 277,
-    LINE_COMMENT = 278,
-    BLOCK_COMMENT = 279
+    CLASS = 265,
+    LEFT_PARENTHESIS = 266,
+    RIGHT_PARENTHESIS = 267,
+    COLON = 268,
+    SEMICOLON = 269,
+    PLUS = 270,
+    MINUS = 271,
+    MULTIPLY = 272,
+    DIVIDE = 273,
+    EQUAL = 274,
+    POW = 275,
+    NEW_LINE = 276,
+    NUMBER = 277,
+    STRING = 278,
+    IDENTIFIER = 279,
+    LINE_COMMENT = 280,
+    BLOCK_COMMENT = 281
   };
 #endif
 
@@ -75,15 +77,16 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 34 "cmp/pye.y" /* yacc.c:1909  */
+#line 51 "cmp/pye.y" /* yacc.c:1909  */
 
-	double num; 
+	int expression_type;
+	double num;
 	char *string;
 	char *identifier; 
 	char *line_comment; 
 	char *block_comment;
 
-#line 87 "pye.tab.h" /* yacc.c:1909  */
+#line 90 "pye.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

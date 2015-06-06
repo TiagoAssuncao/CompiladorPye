@@ -59,7 +59,7 @@
 
 %start input
 
-%token DEF IF ELSE FOR WHILE TRY CATCH
+%token DEF IF ELSE FOR WHILE TRY CATCH CLASS
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL POW
@@ -82,6 +82,8 @@ input:
 	| input command {;}
 	| function_declaration {;}
 	| input function_declaration {;}
+	| class_declaration {;}
+	| input class_declaration {;}
 	| NEW_LINE {fprintf(yyout, "\n");}
 	| input NEW_LINE {fprintf(yyout, "\n");}
 	| LINE_COMMENT {fprintf(yyout, "Comentatio em linha");}
@@ -179,6 +181,26 @@ function_declaration:
 		fprintf(yyout, "# Function declaration: %s\n", $2);
 		apply_tabulation();
 		fprintf(yyout, "def %s():", $2);
+	}
+	;
+
+class_declaration:
+	CLASS IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+		char name_identifier[35];
+		strcpy(name_identifier, $2);
+
+		char element_type[35];
+		strcpy(element_type, "");
+
+		char scope[35];
+		strcpy(scope, "Testando Escopo"); // Will come from the stack...
+
+		create_new_node(name_identifier, STRUCTURE_CLASS, element_type);
+
+		apply_tabulation();
+		fprintf(yyout, "# Class declaration: %s\n", $2);
+		apply_tabulation();
+		fprintf(yyout, "class %s():", $2);
 	}
 	;
 

@@ -48,6 +48,7 @@ undefined [.]+
 %%
 
 "def "			{set_white_status(BLOCKED); return DEF;}
+"class "		{set_white_status(BLOCKED); return CLASS;}
 "if"			{set_white_status(BLOCKED); return IF;}
 "else"			{set_white_status(BLOCKED); return ELSE;}
 "for"			{set_white_status(BLOCKED); return FOR;}
