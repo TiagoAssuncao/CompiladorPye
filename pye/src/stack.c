@@ -73,7 +73,7 @@ stack_header *pop_element(stack_header *header) {
 		debug("FUNCTION pop_element: Can't remove a element. The Stack is blank");
 	}
 
-	debug("FUNCTION insert_scope_on_stack: Leaving...");
+	debug("FUNCTION pop_element: Leaving...");
 
 	return header;
 }
@@ -98,10 +98,9 @@ void show_stack(stack_header *header) {
 
 	stack_node *current_element = header->top;
 	
+	int i = 0;
 	while(current_element != NULL) {
-		int i = 0;
-
-		printf("%d- Nome do elemento: %s\n", i, current_element->scope_name);
+		printf("%d - Element's name: %s\n", i, current_element->scope_name);
 
 		i++;
 		current_element = current_element->previous;
