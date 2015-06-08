@@ -189,7 +189,7 @@ function_declaration:
 
 
 class_declaration:
-	CLASS IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+	CLASS IDENTIFIER COLON {
 		char name_identifier[35];
 		strcpy(name_identifier, $2);
 
@@ -204,7 +204,7 @@ class_declaration:
 		apply_tabulation();
 		fprintf(yyout, "# Class declaration: %s\n", $2);
 		apply_tabulation();
-		fprintf(yyout, "class %s():", $2);
+		fprintf(yyout, "class %s:", $2);
 	}
 	;
 
