@@ -39,6 +39,10 @@ show:
 clean: 
 	rm -rf obj/*
 	rm -rf bin/*
+	rm inc/pye.tab.h
+	rm src/pye.tab.c
+	rm src/lex.yy.c
+	rm out.py
 
 .PHONY: everything
 everything:
