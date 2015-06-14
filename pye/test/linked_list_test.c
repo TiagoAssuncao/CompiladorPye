@@ -21,6 +21,14 @@ int init_suite1(void)
    return 0;
 }
 
+int init_suite_insert(void){
+   init_suite1();
+
+   header = insert_element(header, element);
+
+   return 0;
+}
+
 /* The suite cleanup function.
  * Closes the temporary file used by the tests.
  * Returns zero on success, non-zero otherwise.
@@ -36,9 +44,31 @@ void testLinkedListCreating(void)
    CU_ASSERT( header != NULL);
 }
 
+/* add the tests to the suite */
+void testInsertNode(void)
+{
+
+   CU_ASSERT_PTR_EQUAL(header, insert_element(header, element));
+}
+
+void testInsertNodeNumber(void)
+{
+   CU_ASSERT(header->length == 3);
+}
+
+void testInsertFirstNode(void)
+{
+   header = new_linked_list();
+   header = insert_element(header, element);
+
+   CU_ASSERT(header->length == 1);
+
+}
+
 int main()
 {
 	 CU_pSuite pSuite = NULL;
+    CU_pSuite pSuiteInsert = NULL;
 
    /* initialize the CUnit test registry */
    if (CUE_SUCCESS != CU_initialize_registry())
@@ -46,6 +76,14 @@ int main()
 
    /* add a suite to the registry */
    pSuite = CU_add_suite("Suite_1", init_suite1, clean_suite1);
+   pSuiteInsert = CU_add_suite("Suite_Insert", init_suite_insert, clean_suite1);
+   
+   if (NULL == pSuiteInsert)
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
+
    if (NULL == pSuite) 
    {
       CU_cleanup_registry();
@@ -54,6 +92,23 @@ int main()
 
    /* add the tests to the suite */
    if ((NULL == CU_add_test(pSuite, "first test()", testLinkedListCreating)))
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
+
+   /* Suite Insert */
+   if ((NULL == CU_add_test(pSuiteInsert, "insert new node()", testInsertNode)))
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
+   if ((NULL == CU_add_test(pSuiteInsert, "number of nodes()", testInsertNodeNumber)))
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
+   if ((NULL == CU_add_test(pSuiteInsert, "insert first node()", testInsertFirstNode)))
    {
       CU_cleanup_registry();
       return CU_get_error();
