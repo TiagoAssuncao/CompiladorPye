@@ -26,6 +26,8 @@ int init_suite1(void)
  */
 int clean_suite1(void)
 {
+   free_linked_list(header);
+   header = NULL;
    return 0;
 }
 
@@ -37,38 +39,12 @@ int init_suite_insert(void){
    return 0;
 }
 int clean_suite_insert(void)
-{
+{  
+   free_linked_list(header);
+   header = NULL;
    return 0;
 }
 
-int init_suiteSearchNode(void)
-{
-   // id = 3 Allocating node for dealloc
-   //node* node2 = build_new_node(3, 1, 2, 2,
-   //              "string", "nodeRemoved", "main", "Variable");
-   /*
-   header = insert_element(header, node2);
-   
-   node* findedElement = search_element(header, node2->identifier);
-   node* removedElement = remove_element( header, 
-                                          findedElement, 
-                                          generic_comparator comparison_function);
-   */
-   return 0;
-}
-int clean_suiteSearchNode(void)
-{
-   return 0;
-}
-
-int init_suiteFree(void)
-{
-   return 0;
-}
-int clean_suiteFree(void)
-{
-   return 0;
-}
 
 /* add the tests to the suite Create*/
 void testLinkedListCreating(void)
@@ -131,36 +107,20 @@ int main()
    /* add a suite to the registry */
    pSuite = CU_add_suite("Suite_Create", init_suite1, clean_suite1);
    pSuiteInsert = CU_add_suite("Suite_Insert", init_suite_insert, clean_suite_insert);
-   pSuiteSearchNode = CU_add_suite("Suite_SearchNode", init_suiteSearchNode, clean_suiteSearchNode);
-   pSuiteFree = CU_add_suite("Suite_Free", init_suiteFree, clean_suiteFree);
+   pSuiteSearchNode = CU_add_suite("Suite_SearchNode", init_suite1, clean_suite1);
+   pSuiteFree = CU_add_suite("Suite_Free", init_suite1, clean_suite1);
 
 
    //Adding suite node to the registry
-   if (NULL == pSuiteInsert)
+   if ((NULL == pSuiteInsert)
+      || (NULL == pSuite)
+      || (NULL == pSuiteSearchNode)
+      || (NULL == pSuiteFree)
+      )
    {
       CU_cleanup_registry();
       return CU_get_error();
    }
-
-   if (NULL == pSuite) 
-   {
-      CU_cleanup_registry();
-      return CU_get_error();
-   }
-
-   if (NULL == pSuiteSearchNode) 
-   {
-      CU_cleanup_registry();
-      return CU_get_error();
-   }
-
-   if (NULL == pSuiteFree)
-   {
-      CU_cleanup_registry();
-      return CU_get_error();
-   }
-
-
 
    /* Suite Create */
    if ((NULL == CU_add_test(pSuite, "test list is created()", testLinkedListCreating))
