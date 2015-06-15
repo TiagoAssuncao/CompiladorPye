@@ -63,6 +63,12 @@ int clean_suiteSearchNode(void)
 
 int init_suiteFree(void)
 {
+   element = build_new_node(1, 1, 2, 2,
+                "string", "node1", "main", "Variable");
+
+   header = new_linked_list();
+   header = insert_element(header, element);
+
    return 0;
 }
 int clean_suiteFree(void)
@@ -115,6 +121,17 @@ void testSearchingDeallocatedNode(void)
    //node* findedElement = search_element(header, "nodeRemoved");
    //CU_ASSERT_PTR_NULL(findedElement);
    CU_ASSERT_PTR_NULL(NULL);
+}
+
+
+
+/* add tests to the suite Free Linked List*/
+void testFreeLinkedList(void)
+{
+   free_linked_list(header);
+   CU_ASSERT_PTR_NULL(header->head);
+   CU_ASSERT_PTR_NULL(header->tail);
+   CU_ASSERT(header->length == 0);
 }
 
 int main()
@@ -189,7 +206,11 @@ int main()
    }
 
    /* Suite Free */
-
+   if( (NULL == CU_add_test(pSuiteFree, "free linked list()", testFreeLinkedList) ))
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
 
 
    // Run all tests using the CUnit Basic interface

@@ -43,6 +43,7 @@ show:
 test:
 	$(CC) $(FLAGS) $(TEST_FILES) $(C_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_test
 	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_test
+	rm run_test
 
 .PHONY: clean
 clean: 

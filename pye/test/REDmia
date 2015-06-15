@@ -1,3 +1,0 @@
-gcc -Wall -I$HOME/local/include linked_list_test.c -L$HOME/local/lib -lcunit -o run
-
-LD_LIBRARY_PATH=$HOME/local/lib ./run
