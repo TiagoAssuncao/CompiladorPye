@@ -10,9 +10,8 @@
 	casa3 = 5;
 
 
-""" afsgafs
-sdfshdghs
-casa5 = 6;"""
+"""liuhados9f7asdfaiygsrw#@%^@%#@$*^@
+fasfasfasfgafs"""
 
 
 def funcao():

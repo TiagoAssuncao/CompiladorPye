@@ -65,7 +65,7 @@
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL POW
-%token NEW_LINE 
+%token NEW_LINE
 
 %token <num> NUMBER
 %token <string> STRING 
@@ -90,6 +90,8 @@ input:
 	| input NEW_LINE {fprintf(yyout, "\n");}
 	| LINE_COMMENT {fprintf(yyout, "Comentatio em linha");}
 	| input LINE_COMMENT {fprintf(yyout, "%s", $2);}
+	| BLOCK_COMMENT { fprintf(yyout, "%s", $1);}
+	| input BLOCK_COMMENT {fprintf(yyout, "%s", $2);}
 	;
 
 
@@ -190,6 +192,7 @@ function_declaration:
 
 class_declaration:
 	CLASS IDENTIFIER COLON {
+		fprintf(yyout, "Class passoooou\n");
 		char name_identifier[35];
 		strcpy(name_identifier, $2);
 

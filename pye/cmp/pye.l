@@ -75,21 +75,11 @@ undefined [.]+
 }
 
 
-{many_lines_comment} {
-	BEGIN(COMMENT_MODE);
+{many_lines_comment}("\n"|.)*{many_lines_comment} {
+	set_white_status(BLOCKED);
+	yylval.block_comment = strdup(yytext);
+	return BLOCK_COMMENT;
 }
-
-
-<COMMENT_MODE>{many_lines_comment} {
-	set_white_status(BLOCKED); 
-	BEGIN(INITIAL);
-}
-
-
-<COMMENT_MODE>{undefined} {
-	yylval.block_comment = strdup(yytext); 
-}
-
 
 {new_line} {
 	current_line++; 
