@@ -20,15 +20,6 @@ int init_suite1(void)
    header = insert_element(header, element);
    return 0;
 }
-
-int init_suite_insert(void){
-   init_suite1();
-
-   header = insert_element(header, element);
-
-   return 0;
-}
-
 /* The suite cleanup function.
  * Closes the temporary file used by the tests.
  * Returns zero on success, non-zero otherwise.
@@ -38,33 +29,18 @@ int clean_suite1(void)
    return 0;
 }
 
-//first Test
-void testLinkedListCreating(void)
-{
-   CU_ASSERT( header != NULL);
-}
+int init_suite_insert(void){
+   init_suite1();
 
-/* add the tests to the suite Insert*/
-void testInsertNode(void)
-{
-
-   CU_ASSERT_PTR_EQUAL(header, insert_element(header, element));
-}
-void testInsertNodeNumber(void)
-{
-   CU_ASSERT(header->length == 3);
-}
-void testInsertFirstNode(void)
-{
-   header = new_linked_list();
    header = insert_element(header, element);
 
-   CU_ASSERT(header->length == 1);
+   return 0;
+}
+int clean_suite_insert(void)
+{
+   return 0;
 }
 
-
-//Test suite of search node
-//Test suite must be started after creating a header and adding a node
 int init_suiteSearchNode(void)
 {
    // id = 3 Allocating node for dealloc
@@ -84,8 +60,45 @@ int clean_suiteSearchNode(void)
 {
    return 0;
 }
-// Test cases
-// Test case of Search node depends of insert function
+
+int init_suiteFree(void)
+{
+   return 0;
+}
+int clean_suiteFree(void)
+{
+   return 0;
+}
+
+/* add the tests to the suite Create*/
+void testLinkedListCreating(void)
+{
+   CU_ASSERT( header != NULL);
+}
+void testNodeCreating(void){
+   CU_ASSERT_PTR_NOT_NULL(element);
+   CU_ASSERT(element->id == 1);
+   CU_ASSERT_STRING_EQUAL(element->type, "string");
+}
+
+/* add the tests to the suite Insert*/
+void testInsertNode(void)
+{
+   CU_ASSERT_PTR_EQUAL(header, insert_element(header, element));
+}
+void testInsertNodeNumber(void)
+{
+   CU_ASSERT(header->length == 3);
+}
+void testInsertFirstNode(void)
+{
+   header = new_linked_list();
+   header = insert_element(header, element);
+
+   CU_ASSERT(header->length == 1);
+}
+
+/*add tests to the suite Search*/
 void testSearchingAllocatedNode(void)
 {
    node* findedElement = search_element(header, element->identifier);
@@ -108,15 +121,21 @@ int main()
 {
 	 CU_pSuite pSuite = NULL;
     CU_pSuite pSuiteInsert = NULL;
+    CU_pSuite pSuiteSearchNode = NULL;
+    CU_pSuite pSuiteFree = NULL;
 
    /* initialize the CUnit test registry */
    if (CUE_SUCCESS != CU_initialize_registry())
       return CU_get_error();
 
    /* add a suite to the registry */
-   pSuite = CU_add_suite("Suite_1", init_suite1, clean_suite1);
-   pSuiteInsert = CU_add_suite("Suite_Insert", init_suite_insert, clean_suite1);
-   
+   pSuite = CU_add_suite("Suite_Create", init_suite1, clean_suite1);
+   pSuiteInsert = CU_add_suite("Suite_Insert", init_suite_insert, clean_suite_insert);
+   pSuiteSearchNode = CU_add_suite("Suite_SearchNode", init_suiteSearchNode, clean_suiteSearchNode);
+   pSuiteFree = CU_add_suite("Suite_Free", init_suiteFree, clean_suiteFree);
+
+
+   //Adding suite node to the registry
    if (NULL == pSuiteInsert)
    {
       CU_cleanup_registry();
@@ -128,17 +147,25 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
    }
-   /* add the tests to the suite */
-   if ((NULL == CU_add_test(pSuite, "first test()", testLinkedListCreating)))
+
+   if (NULL == pSuiteSearchNode) 
    {
       CU_cleanup_registry();
       return CU_get_error();
    }
 
-   //Adding suite search node to the registry
-   CU_pSuite pSuiteSearchNode = NULL;
-   pSuiteSearchNode = CU_add_suite("Suite_SearchNode", init_suiteSearchNode, clean_suiteSearchNode);
-   if (NULL == pSuiteSearchNode) 
+   if (NULL == pSuiteFree)
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
+
+
+
+   /* Suite Create */
+   if ((NULL == CU_add_test(pSuite, "test list is created()", testLinkedListCreating))
+      || (NULL == CU_add_test(pSuite, "test build new node()", testNodeCreating))
+      )
    {
       CU_cleanup_registry();
       return CU_get_error();
@@ -163,6 +190,10 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
    }
+
+   /* Suite Free */
+
+
 
    // Run all tests using the CUnit Basic interface
    CU_basic_set_mode(CU_BRM_VERBOSE);
