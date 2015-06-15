@@ -2,7 +2,7 @@
 #include <string.h>
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
-#include "./Linked_List_Copy/linked_list.c"
+#include "linked_list.h"
 
 list_header *header = NULL;
 node* element = NULL;
@@ -134,7 +134,6 @@ int main()
    pSuiteSearchNode = CU_add_suite("Suite_SearchNode", init_suiteSearchNode, clean_suiteSearchNode);
    pSuiteFree = CU_add_suite("Suite_Free", init_suiteFree, clean_suiteFree);
 
-
    //Adding suite node to the registry
    if (NULL == pSuiteInsert)
    {
@@ -159,8 +158,6 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
    }
-
-
 
    /* Suite Create */
    if ((NULL == CU_add_test(pSuite, "test list is created()", testLinkedListCreating))

@@ -1,7 +1,11 @@
 #.RECIPEPREFIX = A   <--- This is a comment used to remember... Ignore it...
 
 CC = gcc
-FLAGS = 
+FLAGS = -Wall
+CUNIT_INC_PATH = $$HOME/local/include
+CUNIT_LIB_PATH = $$HOME/local/lib
+
+TEST_FILES = $(wildcard test/*_test.c)
 
 C_FILES = $(wildcard src/*.c)
 O_FILES = $(patsubst src/%.c, obj/%.o, $(C_FILES))
@@ -25,15 +29,20 @@ parser:
 	@mv pye.tab.h inc/
 
 obj/%.o: src/%.c
-	$(CC) $(FLAGS) -c $< -o $@ -I./inc
+	$(CC) $(FLAGS) -c $< -o $@ -I./inc 
 
 .PHONY: run
 run:
 	bin/./pye in.py out.py
 
 .PHONY: show
-show:
+show: 
 	@cat out.py 
+
+.PHONY: test
+test:
+	$(CC) $(FLAGS) $(TEST_FILES) $(C_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_test
+	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_test
 
 .PHONY: clean
 clean: 
