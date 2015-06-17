@@ -4,30 +4,24 @@
 #include <CUnit/Basic.h>
 #include "stack.h"
 
-stack_header *header = NULL;
 
-int init_suite(void)
+stack_header *stack = NULL;
+
+int init_suiteNewStack(void)
 {
-   // Run commands to prepare test enviroment
-   // system("command");
+   stack = new_stack();
    return 0;
 }
-int clean_suite(void)
+int clean_suiteNewStack(void)
 {
    return 0;
-}
-
-/* add tests to the suite Free Linked List*/
-void test(void)
-{
-   CU_ASSERT(1 == 1);
 }
 
 /* Test for insert element on stack */
 int init_suiteInsert(void)
 {
-   header = new_stack();
-   header = insert_scope_on_stack(header,"firstScope");
+   stack = new_stack();
+   stack = insert_scope_on_stack(stack,"firstScope");
    return 0;
 }
 int clean_suiteInsert(void)
@@ -38,8 +32,8 @@ int clean_suiteInsert(void)
 /* Test insert Element*/
 void testInsertElement(void)
 {
-   CU_ASSERT(header->length == 1);
-   stack_node *node = get_top(header);
+   CU_ASSERT(stack->length == 1);
+   stack_node *node = get_top(stack);
 
    CU_ASSERT_PTR_NULL(node->next);
    CU_ASSERT_PTR_NULL(node->previous);
@@ -48,10 +42,10 @@ void testInsertElement(void)
 
 void testInsertSecondElement(void)
 {
-   header = insert_scope_on_stack(header,"secondScope");
+   stack = insert_scope_on_stack(stack,"secondScope");
 
-   CU_ASSERT(header->length == 2);
-   stack_node *node = get_top(header);
+   CU_ASSERT(stack->length == 2);
+   stack_node *node = get_top(stack);
 
    CU_ASSERT_STRING_EQUAL(node->scope_name, "secondScope");   
    CU_ASSERT_PTR_NULL(node->next);
@@ -59,36 +53,51 @@ void testInsertSecondElement(void)
    
    stack_node* previousNode = node->previous;
    CU_ASSERT_STRING_EQUAL(previousNode->scope_name, "firstScope");
-   
+}
+
+/*New stack tests*/
+void testNewStack(void)
+{
+   CU_ASSERT_PTR_NOT_NULL(stack);
+
 }
 
 int main()
 {
    
-    CU_pSuite pSuite = NULL;
     CU_pSuite pSuiteInsert = NULL;
+    CU_pSuite pSuiteNew = NULL;
 
    /* initialize the CUnit test registry */
    if (CUE_SUCCESS != CU_initialize_registry())
       return CU_get_error();
 
    /* add a suite to the registry */
-   pSuite = CU_add_suite("Suite", init_suite, clean_suite);
    pSuiteInsert = CU_add_suite("Suite Insert Element on Stack", init_suiteInsert, clean_suiteInsert);
+   pSuiteNew = CU_add_suite("Suite New stack", init_suiteNewStack, clean_suiteNewStack);
 
-   if (NULL == pSuiteInsert)
+   if ( (NULL == pSuiteInsert) 
+      || (NULL == pSuiteNew) )
    {
       CU_cleanup_registry();
       return CU_get_error();
    }
 
-   /* Suite Free */
+   /* Suite Insert */
    if( (NULL == CU_add_test(pSuiteInsert, "Insert Element on stack()", testInsertElement) ) 
       || (NULL == CU_add_test(pSuiteInsert, "Insert Second Element on stack()", testInsertSecondElement) ))
    {
       CU_cleanup_registry();
       return CU_get_error();
    }
+
+   /* Suite New stack*/
+   if( (NULL == CU_add_test(pSuiteNew, "Create stack()", testNewStack)) )
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
+
 
 
    // Run all tests using the CUnit Basic interface
