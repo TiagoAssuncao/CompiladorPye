@@ -57,7 +57,7 @@ list_header *insert_element(list_header *header, node *element);
 // Search for a element in the linked list. The third is a pointer function that points to a comparison function.
 // If it is found, returns a pointer to the correlated node.
 // Otherwise, returns NULL.
-node *search_element(list_header *header, char node_identifier[]);
+node *search_element(list_header *header, char node_identifier[], char scope[]);
 
 // Delete
 node *remove_element(list_header *header, void *element, generic_comparator comparison_function);
