@@ -17,6 +17,16 @@ int clean_suiteNewStack(void)
    return 0;
 }
 
+int init_suiteGetTop(void)
+{
+   stack = new_stack();
+   return 0;
+}
+int clean_suiteGetTop(void)
+{
+   return 0;
+}
+
 /* Test for insert element on stack */
 int init_suiteInsert(void)
 {
@@ -26,7 +36,32 @@ int init_suiteInsert(void)
 }
 int clean_suiteInsert(void)
 {
+
+   // Cleaning the stack
+   while(get_top(stack)){
+      pop_element(stack);
+   }
+
    return 0;
+}
+
+/*New stack tests*/
+void testNewStack(void)
+{
+   CU_ASSERT_PTR_NOT_NULL(stack);
+}
+
+void testGetTopWithoutElement(void)
+{
+   stack_node* node = get_top(stack);
+   CU_ASSERT_PTR_NULL(node);
+}
+
+void testGetTopWithElement(void)
+{
+   insert_scope_on_stack(stack, "newScope");
+   stack_node* node = get_top(stack);
+   CU_ASSERT_STRING_EQUAL(node->scope_name, "newScope");
 }
 
 /* Test insert Element*/
@@ -55,18 +90,14 @@ void testInsertSecondElement(void)
    CU_ASSERT_STRING_EQUAL(previousNode->scope_name, "firstScope");
 }
 
-/*New stack tests*/
-void testNewStack(void)
-{
-   CU_ASSERT_PTR_NOT_NULL(stack);
 
-}
 
 int main()
 {
    
     CU_pSuite pSuiteInsert = NULL;
     CU_pSuite pSuiteNew = NULL;
+    CU_pSuite pSuiteGetTop = NULL;
 
    /* initialize the CUnit test registry */
    if (CUE_SUCCESS != CU_initialize_registry())
@@ -75,17 +106,10 @@ int main()
    /* add a suite to the registry */
    pSuiteInsert = CU_add_suite("Suite Insert Element on Stack", init_suiteInsert, clean_suiteInsert);
    pSuiteNew = CU_add_suite("Suite New stack", init_suiteNewStack, clean_suiteNewStack);
+   pSuiteGetTop = CU_add_suite("Suite Get Top", init_suiteGetTop, clean_suiteGetTop);
 
    if ( (NULL == pSuiteInsert) 
       || (NULL == pSuiteNew) )
-   {
-      CU_cleanup_registry();
-      return CU_get_error();
-   }
-
-   /* Suite Insert */
-   if( (NULL == CU_add_test(pSuiteInsert, "Insert Element on stack()", testInsertElement) ) 
-      || (NULL == CU_add_test(pSuiteInsert, "Insert Second Element on stack()", testInsertSecondElement) ))
    {
       CU_cleanup_registry();
       return CU_get_error();
@@ -97,6 +121,23 @@ int main()
       CU_cleanup_registry();
       return CU_get_error();
    }
+
+   if( (NULL == CU_add_test(pSuiteGetTop, "Get top of Stack Without element()", testGetTopWithoutElement)) 
+      || (NULL == CU_add_test(pSuiteGetTop, "Get top of Stack With element()", testGetTopWithElement)) )
+   {
+      CU_cleanup_registry();
+      return CU_get_error();   
+   }
+
+   /* Suite Insert */
+   if( (NULL == CU_add_test(pSuiteInsert, "Insert Element on stack()", testInsertElement) ) 
+      || (NULL == CU_add_test(pSuiteInsert, "Insert Second Element on stack()", testInsertSecondElement) ))
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
+
+   
 
 
 
