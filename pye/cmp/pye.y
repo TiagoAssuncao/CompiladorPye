@@ -39,7 +39,10 @@
 
 	void yyerror (char *s);
 	void apply_tabulation();
-	void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char type_of_element[35]);
+	void insert_on_symbol_table(
+		const char name_identifier[35], 
+		const char structure_type[35], 
+		const char type_of_element[35]);
 
 	extern FILE *yyin;
 	extern FILE *yyout;
@@ -88,7 +91,14 @@ rule:
 	command {;}
 	| function_declaration {;}
 	| class_declaration {;}
-	| NEW_LINE { fprintf(yyout, "\n");}
+	| NEW_LINE { 
+		if(current_step == SECOND) {
+			fprintf(yyout, "\n");
+		}
+		else {
+			//Nothing to do
+		}
+	}
 	| comment {;}
 	;
 
@@ -97,30 +107,59 @@ command:
 	;
 
 command_finisher:
-	NEW_LINE {fprintf(yyout, "\n");}
-	| SEMICOLON {fprintf(yyout, ";");}
+	NEW_LINE { 
+		if(current_step == SECOND) {
+			fprintf(yyout, "\n");
+		}
+		else {
+			//Nothing to do
+		}
+	}
+	| SEMICOLON { 
+		if(current_step == SECOND) {
+			fprintf(yyout, ";");
+		}
+		else {
+			//Nothing to do
+		}
+	}
 	;
 
 assignment:
 	IDENTIFIER EQUAL expression {
-		char name_identifier[35];
-		strcpy(name_identifier, $1);
+		if(current_step == FIRST) {
+			char name_identifier[35];
+			strcpy(name_identifier, $1);
 
-		int expression_type = $3;
+			int expression_type = $3;
 
-		char element_type[35];
-		strcpy(element_type, EXPRESSION_TYPES[expression_type]);
+			char element_type[35];
+			strcpy(element_type, EXPRESSION_TYPES[expression_type]);
 
-		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_VARIABLE], element_type);
+			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_VARIABLE], element_type);
+		}
+		else {
+			//Code Generate
+		}
 	}
 	;
 
 expression:
 	number_expression {
-		$$ = NUMBER_EXPRESSION;
+		if(current_step == FIRST){
+			$$ = NUMBER_EXPRESSION;
+		}
+		else{
+			//Code Generate
+		}
 	}
 	| string_expression {
-		$$ = STRING_EXPRESSION;
+		if(current_step == FIRST){
+			$$ = STRING_EXPRESSION;
+		}
+		else{
+			//Code Generate
+		}
 	}
 	;
 
@@ -150,48 +189,70 @@ string_term:
 
 function_declaration:
 	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
-		char name_identifier[35];
-		strcpy(name_identifier, $2);
+		if(current_step == FIRST) {
+			char name_identifier[35];
+			strcpy(name_identifier, $2);
 
-		char element_type[35];
-		strcpy(element_type, "");
+			char element_type[35];
+			strcpy(element_type, "");
 
-		char scope[35];
-		strcpy(scope, "Testando Escopo"); // Will come from the stack...
+			char scope[35];
+			strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_FUNCTION], element_type);
+			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_FUNCTION], element_type);
+		}
+		else {
+			apply_tabulation();
+			fprintf(yyout, "# Function declaration: %s\n", $2);
+			apply_tabulation();
+			fprintf(yyout, "def %s():", $2);
+		}
 
-		apply_tabulation();
-		fprintf(yyout, "# Function declaration: %s\n", $2);
-		apply_tabulation();
-		fprintf(yyout, "def %s():", $2);
 	}
 	;
 
 class_declaration:
 	CLASS IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
-		char name_identifier[35];
-		strcpy(name_identifier, $2);
+		if(current_step == FIRST) {
+			char name_identifier[35];
+			strcpy(name_identifier, $2);
 
-		char element_type[35];
-		strcpy(element_type, "");
+			char element_type[35];
+			strcpy(element_type, "");
 
-		char scope[35];
-		strcpy(scope, "Testando Escopo"); // Will come from the stack...
+			char scope[35];
+			strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_CLASS], element_type);
+			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_CLASS], element_type);
+		}
+		else {
+			apply_tabulation();
+			fprintf(yyout, "# Class declaration: %s\n", $2);
+			apply_tabulation();
+			fprintf(yyout, "class %s:", $2);
+		}
 
-		apply_tabulation();
-		fprintf(yyout, "# Class declaration: %s\n", $2);
-		apply_tabulation();
-		fprintf(yyout, "class %s:", $2);
 	}
 	;
 
 	comment:
-	LINE_COMMENT { fprintf(yyout, "%s", $1);}
-	| BLOCK_COMMENT { fprintf(yyout, "%s", $1);}
-	;
+		LINE_COMMENT { 
+			if(current_step == SECOND) {
+				fprintf(yyout, "%s", $1);
+			}
+			else {
+				//Nothing to do
+			}
+		}
+		| BLOCK_COMMENT { 
+			if(current_step == SECOND) {
+				fprintf(yyout, "%s", $1);
+			}
+			else {
+				//Nothing to do
+			}
+		}
+		;
 
 /* INCOMPLETE !!!
 function_declaration_args:
@@ -215,12 +276,18 @@ int main (int argc, char **argv) {
 
 	symbol_table = new_linked_list();
 
+	//Doing FIRST STEP for collect data and stores on simbol table
 	current_step = FIRST;
 	yyparse();
 
+	//Placing the file pointer at the beginning
+	fseek(yyin, 0, SEEK_SET);
+
+	//Doing SECOND STEP for Generate the output of code
 	current_step = SECOND;
 	yyparse();
 
+	//Show the elements of simbol table
 	print_linked_list(symbol_table);
 	
 	return 0;
