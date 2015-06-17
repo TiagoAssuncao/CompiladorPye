@@ -80,34 +80,26 @@
 %%
 
 input:
-	command {;}
-	| input command {;}
-	| function_declaration {;}
-	| input function_declaration {;}
-	| class_declaration {;}
-	| input class_declaration {;}
-	| NEW_LINE {fprintf(yyout, "\n");}
-	| input NEW_LINE {fprintf(yyout, "\n");}
-	| LINE_COMMENT {fprintf(yyout, "Comentatio em linha");}
-	| input LINE_COMMENT {fprintf(yyout, "%s", $2);}
-	| BLOCK_COMMENT { fprintf(yyout, "%s", $1);}
-	| input BLOCK_COMMENT {fprintf(yyout, "%s", $2);}
+	rule {;}
+	| input rule {;}
 	;
 
-
+rule:
+	command {;}
+	| function_declaration {;}
+	| class_declaration {;}
+	| NEW_LINE { fprintf(yyout, "\n");}
+	| comment {;}
+	;
 
 command:
 	assignment command_finisher {;}
 	;
 
-
-
 command_finisher:
 	NEW_LINE {fprintf(yyout, "\n");}
 	| SEMICOLON {fprintf(yyout, ";");}
 	;
-
-
 
 assignment:
 	IDENTIFIER EQUAL expression {
@@ -123,8 +115,6 @@ assignment:
 	}
 	;
 
-
-
 expression:
 	number_expression {
 		$$ = NUMBER_EXPRESSION;
@@ -133,8 +123,6 @@ expression:
 		$$ = STRING_EXPRESSION;
 	}
 	;
-
-
 
 number_expression:
 	number_term {$$ = NUMBER_EXPRESSION;}
@@ -145,28 +133,20 @@ number_expression:
 	| number_expression POW number_term {$$ = NUMBER_EXPRESSION;}
 	;
 
-
-
 string_expression:
 	string_term {$$ = STRING_EXPRESSION;}
 	| string_expression PLUS string_term {$$ = STRING_EXPRESSION;}
 	;
-
-
 
 number_term:
 	NUMBER {$$ = $1;}
 	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
 	;
 
-
-
 string_term:
 	STRING {$$ = $1;}
 	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
 	;
-
-
 
 function_declaration:
 	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
@@ -188,11 +168,8 @@ function_declaration:
 	}
 	;
 
-
-
 class_declaration:
-	CLASS IDENTIFIER COLON {
-		fprintf(yyout, "Class passoooou\n");
+	CLASS IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
 		char name_identifier[35];
 		strcpy(name_identifier, $2);
 
@@ -209,6 +186,11 @@ class_declaration:
 		apply_tabulation();
 		fprintf(yyout, "class %s:", $2);
 	}
+	;
+
+	comment:
+	LINE_COMMENT { fprintf(yyout, "%s", $1);}
+	| BLOCK_COMMENT { fprintf(yyout, "%s", $1);}
 	;
 
 /* INCOMPLETE !!!

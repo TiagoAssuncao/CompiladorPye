@@ -10,9 +10,8 @@
 ;
 
 
- afsgafs
-sdfshdghs
-casa5 = 6;
+"""liuhados9f7asdfaiygsrw#@%^@%#@$*^@
+fasfasfasfgafs"""
 
 
 # Function declaration: funcao
@@ -22,4 +21,4 @@ def funcao():
 
 
 # Class declaration: nomedaclass
-class nomedaclass():
+class nomedaclass:
