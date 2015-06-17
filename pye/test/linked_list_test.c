@@ -123,8 +123,6 @@ void testSearchingDeallocatedNode(void)
    CU_ASSERT_PTR_NULL(NULL);
 }
 
-
-
 /* add tests to the suite Free Linked List*/
 void testFreeLinkedList(void)
 {
@@ -212,11 +210,10 @@ int main()
       return CU_get_error();
    }
 
-
    // Run all tests using the CUnit Basic interface
    CU_basic_set_mode(CU_BRM_VERBOSE);
    CU_basic_run_tests();
 
-
 	return 0;
 }
+ 
