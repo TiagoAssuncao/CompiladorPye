@@ -2,7 +2,7 @@
 #include <string.h>
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
-#include "./Linked_List_Copy/linked_list.c"
+#include "linked_list.h"
 
 list_header *header = NULL;
 node* element = NULL;
@@ -44,7 +44,6 @@ int clean_suite_insert(void)
    header = NULL;
    return 0;
 }
-
 
 /* add the tests to the suite Create*/
 void testLinkedListCreating(void)
@@ -93,6 +92,15 @@ void testSearchingDeallocatedNode(void)
    CU_ASSERT_PTR_NULL(NULL);
 }
 
+/* add tests to the suite Free Linked List*/
+void testFreeLinkedList(void)
+{
+   free_linked_list(header);
+   CU_ASSERT_PTR_NULL(header->head);
+   CU_ASSERT_PTR_NULL(header->tail);
+   CU_ASSERT(header->length == 0);
+}
+
 int main()
 {
 	 CU_pSuite pSuite = NULL;
@@ -109,7 +117,6 @@ int main()
    pSuiteInsert = CU_add_suite("Suite_Insert", init_suite_insert, clean_suite_insert);
    pSuiteSearchNode = CU_add_suite("Suite_SearchNode", init_suite1, clean_suite1);
    pSuiteFree = CU_add_suite("Suite_Free", init_suite1, clean_suite1);
-
 
    //Adding suite node to the registry
    if ((NULL == pSuiteInsert)
@@ -152,13 +159,16 @@ int main()
    }
 
    /* Suite Free */
-
-
+   if( (NULL == CU_add_test(pSuiteFree, "free linked list()", testFreeLinkedList) ))
+   {
+      CU_cleanup_registry();
+      return CU_get_error();
+   }
 
    // Run all tests using the CUnit Basic interface
    CU_basic_set_mode(CU_BRM_VERBOSE);
    CU_basic_run_tests();
 
-
 	return 0;
 }
+ 

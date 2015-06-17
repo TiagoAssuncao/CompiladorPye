@@ -37,9 +37,12 @@ void free_linked_list(list_header *header) {
 	while(header->head != NULL) {
 		current_node = header->head;
 		header->head = current_node->next;
-
+		header->length--;
+		
 		free(current_node);
 	}
+
+	header->tail = NULL;
 
 	debug("FUNCTION free_linked_list: Leaving...");
 }
