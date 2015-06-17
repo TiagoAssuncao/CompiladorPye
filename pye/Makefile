@@ -46,9 +46,13 @@ test:
 	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_test
 	rm run_test
 
-	$(CC) $(FLAGS) ./test/symbol_table_test.c $(C_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_symbol_table_test
-	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_symbol_table_test
-	rm run_symbol_table_test	
+	$(CC) $(FLAGS) ./test/pye_out_test.c $(C_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_pye_out_test
+	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_pye_out_test
+	rm run_pye_out_test	
+
+	$(CC) $(FLAGS) ./test/stack_test.c $(C_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_stack_test
+	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_stack_test
+	rm run_stack_test
 
 # test/%_test.c:
 # 	$(CC) $(FLAGS) $< $(C_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_test
