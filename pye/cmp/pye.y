@@ -5,7 +5,7 @@
 	#include <string.h>
 
 	#include "linked_list.h"
-	#include "variable_list.h"
+	#include "stack.h"
 	#include "debugger.h"
 	#include "mathematics.h"
 
@@ -20,16 +20,17 @@
 	};
 
 	enum structure_types {
-		STRUCTURE_FUNCTION,
-		STRUCTURE_VARIABLE,
-		STRUCTURE_CLASS,
-		STRUCTURE_METHOD
+		FUNCTION_STRUCTURE,
+		VARIABLE_STRUCTURE,
+		CLASS_STRUCTURE,
+		METHOD_STRUCTURE
 	};
 
 	const char STRUCTURE_TYPES[][35] = {"function", "variable", "class", "method"};
 	const char EXPRESSION_TYPES[][35] = {"number", "string"};
 
 	list_header *symbol_table;
+	stack_header *scope_stack;
 
 	unsigned int current_step;
 	unsigned int count_identifier = 0;
@@ -37,9 +38,10 @@
 	// Change to stack.. 
 	char CURRENT_SCOPE[35];
 
-	void yyerror (char *s);
+	void check_scope_stack();
 	void apply_tabulation();
 	void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char type_of_element[35]);
+	void yyerror (char *s);
 
 	extern FILE *yyin;
 	extern FILE *yyout;
@@ -47,11 +49,12 @@
 	extern unsigned int tabulation_level;
 	extern unsigned int space_level;
 	extern unsigned int amount_block_comments;
+	extern clean_white_level();
 %}
 
 
 %union {
-	int expression_type;
+	int logic_handler;
 	double num;
 	char *string;
 	char *identifier; 
@@ -61,7 +64,8 @@
 
 %start input
 
-%token DEF IF ELSE FOR WHILE TRY CATCH CLASS
+%token IF ELSE FOR WHILE TRY CATCH
+%token DEF CLASS METHOD
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL POW
@@ -75,20 +79,22 @@
 
 %type <num> input number_term
 %type <string> string_term
-%type <expression_type> expression number_expression string_expression
+%type <logic_handler> expression number_expression string_expression declaration_identifier
 
 %%
 
 input:
-	rule {;}
-	| input rule {;}
+	rule {check_scope_stack();}
+	| input rule {check_scope_stack();}
 	;
 
 rule:
 	command {;}
-	| function_declaration {;}
-	| class_declaration {;}
-	| NEW_LINE { fprintf(yyout, "\n");}
+	| declaration {;}
+	| NEW_LINE {
+		clean_white_level();
+		fprintf(yyout, "\n");
+	}
 	| comment {;}
 	;
 
@@ -97,7 +103,10 @@ command:
 	;
 
 command_finisher:
-	NEW_LINE {fprintf(yyout, "\n");}
+	NEW_LINE {
+		clean_white_level();
+		fprintf(yyout, "\n");
+	}
 	| SEMICOLON {fprintf(yyout, ";");}
 	;
 
@@ -111,17 +120,15 @@ assignment:
 		char element_type[35];
 		strcpy(element_type, EXPRESSION_TYPES[expression_type]);
 
-		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_VARIABLE], element_type);
+		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[VARIABLE_STRUCTURE], element_type);
+
+		fprintf(yyout, "%s =", $1);
 	}
 	;
 
 expression:
-	number_expression {
-		$$ = NUMBER_EXPRESSION;
-	}
-	| string_expression {
-		$$ = STRING_EXPRESSION;
-	}
+	number_expression {$$ = NUMBER_EXPRESSION;}
+	| string_expression {$$ = STRING_EXPRESSION;}
 	;
 
 number_expression:
@@ -148,8 +155,8 @@ string_term:
 	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
 	;
 
-function_declaration:
-	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+declaration:
+	declaration_identifier IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
 		char name_identifier[35];
 		strcpy(name_identifier, $2);
 
@@ -159,44 +166,27 @@ function_declaration:
 		char scope[35];
 		strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_FUNCTION], element_type);
+		int structure_type = $1;
+
+		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[structure_type], element_type);
 
 		apply_tabulation();
 		fprintf(yyout, "# Function declaration: %s\n", $2);
 		apply_tabulation();
 		fprintf(yyout, "def %s():", $2);
+
+		insert_scope_on_stack(scope_stack, $2, tabulation_level, space_level);
 	}
-	;
 
-class_declaration:
-	CLASS IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
-		char name_identifier[35];
-		strcpy(name_identifier, $2);
+declaration_identifier:
+	DEF {$$ = FUNCTION_STRUCTURE;}
+	| CLASS {$$ = CLASS_STRUCTURE;}
+	| METHOD {$$ = METHOD_STRUCTURE;}
 
-		char element_type[35];
-		strcpy(element_type, "");
-
-		char scope[35];
-		strcpy(scope, "Testando Escopo"); // Will come from the stack...
-
-		insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_CLASS], element_type);
-
-		apply_tabulation();
-		fprintf(yyout, "# Class declaration: %s\n", $2);
-		apply_tabulation();
-		fprintf(yyout, "class %s:", $2);
-	}
-	;
-
-	comment:
+comment:
 	LINE_COMMENT { fprintf(yyout, "%s", $1);}
 	| BLOCK_COMMENT { fprintf(yyout, "%s", $1);}
 	;
-
-/* INCOMPLETE !!!
-function_declaration_args:
-	;
-   INCOMPLETE !!! */
 
 %%
 
@@ -214,6 +204,7 @@ int main (int argc, char **argv) {
 	}
 
 	symbol_table = new_linked_list();
+	scope_stack = new_stack();
 
 	current_step = FIRST;
 	yyparse();
@@ -226,7 +217,6 @@ int main (int argc, char **argv) {
 	return 0;
 }
 
-
 void apply_tabulation() {
 	int i = 0;
 	while(space_level > i) {
@@ -238,6 +228,20 @@ void apply_tabulation() {
 	while(tabulation_level > i) {
 		fprintf(yyout, "\t");
 		i++;
+	}
+}
+
+void check_scope_stack() {
+	if(scope_stack->length > 0) {
+		stack_node *top_node = scope_stack->top;
+		while(top_node->tabulation_level >= tabulation_level || top_node->space_level >= space_level) {
+			pop_element(scope_stack);
+			
+			if(scope_stack->length == 0)
+				break;
+		
+			top_node = scope_stack->top;
+		}
 	}
 }
 

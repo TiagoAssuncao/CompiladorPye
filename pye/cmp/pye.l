@@ -82,8 +82,7 @@ undefined [.]+
 }
 
 {new_line} {
-	current_line++; 
-	clean_white_level(); 
+	current_line++;
 	set_white_status(NOT_BLOCKED); 
 	return NEW_LINE;
 }
