@@ -54,6 +54,10 @@ test:
 	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_stack_test
 	rm run_stack_test
 
+	$(CC) $(FLAGS) ./test/mathematics_test.c $(C_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_mathematics_test
+	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_mathematics_test
+	rm run_mathematics_test
+
 # test/%_test.c:
 # 	$(CC) $(FLAGS) $< $(C_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_test
 # 	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_test

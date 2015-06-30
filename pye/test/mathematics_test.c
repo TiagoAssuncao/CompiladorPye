@@ -4,7 +4,6 @@
 #include <CUnit/Basic.h>
 #include "mathematics.h"
 
-init_suiteAbsolute, clean_suiteAbsolute
 int init_suite(void){
 	return 0;
 } 
@@ -16,6 +15,7 @@ int clean_suite(void){
 /* Absolute tests */
 void testAbsoluteValue(void){
 	CU_ASSERT_EQUAL(6, absolute(6));
+	CU_ASSERT_EQUAL(6, absolute(-6));
 }
 
 /* Exponentiation test */
