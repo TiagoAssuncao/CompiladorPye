@@ -115,6 +115,12 @@ void testPopElementTopNextNull(void)
    pop_element(stack);
    CU_ASSERT_PTR_NULL(stack->top->next);
 }
+void testPopElementBlankStack(void)
+{
+   stack = new_stack();
+   CU_ASSERT_PTR_EQUAL(stack, pop_element(stack));
+}
+
 
 int main()
 {
@@ -166,12 +172,12 @@ int main()
    /* Suite Pop Element */
    if ( (NULL == CU_add_test(pSuitePopElement, "Pop element()", testPopElement)) 
       || (NULL == CU_add_test(pSuitePopElement, "Top next element is NULL()", testPopElementTopNextNull))
+      || (NULL == CU_add_test(pSuitePopElement, "The stack is blank()", testPopElementBlankStack))
    )
    {
       CU_cleanup_registry();
       return CU_get_error();
    }
-
 
    // Run all tests using the CUnit Basic interface
    CU_basic_set_mode(CU_BRM_VERBOSE);

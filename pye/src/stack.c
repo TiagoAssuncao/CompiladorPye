@@ -98,9 +98,9 @@ void show_stack(stack_header *header) {
 
 	stack_node *current_element = header->top;
 	
+	int i = 0;
 	while(current_element != NULL) {
-		int i = 0;
-
+		
 		printf("%d- Nome do elemento: %s\n", i, current_element->scope_name);
 
 		i++;
