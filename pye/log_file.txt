@@ -1,0 +1,10 @@
+Line 1 -> Assignment found! Variable identifier: brasil
+Line 3 -> Assignment found! Variable identifier: juca_bala
+Line 4 -> Assignment found! Variable identifier: juca_bala2
+Line 6 -> Assignment found! Variable identifier: casa
+Line 7 -> Assignment found! Variable identifier: casa1
+Line 7 -> Assignment found! Variable identifier: casa2
+Line 10 -> Assignment found! Variable identifier: casa3
+Line 17 -> Assignment found! Variable identifier: numero
+Line 19 -> Assignment found! Variable identifier: estadosUnidos
+Line 22 -> Assignment found! Variable identifier: casa4

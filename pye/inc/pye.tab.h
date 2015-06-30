@@ -77,7 +77,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 56 "cmp/pye.y" /* yacc.c:1909  */
+#line 59 "cmp/pye.y" /* yacc.c:1909  */
 
 	int expression_type;
 	double num;

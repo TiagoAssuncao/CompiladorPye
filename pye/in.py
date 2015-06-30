@@ -20,4 +20,4 @@ estadosUnidos=4
 
 
 class nomedaclass():
-	
+	casa4 = 7;

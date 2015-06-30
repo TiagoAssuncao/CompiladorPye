@@ -30,9 +30,12 @@
 	const char EXPRESSION_TYPES[][35] = {"number", "string"};
 
 	list_header *symbol_table;
+	FILE *log_file;
 
 	unsigned int current_step;
 	unsigned int count_identifier = 0;
+	double number_expression_value = 0;
+	char string_expression_value[35];
 
 	// Change to stack.. 
 	char CURRENT_SCOPE[35];
@@ -40,9 +43,9 @@
 	void yyerror (char *s);
 	void apply_tabulation();
 	void insert_on_symbol_table(
-		const char name_identifier[35], 
-		const char structure_type[35], 
-		const char type_of_element[35]);
+	const char name_identifier[35], 
+	const char structure_type[35], 
+	const char type_of_element[35]);
 
 	extern FILE *yyin;
 	extern FILE *yyout;
@@ -139,7 +142,17 @@ assignment:
 			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_VARIABLE], element_type);
 		}
 		else {
-			//Code Generate
+			apply_tabulation();
+			fprintf(yyout, "%s = ", $1);
+
+			if($3 == NUMBER_EXPRESSION) {
+				fprintf(yyout, "%.2lf", number_expression_value);
+			}
+			else {
+				fprintf(yyout, "%s", string_expression_value);
+			}
+
+			fprintf(log_file, "Line %u -> Assignment found! Variable identifier: %s\n", current_line, $1);
 		}
 	}
 	;
@@ -147,7 +160,7 @@ assignment:
 expression:
 	number_expression {
 		if(current_step == FIRST){
-			$$ = NUMBER_EXPRESSION;
+			$$ = $1;
 		}
 		else{
 			//Code Generate
@@ -174,16 +187,29 @@ number_expression:
 
 string_expression:
 	string_term {$$ = STRING_EXPRESSION;}
-	| string_expression PLUS string_term {$$ = STRING_EXPRESSION;}
+	| string_expression PLUS string_term {
+		$$ = STRING_EXPRESSION; 
+		//Colocar a concatenação do string_term
+	}
 	;
 
 number_term:
-	NUMBER {$$ = $1;}
+	NUMBER {
+		if(current_step == FIRST){
+			$$ = $1;
+			number_expression_value = $1;
+		}
+		else {
+		}
+	}
 	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
 	;
 
 string_term:
-	STRING {$$ = $1;}
+	STRING {
+		$$ = $1;
+		strcpy(string_expression_value, $1);
+	}
 	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
 	;
 
@@ -229,7 +255,7 @@ class_declaration:
 			apply_tabulation();
 			fprintf(yyout, "# Class declaration: %s\n", $2);
 			apply_tabulation();
-			fprintf(yyout, "class %s:", $2);
+			fprintf(yyout, "class %s():", $2);
 		}
 
 	}
@@ -274,6 +300,12 @@ int main (int argc, char **argv) {
 		exit(0);
 	}
 
+	log_file = fopen("log_file.txt", "w");
+	if(log_file == NULL) {
+		printf("Error on log_file.\n");
+		exit(0);
+	}
+
 	symbol_table = new_linked_list();
 
 	//Doing FIRST STEP for collect data and stores on simbol table
@@ -285,11 +317,13 @@ int main (int argc, char **argv) {
 
 	//Doing SECOND STEP for Generate the output of code
 	current_step = SECOND;
+	current_line = 1;
 	yyparse();
 
 	//Show the elements of simbol table
 	print_linked_list(symbol_table);
 	
+	fprintf(yyout, "\n");
 	return 0;
 }
 
