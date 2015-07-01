@@ -73,6 +73,7 @@
 	#include "stack.h"
 	#include "debugger.h"
 	#include "mathematics.h"
+	#include "log.h"
 
 	enum steps {
 		FIRST,
@@ -101,6 +102,9 @@
 
 	unsigned int current_step;
 	unsigned int count_identifier = 0;
+	unsigned int number_variable = 0;
+	unsigned int number_class = 0;
+	unsigned int number_method = 0;
 	double number_expression_value = 0;
 	char string_expression_value[35];
 
@@ -109,8 +113,8 @@
 
 	void check_scope_stack();
 	void apply_tabulation();
-
 	void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char type_of_element[35]);
+	void check_undeclaration(char *identifier);
 	void yyerror (char *s);
 
 	extern FILE *yyin;
@@ -121,7 +125,7 @@
 	extern unsigned int amount_block_comments;
 	extern clean_white_level();
 
-#line 125 "pye.tab.c" /* yacc.c:339  */
+#line 129 "pye.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -189,7 +193,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 61 "cmp/pye.y" /* yacc.c:355  */
+#line 65 "cmp/pye.y" /* yacc.c:355  */
 
 	int logic_handler;
 	double num;
@@ -198,7 +202,7 @@ union YYSTYPE
 	char *line_comment; 
 	char *block_comment;
 
-#line 202 "pye.tab.c" /* yacc.c:355  */
+#line 206 "pye.tab.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -213,7 +217,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 217 "pye.tab.c" /* yacc.c:358  */
+#line 221 "pye.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -513,10 +517,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    92,    92,    93,    97,    98,    99,   109,   113,   117,
-     127,   138,   167,   175,   186,   187,   188,   189,   190,   191,
-     195,   196,   203,   211,   215,   219,   223,   259,   260,   261,
-     264,   272
+       0,    96,    96,    97,   101,   102,   103,   113,   117,   121,
+     131,   142,   174,   182,   193,   194,   195,   196,   197,   198,
+     202,   203,   209,   213,   219,   223,   229,   259,   262,   266,
+     272,   280
 };
 #endif
 
@@ -1318,58 +1322,31 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 92 "cmp/pye.y" /* yacc.c:1646  */
+#line 96 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1324 "pye.tab.c" /* yacc.c:1646  */
+#line 1328 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 93 "cmp/pye.y" /* yacc.c:1646  */
+#line 97 "cmp/pye.y" /* yacc.c:1646  */
     {;}
-#line 1330 "pye.tab.c" /* yacc.c:1646  */
+#line 1334 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 97 "cmp/pye.y" /* yacc.c:1646  */
+#line 101 "cmp/pye.y" /* yacc.c:1646  */
     {check_scope_stack();}
-#line 1336 "pye.tab.c" /* yacc.c:1646  */
+#line 1340 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 98 "cmp/pye.y" /* yacc.c:1646  */
-    {check_scope_stack();}
-#line 1342 "pye.tab.c" /* yacc.c:1646  */
+#line 102 "cmp/pye.y" /* yacc.c:1646  */
+    {;}
+#line 1346 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 99 "cmp/pye.y" /* yacc.c:1646  */
-    {check_scope_stack();
-		current_line++;
-		clean_white_level();
-		if(current_step == SECOND) {
-			fprintf(yyout, "\n");
-		}
-		else {
-			//Nothing to do
-		}
-	}
-#line 1357 "pye.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 7:
-#line 109 "cmp/pye.y" /* yacc.c:1646  */
-    {check_scope_stack();}
-#line 1363 "pye.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 8:
-#line 113 "cmp/pye.y" /* yacc.c:1646  */
-    {;}
-#line 1369 "pye.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 9:
-#line 117 "cmp/pye.y" /* yacc.c:1646  */
+#line 103 "cmp/pye.y" /* yacc.c:1646  */
     {
 		current_line++;
 		clean_white_level();
@@ -1380,11 +1357,38 @@ yyreduce:
 			//Nothing to do
 		}
 	}
-#line 1384 "pye.tab.c" /* yacc.c:1646  */
+#line 1361 "pye.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 7:
+#line 113 "cmp/pye.y" /* yacc.c:1646  */
+    {check_scope_stack();}
+#line 1367 "pye.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 8:
+#line 117 "cmp/pye.y" /* yacc.c:1646  */
+    {;}
+#line 1373 "pye.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 9:
+#line 121 "cmp/pye.y" /* yacc.c:1646  */
+    {
+		current_line++;
+		clean_white_level();
+		if(current_step == SECOND) {
+			fprintf(yyout, "\n");
+		}
+		else {
+			//Nothing to do
+		}
+	}
+#line 1388 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 127 "cmp/pye.y" /* yacc.c:1646  */
+#line 131 "cmp/pye.y" /* yacc.c:1646  */
     { 
 		if(current_step == SECOND) {
 			fprintf(yyout, ";");
@@ -1393,11 +1397,11 @@ yyreduce:
 			//Nothing to do
 		}
 	}
-#line 1397 "pye.tab.c" /* yacc.c:1646  */
+#line 1401 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 138 "cmp/pye.y" /* yacc.c:1646  */
+#line 142 "cmp/pye.y" /* yacc.c:1646  */
     {
 		if(current_step == FIRST) {
 			char name_identifier[35];
@@ -1408,12 +1412,15 @@ yyreduce:
 			char element_type[35];
 			strcpy(element_type, EXPRESSION_TYPES[expression_type]);
 
-			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[VARIABLE_STRUCTURE], element_type);
+			node *node_found = search_element(symbol_table, name_identifier, get_top(scope_stack)->scope_name);
+			if(!node_found) {
+				insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[VARIABLE_STRUCTURE], element_type);
+				number_variable++;
+			}
 		}
 		else {
 			apply_tabulation();
 			fprintf(yyout, "%s = ", (yyvsp[-2].identifier));
-
 			if((yyvsp[0].logic_handler) == NUMBER_EXPRESSION) {
 				fprintf(yyout, "%.2lf", number_expression_value);
 			}
@@ -1421,14 +1428,14 @@ yyreduce:
 				fprintf(yyout, "%s", string_expression_value);
 			}
 
-			fprintf(log_file, "Line %u -> Assignment found! Variable identifier: %s\n", current_line, (yyvsp[-2].identifier));
+			//fprintf(log_file, "Line %u -> Assignment found! Variable identifier: %s\n", current_line, $1);
 		}
 	}
-#line 1428 "pye.tab.c" /* yacc.c:1646  */
+#line 1435 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 167 "cmp/pye.y" /* yacc.c:1646  */
+#line 174 "cmp/pye.y" /* yacc.c:1646  */
     {
 		if(current_step == FIRST) {
 			(yyval.logic_handler) = NUMBER_EXPRESSION;
@@ -1437,11 +1444,11 @@ yyreduce:
 			//Code Generate
 		}
 	}
-#line 1441 "pye.tab.c" /* yacc.c:1646  */
+#line 1448 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 175 "cmp/pye.y" /* yacc.c:1646  */
+#line 182 "cmp/pye.y" /* yacc.c:1646  */
     {
 		if(current_step == FIRST) {
 			(yyval.logic_handler) = STRING_EXPRESSION;
@@ -1450,108 +1457,102 @@ yyreduce:
 			//Code Generate
 		}
 	}
-#line 1454 "pye.tab.c" /* yacc.c:1646  */
+#line 1461 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 186 "cmp/pye.y" /* yacc.c:1646  */
+#line 193 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.logic_handler) = NUMBER_EXPRESSION;}
-#line 1460 "pye.tab.c" /* yacc.c:1646  */
+#line 1467 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 187 "cmp/pye.y" /* yacc.c:1646  */
+#line 194 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.logic_handler) = NUMBER_EXPRESSION;}
-#line 1466 "pye.tab.c" /* yacc.c:1646  */
+#line 1473 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 188 "cmp/pye.y" /* yacc.c:1646  */
+#line 195 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.logic_handler) = NUMBER_EXPRESSION;}
-#line 1472 "pye.tab.c" /* yacc.c:1646  */
+#line 1479 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 189 "cmp/pye.y" /* yacc.c:1646  */
+#line 196 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.logic_handler) = NUMBER_EXPRESSION;}
-#line 1478 "pye.tab.c" /* yacc.c:1646  */
+#line 1485 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 190 "cmp/pye.y" /* yacc.c:1646  */
+#line 197 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.logic_handler) = NUMBER_EXPRESSION;}
-#line 1484 "pye.tab.c" /* yacc.c:1646  */
+#line 1491 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 191 "cmp/pye.y" /* yacc.c:1646  */
+#line 198 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.logic_handler) = NUMBER_EXPRESSION;}
-#line 1490 "pye.tab.c" /* yacc.c:1646  */
+#line 1497 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 195 "cmp/pye.y" /* yacc.c:1646  */
+#line 202 "cmp/pye.y" /* yacc.c:1646  */
     {(yyval.logic_handler) = STRING_EXPRESSION;}
-#line 1496 "pye.tab.c" /* yacc.c:1646  */
+#line 1503 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 196 "cmp/pye.y" /* yacc.c:1646  */
+#line 203 "cmp/pye.y" /* yacc.c:1646  */
     {
 		(yyval.logic_handler) = STRING_EXPRESSION; 
-		//Colocar a concatenação do string_term
 	}
-#line 1505 "pye.tab.c" /* yacc.c:1646  */
+#line 1511 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 203 "cmp/pye.y" /* yacc.c:1646  */
+#line 209 "cmp/pye.y" /* yacc.c:1646  */
     {
-		if(current_step == FIRST){
-			(yyval.num) = (yyvsp[0].num);
-			number_expression_value = (yyvsp[0].num);
-		}
-		else {
-		}
+		(yyval.num) = (yyvsp[0].num);
+		number_expression_value = (yyvsp[0].num);
 	}
-#line 1518 "pye.tab.c" /* yacc.c:1646  */
+#line 1520 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 211 "cmp/pye.y" /* yacc.c:1646  */
-    {;}
-#line 1524 "pye.tab.c" /* yacc.c:1646  */
+#line 213 "cmp/pye.y" /* yacc.c:1646  */
+    {
+		check_undeclaration((yyvsp[0].identifier));
+	}
+#line 1528 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 215 "cmp/pye.y" /* yacc.c:1646  */
+#line 219 "cmp/pye.y" /* yacc.c:1646  */
     {
 		(yyval.string) = (yyvsp[0].string);
 		strcpy(string_expression_value, (yyvsp[0].string));
 	}
-#line 1533 "pye.tab.c" /* yacc.c:1646  */
+#line 1537 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 219 "cmp/pye.y" /* yacc.c:1646  */
-    {;}
-#line 1539 "pye.tab.c" /* yacc.c:1646  */
+#line 223 "cmp/pye.y" /* yacc.c:1646  */
+    {
+		check_undeclaration((yyvsp[0].identifier));
+	}
+#line 1545 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 223 "cmp/pye.y" /* yacc.c:1646  */
+#line 229 "cmp/pye.y" /* yacc.c:1646  */
     {
-		insert_scope_on_stack(scope_stack, (yyvsp[-3].identifier), tabulation_level, space_level);
-
 		if(current_step == FIRST) {
 			char name_identifier[35];
 			strcpy(name_identifier, (yyvsp[-3].identifier));
 			
 			char element_type[35];
 			strcpy(element_type, "");
-
-			char scope[35];
-			strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
 			int structure_type = (yyvsp[-4].logic_handler);
 
@@ -1569,34 +1570,41 @@ yyreduce:
 				apply_tabulation();
 				fprintf(yyout, "class %s():", (yyvsp[-3].identifier));
 			}
-
 		}
 
-		show_stack(scope_stack);
+		insert_scope_on_stack(scope_stack, (yyvsp[-3].identifier), tabulation_level, space_level);
 	}
 #line 1578 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 259 "cmp/pye.y" /* yacc.c:1646  */
-    {(yyval.logic_handler) = FUNCTION_STRUCTURE;}
-#line 1584 "pye.tab.c" /* yacc.c:1646  */
+    {
+		number_method++;
+		(yyval.logic_handler) = FUNCTION_STRUCTURE;}
+#line 1586 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 260 "cmp/pye.y" /* yacc.c:1646  */
-    {(yyval.logic_handler) = CLASS_STRUCTURE;}
-#line 1590 "pye.tab.c" /* yacc.c:1646  */
+#line 262 "cmp/pye.y" /* yacc.c:1646  */
+    {
+		number_class++;
+		(yyval.logic_handler) = CLASS_STRUCTURE;
+	}
+#line 1595 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 261 "cmp/pye.y" /* yacc.c:1646  */
-    {(yyval.logic_handler) = METHOD_STRUCTURE;}
-#line 1596 "pye.tab.c" /* yacc.c:1646  */
+#line 266 "cmp/pye.y" /* yacc.c:1646  */
+    {
+		number_method++;
+		(yyval.logic_handler) = METHOD_STRUCTURE;
+	}
+#line 1604 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 264 "cmp/pye.y" /* yacc.c:1646  */
+#line 272 "cmp/pye.y" /* yacc.c:1646  */
     { 
 		if(current_step == SECOND) {
 			fprintf(yyout, "%s", (yyvsp[0].line_comment));
@@ -1605,11 +1613,11 @@ yyreduce:
 			//Nothing to do
 		}
 	}
-#line 1609 "pye.tab.c" /* yacc.c:1646  */
+#line 1617 "pye.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 272 "cmp/pye.y" /* yacc.c:1646  */
+#line 280 "cmp/pye.y" /* yacc.c:1646  */
     { 
 		if(current_step == SECOND) {
 			fprintf(yyout, "%s", (yyvsp[0].block_comment));
@@ -1618,11 +1626,11 @@ yyreduce:
 			//Nothing to do
 		}
 	}
-#line 1622 "pye.tab.c" /* yacc.c:1646  */
+#line 1630 "pye.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1626 "pye.tab.c" /* yacc.c:1646  */
+#line 1634 "pye.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1850,7 +1858,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 283 "cmp/pye.y" /* yacc.c:1906  */
+#line 291 "cmp/pye.y" /* yacc.c:1906  */
 
 
 int main (int argc, char **argv) {
@@ -1877,19 +1885,22 @@ int main (int argc, char **argv) {
 
 	insert_scope_on_stack(scope_stack, "Main", 0, 0);
 	
-	//Doing FIRST STEP for collect data and stores on simbol table
 	current_step = FIRST;
 	yyparse();
 
 	//Placing the file pointer at the beginning
 	fseek(yyin, 0, SEEK_SET);
 
+	print_number_terms(log_file, number_variable, number_method, number_class);
+
 	//Doing SECOND STEP for Generate the output of code
 	current_step = SECOND;
 	current_line = 1;
 	yyparse();
 
-	print_linked_list(symbol_table);
+	print_log_unused(symbol_table, log_file);
+	print_number_of_errors(log_file);
+	print_number_of_warnings(log_file);
 	
 	fprintf(yyout, "\n");
 	return 0;
@@ -1913,7 +1924,7 @@ void check_scope_stack() {
 	if(scope_stack->length > 1) {
 		stack_node *top_node = scope_stack->top;
 		while(top_node->tabulation_level >= tabulation_level || top_node->space_level >= space_level) {
-			fprintf(yyout, "\n%s - tabulation_level: %u - %u\n",top_node->scope_name,  top_node->tabulation_level, top_node->space_level);
+
 			pop_element(scope_stack);
 			
 			if(scope_stack->length == 1){
@@ -1944,6 +1955,25 @@ void insert_on_symbol_table(const char name_identifier[35], const char structure
 
 	symbol_table = insert_element(symbol_table, new_node);
 	count_identifier++;
+}
+
+void check_undeclaration(char *identifier) {
+	char scope[35];
+	stack_node *top_stack = get_top(scope_stack);
+	strcpy(scope, top_stack->scope_name);
+
+	node *node_found = search_element(symbol_table, identifier, scope);
+	if(node_found) {
+		if(current_line > node_found->declaration_line) {
+			node_found->is_used = TRUE;
+		}
+		else {
+			print_log_undeclared(identifier, current_line, log_file, scope);
+		}
+	}
+	else if(current_step == SECOND) {
+		print_log_undeclared(identifier, current_line, log_file, scope);
+	}
 }
 
 void yyerror (char *s) {

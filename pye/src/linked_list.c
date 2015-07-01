@@ -177,7 +177,8 @@ void print_node(node *input_node) {
 	printf("Structure Type: %s\n", input_node->structure_type);
 	printf("Declaration Line: %u\n", input_node->declaration_line);
 	printf("Tabulation Level: %u\n", input_node->tabulation_level);
-	printf("Space Level: %u\n\n\n", input_node->space_level);
+	printf("Space Level: %u\n", input_node->space_level);
+	printf("Is used? "); (input_node->is_used) ? printf("YES") : printf("NO"); printf("\n\n\n");
 
 	debug("FUNCTION print_node: Leaving...");
 }

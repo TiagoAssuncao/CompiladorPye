@@ -1,33 +1,29 @@
+	argentina = 5.00;
 
-media - tabulation_level: 0 - 0
+alemanha = "7 a 0"
 
-nomedaclass - tabulation_level: 0 - 0
-	brasil = 7.00;
 
-     juca_bala = 7.00;
- juca_bala2 = 7.00;
+     juca_bala = 4124.00;
+ juca_bala2 = 4124.00;
  casa = 7.00
    casa1 = 7.00
 		casa2 = 7.00;
 
 #casa4 = 8;
-	casa3 = 7.00;
+	casa3 = 5.00;
 
+jose = 5.00;
 
-"""liuhados9f7asdfaiygsrw#@%^@%#@$*^@
-fasfasfasfgafs"""
+"""liuhados9f7asdfaiygsrw#@%^@%#@$*^@fasfasfasfgafs"""
 
 
 # Function declaration: media
 def media():
-media - tabulation_level: 0 - 0
-
-     numero = 7.00;
-estadosUnidos = 7.00
+     numero = 1.00;
+estadosUnidos = 4.00
 
 
 # Class declaration: nomedaclass
 class nomedaclass():
-nomedaclass - tabulation_level: 0 - 0
-
 	casa4 = 7.00;
+	fga = 'O novo endereco da tecnologia'

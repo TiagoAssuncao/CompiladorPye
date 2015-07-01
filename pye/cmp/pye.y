@@ -8,6 +8,7 @@
 	#include "stack.h"
 	#include "debugger.h"
 	#include "mathematics.h"
+	#include "log.h"
 
 	enum steps {
 		FIRST,
@@ -36,6 +37,9 @@
 
 	unsigned int current_step;
 	unsigned int count_identifier = 0;
+	unsigned int number_variable = 0;
+	unsigned int number_class = 0;
+	unsigned int number_method = 0;
 	double number_expression_value = 0;
 	char string_expression_value[35];
 
@@ -44,8 +48,8 @@
 
 	void check_scope_stack();
 	void apply_tabulation();
-
 	void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char type_of_element[35]);
+	void check_undeclaration(char *identifier);
 	void yyerror (char *s);
 
 	extern FILE *yyin;
@@ -95,8 +99,8 @@ input:
 
 rule:
 	command {check_scope_stack();}
-	| declaration {check_scope_stack();}
-	| NEW_LINE {check_scope_stack();
+	| declaration {;}
+	| NEW_LINE {
 		current_line++;
 		clean_white_level();
 		if(current_step == SECOND) {
@@ -145,12 +149,15 @@ assignment:
 			char element_type[35];
 			strcpy(element_type, EXPRESSION_TYPES[expression_type]);
 
-			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[VARIABLE_STRUCTURE], element_type);
+			node *node_found = search_element(symbol_table, name_identifier, get_top(scope_stack)->scope_name);
+			if(!node_found) {
+				insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[VARIABLE_STRUCTURE], element_type);
+				number_variable++;
+			}
 		}
 		else {
 			apply_tabulation();
 			fprintf(yyout, "%s = ", $1);
-
 			if($3 == NUMBER_EXPRESSION) {
 				fprintf(yyout, "%.2lf", number_expression_value);
 			}
@@ -158,7 +165,7 @@ assignment:
 				fprintf(yyout, "%s", string_expression_value);
 			}
 
-			fprintf(log_file, "Line %u -> Assignment found! Variable identifier: %s\n", current_line, $1);
+			//fprintf(log_file, "Line %u -> Assignment found! Variable identifier: %s\n", current_line, $1);
 		}
 	}
 	;
@@ -195,20 +202,17 @@ string_expression:
 	string_term {$$ = STRING_EXPRESSION;}
 	| string_expression PLUS string_term {
 		$$ = STRING_EXPRESSION; 
-		//Colocar a concatenação do string_term
 	}
 	;
 
 number_term:
 	NUMBER {
-		if(current_step == FIRST){
-			$$ = $1;
-			number_expression_value = $1;
-		}
-		else {
-		}
+		$$ = $1;
+		number_expression_value = $1;
 	}
-	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
+	| IDENTIFIER {
+		check_undeclaration($1);
+	}
 	;
 
 string_term:
@@ -216,22 +220,19 @@ string_term:
 		$$ = $1;
 		strcpy(string_expression_value, $1);
 	}
-	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
+	| IDENTIFIER {
+		check_undeclaration($1);
+	}
 	;
 
 declaration:
 	declaration_identifier IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
-		insert_scope_on_stack(scope_stack, $2, tabulation_level, space_level);
-
 		if(current_step == FIRST) {
 			char name_identifier[35];
 			strcpy(name_identifier, $2);
 			
 			char element_type[35];
 			strcpy(element_type, "");
-
-			char scope[35];
-			strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
 			int structure_type = $1;
 
@@ -249,16 +250,23 @@ declaration:
 				apply_tabulation();
 				fprintf(yyout, "class %s():", $2);
 			}
-
 		}
 
-		show_stack(scope_stack);
+		insert_scope_on_stack(scope_stack, $2, tabulation_level, space_level);
 	}
 
 declaration_identifier:
-	DEF {$$ = FUNCTION_STRUCTURE;}
-	| CLASS {$$ = CLASS_STRUCTURE;}
-	| METHOD {$$ = METHOD_STRUCTURE;}
+	DEF {
+		number_method++;
+		$$ = FUNCTION_STRUCTURE;}
+	| CLASS {
+		number_class++;
+		$$ = CLASS_STRUCTURE;
+	}
+	| METHOD {
+		number_method++;
+		$$ = METHOD_STRUCTURE;
+	}
 
 comment:
 	LINE_COMMENT { 
@@ -306,19 +314,22 @@ int main (int argc, char **argv) {
 
 	insert_scope_on_stack(scope_stack, "Main", 0, 0);
 	
-	//Doing FIRST STEP for collect data and stores on simbol table
 	current_step = FIRST;
 	yyparse();
 
 	//Placing the file pointer at the beginning
 	fseek(yyin, 0, SEEK_SET);
 
+	print_number_terms(log_file, number_variable, number_method, number_class);
+
 	//Doing SECOND STEP for Generate the output of code
 	current_step = SECOND;
 	current_line = 1;
 	yyparse();
 
-	print_linked_list(symbol_table);
+	print_log_unused(symbol_table, log_file);
+	print_number_of_errors(log_file);
+	print_number_of_warnings(log_file);
 	
 	fprintf(yyout, "\n");
 	return 0;
@@ -342,7 +353,7 @@ void check_scope_stack() {
 	if(scope_stack->length > 1) {
 		stack_node *top_node = scope_stack->top;
 		while(top_node->tabulation_level >= tabulation_level || top_node->space_level >= space_level) {
-			fprintf(yyout, "\n%s - tabulation_level: %u - %u\n",top_node->scope_name,  top_node->tabulation_level, top_node->space_level);
+
 			pop_element(scope_stack);
 			
 			if(scope_stack->length == 1){
@@ -373,6 +384,25 @@ void insert_on_symbol_table(const char name_identifier[35], const char structure
 
 	symbol_table = insert_element(symbol_table, new_node);
 	count_identifier++;
+}
+
+void check_undeclaration(char *identifier) {
+	char scope[35];
+	stack_node *top_stack = get_top(scope_stack);
+	strcpy(scope, top_stack->scope_name);
+
+	node *node_found = search_element(symbol_table, identifier, scope);
+	if(node_found) {
+		if(current_line > node_found->declaration_line) {
+			node_found->is_used = TRUE;
+		}
+		else {
+			print_log_undeclared(identifier, current_line, log_file, scope);
+		}
+	}
+	else if(current_step == SECOND) {
+		print_log_undeclared(identifier, current_line, log_file, scope);
+	}
 }
 
 void yyerror (char *s) {

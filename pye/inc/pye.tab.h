@@ -78,7 +78,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 61 "cmp/pye.y" /* yacc.c:1909  */
+#line 65 "cmp/pye.y" /* yacc.c:1909  */
 
 	int logic_handler;
 	double num;
