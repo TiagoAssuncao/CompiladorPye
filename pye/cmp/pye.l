@@ -12,7 +12,7 @@
 	unsigned int current_line = 1;
 	unsigned int space_level = 0;
 	unsigned int tabulation_level = 0;
-	unsigned int white_enhancer_status = 0;
+	unsigned int white_enhancer_status = NOT_BLOCKED;
 	unsigned int amount_block_comments = 0;
 
 	void clean_white_level();
@@ -82,8 +82,6 @@ undefined [.]+
 }
 
 {new_line} {
-	current_line++; 
-	clean_white_level(); 
 	set_white_status(NOT_BLOCKED); 
 	return NEW_LINE;
 }

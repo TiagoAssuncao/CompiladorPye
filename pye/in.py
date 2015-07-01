@@ -14,7 +14,7 @@
 fasfasfasfgafs"""
 
 
-def funcao():
+def media():
      numero = 1;
 estadosUnidos=4
 

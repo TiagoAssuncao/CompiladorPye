@@ -27,17 +27,20 @@ stack_header *new_stack() {
 	return header;
 }
 
-stack_header *insert_scope_on_stack(stack_header *header, char scope_name[35]) {
+stack_header *insert_scope_on_stack(stack_header *header, char scope_name[35], unsigned int tabulation_level, unsigned int space_level) {
 	debug("FUNCTION insert_scope_on_stack: Starting...");
 	
 	assert(header != NULL);
 	assert(scope_name != NULL);
 
 	stack_node *new_element = (stack_node *) malloc(sizeof(stack_node));
+	
 	strcpy(new_element->scope_name, scope_name);
+	new_element->tabulation_level = tabulation_level;
+	new_element->space_level = space_level;
+
 	new_element->next = NULL;
 	new_element->previous = header->top;
-
 
 	if(header->top != NULL) {
 		header->top->next = new_element;

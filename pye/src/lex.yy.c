@@ -523,7 +523,7 @@ char *yytext;
 	unsigned int current_line = 1;
 	unsigned int space_level = 0;
 	unsigned int tabulation_level = 0;
-	unsigned int white_enhancer_status = 0;
+	unsigned int white_enhancer_status = NOT_BLOCKED;
 	unsigned int amount_block_comments = 0;
 
 	void clean_white_level();
@@ -918,15 +918,13 @@ case 21:
 YY_RULE_SETUP
 #line 84 "cmp/pye.l"
 {
-	current_line++; 
-	clean_white_level(); 
 	set_white_status(NOT_BLOCKED); 
 	return NEW_LINE;
 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 92 "cmp/pye.l"
+#line 90 "cmp/pye.l"
 {
 	if(white_enhancer_status == NOT_BLOCKED){
 		space_level++;
@@ -938,7 +936,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 102 "cmp/pye.l"
+#line 100 "cmp/pye.l"
 {
 	if(white_enhancer_status == NOT_BLOCKED) {
 		tabulation_level++;
@@ -950,7 +948,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 112 "cmp/pye.l"
+#line 110 "cmp/pye.l"
 {
 	yylval.identifier = strdup(yytext); 
 	set_white_status(BLOCKED); 
@@ -959,7 +957,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 119 "cmp/pye.l"
+#line 117 "cmp/pye.l"
 {	
 	yylval.num = atof(yytext);
 	set_white_status(BLOCKED); 
@@ -968,7 +966,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 125 "cmp/pye.l"
+#line 123 "cmp/pye.l"
 {
 	yylval.string = yytext;
 	set_white_status(BLOCKED);
@@ -977,7 +975,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 132 "cmp/pye.l"
+#line 130 "cmp/pye.l"
 {	
 	ECHO;
 	set_white_status(BLOCKED); 
@@ -986,10 +984,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 138 "cmp/pye.l"
+#line 136 "cmp/pye.l"
 ECHO;
 	YY_BREAK
-#line 993 "lex.yy.c"
+#line 991 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT_MODE):
 	yyterminate();
@@ -1985,7 +1983,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 137 "cmp/pye.l"
+#line 135 "cmp/pye.l"
 
 
 

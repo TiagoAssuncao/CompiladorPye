@@ -77,7 +77,7 @@ list_header *insert_element(list_header *header, node *new_node) {
 	return header;
 }
 
-node *search_element(list_header *header, char node_identifier[]) {
+node *search_element(list_header *header, char node_identifier[], char scope[]) {
 	debug("FUNCTION search_element: Starting...");
 
 	assert(header != NULL);
@@ -93,6 +93,7 @@ node *search_element(list_header *header, char node_identifier[]) {
 
 		while(current_node != NULL) {
 			element_found = !strcmp(current_node->identifier, node_identifier);
+			element_found *= !strcmp(current_node->scope, scope);
 
 			if(element_found) {
 				return_node = current_node;

@@ -45,30 +45,31 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    DEF = 258,
-    IF = 259,
-    ELSE = 260,
-    FOR = 261,
-    WHILE = 262,
-    TRY = 263,
-    CATCH = 264,
+    IF = 258,
+    ELSE = 259,
+    FOR = 260,
+    WHILE = 261,
+    TRY = 262,
+    CATCH = 263,
+    DEF = 264,
     CLASS = 265,
-    LEFT_PARENTHESIS = 266,
-    RIGHT_PARENTHESIS = 267,
-    COLON = 268,
-    SEMICOLON = 269,
-    PLUS = 270,
-    MINUS = 271,
-    MULTIPLY = 272,
-    DIVIDE = 273,
-    EQUAL = 274,
-    POW = 275,
-    NEW_LINE = 276,
-    NUMBER = 277,
-    STRING = 278,
-    IDENTIFIER = 279,
-    LINE_COMMENT = 280,
-    BLOCK_COMMENT = 281
+    METHOD = 266,
+    LEFT_PARENTHESIS = 267,
+    RIGHT_PARENTHESIS = 268,
+    COLON = 269,
+    SEMICOLON = 270,
+    PLUS = 271,
+    MINUS = 272,
+    MULTIPLY = 273,
+    DIVIDE = 274,
+    EQUAL = 275,
+    POW = 276,
+    NEW_LINE = 277,
+    NUMBER = 278,
+    STRING = 279,
+    IDENTIFIER = 280,
+    LINE_COMMENT = 281,
+    BLOCK_COMMENT = 282
   };
 #endif
 
@@ -77,16 +78,16 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 59 "cmp/pye.y" /* yacc.c:1909  */
+#line 61 "cmp/pye.y" /* yacc.c:1909  */
 
-	int expression_type;
+	int logic_handler;
 	double num;
 	char *string;
 	char *identifier; 
 	char *line_comment; 
 	char *block_comment;
 
-#line 90 "pye.tab.h" /* yacc.c:1909  */
+#line 91 "pye.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

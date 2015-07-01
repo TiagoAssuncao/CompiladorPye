@@ -5,7 +5,7 @@
 	#include <string.h>
 
 	#include "linked_list.h"
-	#include "variable_list.h"
+	#include "stack.h"
 	#include "debugger.h"
 	#include "mathematics.h"
 
@@ -20,17 +20,19 @@
 	};
 
 	enum structure_types {
-		STRUCTURE_FUNCTION,
-		STRUCTURE_VARIABLE,
-		STRUCTURE_CLASS,
-		STRUCTURE_METHOD
+		FUNCTION_STRUCTURE,
+		VARIABLE_STRUCTURE,
+		CLASS_STRUCTURE,
+		METHOD_STRUCTURE
 	};
 
 	const char STRUCTURE_TYPES[][35] = {"function", "variable", "class", "method"};
 	const char EXPRESSION_TYPES[][35] = {"number", "string"};
 
 	list_header *symbol_table;
+
 	FILE *log_file;
+	stack_header *scope_stack;
 
 	unsigned int current_step;
 	unsigned int count_identifier = 0;
@@ -40,12 +42,11 @@
 	// Change to stack.. 
 	char CURRENT_SCOPE[35];
 
-	void yyerror (char *s);
+	void check_scope_stack();
 	void apply_tabulation();
-	void insert_on_symbol_table(
-	const char name_identifier[35], 
-	const char structure_type[35], 
-	const char type_of_element[35]);
+
+	void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char type_of_element[35]);
+	void yyerror (char *s);
 
 	extern FILE *yyin;
 	extern FILE *yyout;
@@ -53,11 +54,12 @@
 	extern unsigned int tabulation_level;
 	extern unsigned int space_level;
 	extern unsigned int amount_block_comments;
+	extern clean_white_level();
 %}
 
 
 %union {
-	int expression_type;
+	int logic_handler;
 	double num;
 	char *string;
 	char *identifier; 
@@ -67,7 +69,8 @@
 
 %start input
 
-%token DEF IF ELSE FOR WHILE TRY CATCH CLASS
+%token IF ELSE FOR WHILE TRY CATCH
+%token DEF CLASS METHOD
 %token LEFT_PARENTHESIS RIGHT_PARENTHESIS
 %token COLON SEMICOLON
 %token PLUS MINUS MULTIPLY DIVIDE EQUAL POW
@@ -81,7 +84,7 @@
 
 %type <num> input number_term
 %type <string> string_term
-%type <expression_type> expression number_expression string_expression
+%type <logic_handler> expression number_expression string_expression declaration_identifier
 
 %%
 
@@ -91,10 +94,11 @@ input:
 	;
 
 rule:
-	command {;}
-	| function_declaration {;}
-	| class_declaration {;}
-	| NEW_LINE { 
+	command {check_scope_stack();}
+	| declaration {check_scope_stack();}
+	| NEW_LINE {check_scope_stack();
+		current_line++;
+		clean_white_level();
 		if(current_step == SECOND) {
 			fprintf(yyout, "\n");
 		}
@@ -102,7 +106,7 @@ rule:
 			//Nothing to do
 		}
 	}
-	| comment {;}
+	| comment {check_scope_stack();}
 	;
 
 command:
@@ -110,7 +114,9 @@ command:
 	;
 
 command_finisher:
-	NEW_LINE { 
+	NEW_LINE {
+		current_line++;
+		clean_white_level();
 		if(current_step == SECOND) {
 			fprintf(yyout, "\n");
 		}
@@ -139,7 +145,7 @@ assignment:
 			char element_type[35];
 			strcpy(element_type, EXPRESSION_TYPES[expression_type]);
 
-			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_VARIABLE], element_type);
+			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[VARIABLE_STRUCTURE], element_type);
 		}
 		else {
 			apply_tabulation();
@@ -159,15 +165,15 @@ assignment:
 
 expression:
 	number_expression {
-		if(current_step == FIRST){
-			$$ = $1;
+		if(current_step == FIRST) {
+			$$ = NUMBER_EXPRESSION;
 		}
 		else{
 			//Code Generate
 		}
 	}
 	| string_expression {
-		if(current_step == FIRST){
+		if(current_step == FIRST) {
 			$$ = STRING_EXPRESSION;
 		}
 		else{
@@ -213,77 +219,66 @@ string_term:
 	| IDENTIFIER {;} // here we need to put a logic to get the identifier value
 	;
 
-function_declaration:
-	DEF IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+declaration:
+	declaration_identifier IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
+		insert_scope_on_stack(scope_stack, $2, tabulation_level, space_level);
+
 		if(current_step == FIRST) {
 			char name_identifier[35];
 			strcpy(name_identifier, $2);
-
+			
 			char element_type[35];
 			strcpy(element_type, "");
 
 			char scope[35];
 			strcpy(scope, "Testando Escopo"); // Will come from the stack...
 
-			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_FUNCTION], element_type);
+			int structure_type = $1;
+
+			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[structure_type], element_type);
 		}
 		else {
 			apply_tabulation();
-			fprintf(yyout, "# Function declaration: %s\n", $2);
-			apply_tabulation();
-			fprintf(yyout, "def %s():", $2);
+			if($1 == FUNCTION_STRUCTURE) {
+				fprintf(yyout, "# Function declaration: %s\n", $2);
+				apply_tabulation();
+				fprintf(yyout, "def %s():", $2);
+			}
+			else {
+				fprintf(yyout, "# Class declaration: %s\n", $2);
+				apply_tabulation();
+				fprintf(yyout, "class %s():", $2);
+			}
+
 		}
 
+		show_stack(scope_stack);
 	}
-	;
 
-class_declaration:
-	CLASS IDENTIFIER LEFT_PARENTHESIS RIGHT_PARENTHESIS COLON {
-		if(current_step == FIRST) {
-			char name_identifier[35];
-			strcpy(name_identifier, $2);
+declaration_identifier:
+	DEF {$$ = FUNCTION_STRUCTURE;}
+	| CLASS {$$ = CLASS_STRUCTURE;}
+	| METHOD {$$ = METHOD_STRUCTURE;}
 
-			char element_type[35];
-			strcpy(element_type, "");
-
-			char scope[35];
-			strcpy(scope, "Testando Escopo"); // Will come from the stack...
-
-			insert_on_symbol_table(name_identifier, STRUCTURE_TYPES[STRUCTURE_CLASS], element_type);
+comment:
+	LINE_COMMENT { 
+		if(current_step == SECOND) {
+			fprintf(yyout, "%s", $1);
 		}
 		else {
-			apply_tabulation();
-			fprintf(yyout, "# Class declaration: %s\n", $2);
-			apply_tabulation();
-			fprintf(yyout, "class %s():", $2);
+			//Nothing to do
 		}
-
+	}
+	| BLOCK_COMMENT { 
+		if(current_step == SECOND) {
+			fprintf(yyout, "%s", $1);
+		}
+		else {
+			//Nothing to do
+		}
 	}
 	;
 
-	comment:
-		LINE_COMMENT { 
-			if(current_step == SECOND) {
-				fprintf(yyout, "%s", $1);
-			}
-			else {
-				//Nothing to do
-			}
-		}
-		| BLOCK_COMMENT { 
-			if(current_step == SECOND) {
-				fprintf(yyout, "%s", $1);
-			}
-			else {
-				//Nothing to do
-			}
-		}
-		;
-
-/* INCOMPLETE !!!
-function_declaration_args:
-	;
-   INCOMPLETE !!! */
 
 %%
 
@@ -307,7 +302,10 @@ int main (int argc, char **argv) {
 	}
 
 	symbol_table = new_linked_list();
+	scope_stack = new_stack();
 
+	insert_scope_on_stack(scope_stack, "Main", 0, 0);
+	
 	//Doing FIRST STEP for collect data and stores on simbol table
 	current_step = FIRST;
 	yyparse();
@@ -320,13 +318,11 @@ int main (int argc, char **argv) {
 	current_line = 1;
 	yyparse();
 
-	//Show the elements of simbol table
 	print_linked_list(symbol_table);
 	
 	fprintf(yyout, "\n");
 	return 0;
 }
-
 
 void apply_tabulation() {
 	int i = 0;
@@ -342,10 +338,28 @@ void apply_tabulation() {
 	}
 }
 
-void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char element_type[35]) {
+void check_scope_stack() {
+	if(scope_stack->length > 1) {
+		stack_node *top_node = scope_stack->top;
+		while(top_node->tabulation_level >= tabulation_level || top_node->space_level >= space_level) {
+			fprintf(yyout, "\n%s - tabulation_level: %u - %u\n",top_node->scope_name,  top_node->tabulation_level, top_node->space_level);
+			pop_element(scope_stack);
+			
+			if(scope_stack->length == 1){
+				break;
+			}
+		
+			top_node = scope_stack->top;
+		}
+	}
+}
+
+void insert_on_symbol_table(const char name_identifier[35], const char structure_type[35], const char element_type[35] ) {
 	node *new_node = NULL;
 
-	char scope[35] = "scope"; // change to stack...
+	char scope[35];
+	stack_node *top_stack = get_top(scope_stack);
+	strcpy(scope, top_stack->scope_name);
 
 	new_node = build_new_node(
 				count_identifier,
