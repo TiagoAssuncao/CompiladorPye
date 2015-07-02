@@ -1,0 +1,6 @@
+
+para compilar: gcc -Wall -I$HOME/local/include arquivo.c -L$HOME/local/lib -lcunit -o run
+
+-Wall impede de executar o "system()"
+
+para rodar: LD_LIBRARY_PATH=$HOME/local/lib ./run

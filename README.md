@@ -1,26 +1,27 @@
 # CompiladorPye
 
-For now, things are little messy. Just be patient.
-
-If you want to check what pye can do for now, go to folder pye/ and do:
+## Dependencies
 
 ```
-$ make clean
-$ make
-$ make run
+$ sudo apt-get install flex
+$ sudo apt-get install bison
 ```
 
-You can input any file you want or just use as an interpreter, as long as you follow the following syntax:
+
+## Testing Dependencies
 
 ```
-a = b = c = 10; <--- a, b and c are valuated with 10.
-a <--- prints a.
-a; b; c; <--- prints a, b and c.
-10 + a <--- prints 10 + a.
+$ sudo apt-get install libcunit1-dev libcunit1-doc libcunit1
 ```
 
-So, if you want to put more than one command per line, use semicolons (;). 
 
-I know it's pretty basic stuff, but the rush is coming soon.
+## Generating a log file from a .py file
+```
+$ make everything
+```
 
-Peace.
+
+## Testing
+```
+$ make test
+```

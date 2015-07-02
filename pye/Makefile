@@ -3,8 +3,12 @@
 CC = gcc
 FLAGS = 
 
+CUNIT_INC_PATH = $$HOME/local/include
+CUNIT_LIB_PATH = $$HOME/local/lib
+
 C_FILES = $(wildcard src/*.c)
 O_FILES = $(patsubst src/%.c, obj/%.o, $(C_FILES))
+TEST_FILES = ./src/linked_list.c ./src/debugger.c ./src/mathematics.c ./src/stack.c 
 
 
 .PHONY: all
@@ -47,3 +51,21 @@ everything:
 	make run
 	clear
 	@make show
+
+.PHONY: test
+test: 
+	$(CC) $(FLAGS) ./test/linked_list_test.c $(TEST_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_test
+	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_test
+	rm run_test
+
+	$(CC) $(FLAGS) ./test/pye_out_test.c $(TEST_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_pye_out_test
+	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_pye_out_test
+	rm run_pye_out_test	
+
+	$(CC) $(FLAGS) ./test/stack_test.c $(TEST_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_stack_test
+	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_stack_test
+	rm run_stack_test
+
+	$(CC) $(FLAGS) ./test/mathematics_test.c $(TEST_FILES) -I$(CUNIT_INC_PATH) -I./inc -L$(CUNIT_LIB_PATH) -lcunit -o run_mathematics_test
+	LD_LIBRARY_PATH=$(CUNIT_LIB_PATH) ./run_mathematics_test
+	rm run_mathematics_test
