@@ -352,7 +352,8 @@ void apply_tabulation() {
 void check_scope_stack() {
 	if(scope_stack->length > 1) {
 		stack_node *top_node = scope_stack->top;
-		while(top_node->tabulation_level >= tabulation_level || top_node->space_level >= space_level) {
+		while(top_node->tabulation_level >= tabulation_level && top_node->space_level >= space_level) {
+
 
 			pop_element(scope_stack);
 			

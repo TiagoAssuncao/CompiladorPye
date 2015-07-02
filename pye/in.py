@@ -19,9 +19,13 @@ jose = jurema;
 
 def media():
      numero = 1;
+     for_we = 3
 estadosUnidos = 4 + numero
 
 
 class nomedaclass():
 	casa4 = 7;
-	fga = 'O novo endereco da tecnologia'
+	fga = 'O novo endereco da tecnologia';
+	brasil = "noia q voa huaehuaehuae"
+
+we_are_sad = 32
